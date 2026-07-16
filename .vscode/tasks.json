@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "ctms-port-check",
+			"type": "shell",
+			"command": "C:\\Users\\hgeec\\github\\caid-agent\\.venv\\Scripts\\python.exe C:\\Users\\hgeec\\github\\workspace-tooling\\check_workspace_ports.py --json > C:\\Users\\hgeec\\github\\_ctms_port_check.json 2>&1",
+			"group": "build"
+		}
+	]
+}

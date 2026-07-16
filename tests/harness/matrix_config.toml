@@ -1,0 +1,29 @@
+subsystem_default = "clinical-trial-system"
+requirement_id_prefixes = ["FR-C-", "NFR-C-"]
+
+[paths]
+json_dir = "tests/harness/json_matrices"
+superset = "tests/harness/requirements_superset.json"
+requirements_matrix = "tests/harness/requirements_matrix.json"
+
+[canonical]
+discovery = "glob:*_scenarios.json"
+strip_matrix = false
+passthrough = "preserve"
+
+[canonical.framework_to_requirements]
+ctms = [
+    "FR-C-11", "FR-C-12", "FR-C-13", "FR-C-14", "FR-C-21", "FR-C-22", "FR-C-23", "FR-C-24",
+    "FR-C-31", "FR-C-32", "FR-C-33", "FR-C-34", "FR-C-35", "FR-C-41", "FR-C-42", "FR-C-43", "FR-C-44",
+    "FR-C-51", "FR-C-52", "FR-C-53", "FR-C-61", "FR-C-62", "FR-C-71", "FR-C-72",
+    "FR-C-81", "FR-C-83", "FR-C-91", "FR-C-A11", "FR-C-A12", "FR-C-A21", "FR-C-A22", "FR-C-A23", "FR-C-A31", "FR-C-A41",
+    "NFR-C-PE-001", "NFR-C-PE-002", "NFR-C-SE-001", "NFR-C-SE-002",
+    "NFR-C-RE-001", "NFR-C-SA-001", "NFR-C-CO-001", "NFR-C-MA-001",
+]
+
+[compliance_policy]
+out_dir = "tests/harness/json_matrices"
+out_file = "compliance_policy_scenarios.json"
+uc_sep = "underscore"
+has_crosslink = false
+default_artefact = "docs/REQUIREMENTS.md"

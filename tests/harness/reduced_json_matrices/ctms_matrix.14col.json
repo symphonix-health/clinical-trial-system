@@ -1,0 +1,719 @@
+{
+  "metadata": {
+    "component": "clinical_trial_system",
+    "requirements_doc": "docs/REQUIREMENTS.md",
+    "executor": "pytest",
+    "requirement_ids": [
+      "FR-C-11",
+      "FR-C-12",
+      "FR-C-21",
+      "FR-C-22",
+      "FR-C-31",
+      "FR-C-32",
+      "FR-C-34",
+      "FR-C-35",
+      "FR-C-41",
+      "FR-C-42",
+      "FR-C-43",
+      "FR-C-51",
+      "FR-C-52",
+      "FR-C-61",
+      "FR-C-62",
+      "FR-C-71",
+      "FR-C-72",
+      "FR-C-73",
+      "FR-C-74",
+      "FR-C-81",
+      "FR-C-91",
+      "FR-C-A11",
+      "FR-C-A12",
+      "FR-C-A21",
+      "FR-C-A22",
+      "FR-C-A23",
+      "FR-C-A31",
+      "FR-C-A41"
+    ]
+  },
+  "test_cases": [
+    {
+      "use_case_id": "CTMS-UC-001",
+      "component": "clinical_trial_system",
+      "scenario": "Create a protocol draft and approve it",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Study created with status draft",
+        "Study approved with status approved",
+        "ProtocolVersion created"
+      ],
+      "preconditions": {
+        "auth_role": "sponsor_manager",
+        "site_checklist": false
+      },
+      "test_data": {
+        "protocol_number": "CTMS-001",
+        "title": "Matrix test",
+        "phase": "II"
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['status'] == 'approved'"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.studies",
+        "app.crud.approve_study"
+      ],
+      "tags": [
+        "study",
+        "protocol",
+        "approval",
+        "J20"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-11 and FR-C-12"
+    },
+    {
+      "use_case_id": "CTMS-UC-002",
+      "component": "clinical_trial_system",
+      "scenario": "Activate a site after completing checklist",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Site created in pending status",
+        "Checklist generated",
+        "Site activated"
+      ],
+      "preconditions": {
+        "study_status": "approved",
+        "auth_role": "regulatory_officer"
+      },
+      "test_data": {
+        "site_code": "MAT-01",
+        "checklist_items": [
+          "ethics",
+          "contract",
+          "training",
+          "pharmacy"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['activation_status'] == 'activated'"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.sites",
+        "app.crud.activate_site"
+      ],
+      "tags": [
+        "site",
+        "activation",
+        "checklist",
+        "J25"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-21 and FR-C-22"
+    },
+    {
+      "use_case_id": "CTMS-UC-003",
+      "component": "clinical_trial_system",
+      "scenario": "Enrol a subject after informed consent",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Subject created",
+        "Consent recorded",
+        "Subject status enrolled"
+      ],
+      "preconditions": {
+        "study_status": "recruiting",
+        "site_status": "activated",
+        "auth_role": "coordinator"
+      },
+      "test_data": {
+        "screening_id": "MAT-S-001",
+        "consent_version": "v1.0"
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['enrolment_status'] == 'enrolled'"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.subjects",
+        "app.crud.record_consent"
+      ],
+      "tags": [
+        "subject",
+        "enrolment",
+        "consent",
+        "J20"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-31 and FR-C-32"
+    },
+    {
+      "use_case_id": "CTMS-UC-004",
+      "component": "clinical_trial_system",
+      "scenario": "Withdraw a subject and cancel future visits",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Subject status withdrawn",
+        "Future visits cancelled or flagged"
+      ],
+      "preconditions": {
+        "subject_status": "enrolled",
+        "auth_role": "coordinator"
+      },
+      "test_data": {
+        "reason": "withdrawal_of_consent"
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['enrolment_status'] == 'withdrawn'"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.subjects",
+        "app.crud.withdraw_subject"
+      ],
+      "tags": [
+        "subject",
+        "withdrawal",
+        "J28"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-34"
+    },
+    {
+      "use_case_id": "CTMS-UC-005",
+      "component": "clinical_trial_system",
+      "scenario": "Randomise a subject to an arm",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Subject randomised",
+        "Arm assignment recorded"
+      ],
+      "preconditions": {
+        "subject_status": "enrolled",
+        "study_blinded": true
+      },
+      "test_data": {
+        "stratification_factors": {
+          "site": "MAT-01"
+        }
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "'arm_' in response.json()['randomisation_arm']"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.subjects",
+        "app.crud.randomise_subject"
+      ],
+      "tags": [
+        "subject",
+        "randomisation",
+        "J20"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-35"
+    },
+    {
+      "use_case_id": "CTMS-UC-006",
+      "component": "clinical_trial_system",
+      "scenario": "Schedule a visit and flag missed visits",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Visit scheduled",
+        "Missed visit flagged",
+        "ProtocolDeviation created"
+      ],
+      "preconditions": {
+        "subject_status": "enrolled"
+      },
+      "test_data": {
+        "scheduled_date": "2026-01-01",
+        "window_max_date": "2026-01-05"
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "len(response.json()) >= 1"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.visits",
+        "app.crud.flag_missed_visits"
+      ],
+      "tags": [
+        "visit",
+        "scheduling",
+        "missed_visit",
+        "J24"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-41, FR-C-42, FR-C-43"
+    },
+    {
+      "use_case_id": "CTMS-UC-007",
+      "component": "clinical_trial_system",
+      "scenario": "Upload a regulatory document and view eTMF report",
+      "test_type": "positive",
+      "priority": "medium",
+      "expected_outcomes": [
+        "Document uploaded",
+        "eTMF report shows uploaded and expired documents"
+      ],
+      "preconditions": {
+        "study_status": "approved",
+        "auth_role": "regulatory_officer"
+      },
+      "test_data": {
+        "document_type": "ethics_approval",
+        "expiry_date": "2020-01-01"
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['expired_count'] >= 1"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.regulatory",
+        "app.crud.etmf_report"
+      ],
+      "tags": [
+        "regulatory",
+        "etmf",
+        "J25"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-51 and FR-C-52"
+    },
+    {
+      "use_case_id": "CTMS-UC-008",
+      "component": "clinical_trial_system",
+      "scenario": "Report a SUSAR and verify deadline computation",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Adverse event created",
+        "SUSAR flag set",
+        "Regulatory deadline computed"
+      ],
+      "preconditions": {
+        "subject_status": "enrolled",
+        "auth_role": "safety_officer"
+      },
+      "test_data": {
+        "severity": "severe",
+        "seriousness": "life_threatening",
+        "causality": "related"
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['susar_flag'] == true",
+        "response.json()['regulatory_report_deadline'] is not None"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.adverse_events",
+        "app.crud.create_adverse_event"
+      ],
+      "tags": [
+        "safety",
+        "adverse_event",
+        "susar",
+        "J22"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-61 and FR-C-62"
+    },
+    {
+      "use_case_id": "CTMS-UC-009",
+      "component": "clinical_trial_system",
+      "scenario": "Receive IP shipment and dispense to subject",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Shipment received",
+        "Inventory updated",
+        "Dispense record created"
+      ],
+      "preconditions": {
+        "site_status": "activated",
+        "subject_status": "enrolled",
+        "auth_role": "site_pharmacist"
+      },
+      "test_data": {
+        "lot": "LOT-001",
+        "quantity": 100,
+        "dispense_quantity": 10
+      },
+      "validation_rules": [
+        "response.status_code == 200"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.ip",
+        "app.crud.receive_ip_shipment",
+        "app.crud.dispense_ip"
+      ],
+      "tags": [
+        "ip",
+        "accountability",
+        "J23"
+      ],
+      "estimated_duration": 3,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-71 and FR-C-72"
+    },
+    {
+      "use_case_id": "CTMS-UC-010",
+      "component": "clinical_trial_system",
+      "scenario": "Track study budget and generate invoice",
+      "test_type": "positive",
+      "priority": "medium",
+      "expected_outcomes": [
+        "Budget category created",
+        "Actual cost updated",
+        "Invoice generated"
+      ],
+      "preconditions": {
+        "study_status": "active",
+        "auth_role": "finance_coordinator"
+      },
+      "test_data": {
+        "budget_category": "per_subject",
+        "planned_amount": 10000
+      },
+      "validation_rules": [
+        "response.status_code == 200"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.budgets",
+        "app.crud.create_invoice"
+      ],
+      "tags": [
+        "finance",
+        "budget",
+        "J27"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-81 and FR-C-83"
+    },
+    {
+      "use_case_id": "CTMS-UC-011",
+      "component": "clinical_trial_system",
+      "scenario": "View recruitment dashboard for a study",
+      "test_type": "positive",
+      "priority": "medium",
+      "expected_outcomes": [
+        "Recruitment report returned"
+      ],
+      "preconditions": {
+        "study_status": "recruiting"
+      },
+      "test_data": {},
+      "validation_rules": [
+        "response.status_code == 200",
+        "'actual_enrolled' in response.json()"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.reports",
+        "app.crud.recruitment_report"
+      ],
+      "tags": [
+        "reporting",
+        "recruitment",
+        "J26"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-91"
+    },
+    {
+      "use_case_id": "CTMS-UC-012",
+      "component": "clinical_trial_system",
+      "scenario": "Register an agentic subject with attestation",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "AgentSubject created",
+        "Attestation recorded",
+        "Attestation status valid"
+      ],
+      "preconditions": {
+        "auth_role": "agent_owner"
+      },
+      "test_data": {
+        "principal_id": "agent://matrix/v1",
+        "autonomy_level": "shadow"
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['attestation_status'] == 'valid'"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.agents",
+        "app.crud.create_agent_attestation"
+      ],
+      "tags": [
+        "agent",
+        "registration",
+        "attestation",
+        "J29"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-A11"
+    },
+    {
+      "use_case_id": "CTMS-UC-013",
+      "component": "clinical_trial_system",
+      "scenario": "Accept agent consent contract",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Consent contract created",
+        "Purpose of use is research"
+      ],
+      "preconditions": {
+        "agent_subject_exists": true,
+        "auth_role": "agent_owner"
+      },
+      "test_data": {
+        "purpose_of_use": "research",
+        "human_oversight_required": true
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['purpose_of_use'] == 'research'"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.agents",
+        "app.crud.create_agent_consent_contract"
+      ],
+      "tags": [
+        "agent",
+        "consent",
+        "J29"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-A12"
+    },
+    {
+      "use_case_id": "CTMS-UC-014",
+      "component": "clinical_trial_system",
+      "scenario": "Author a synthetic environment",
+      "test_type": "positive",
+      "priority": "medium",
+      "expected_outcomes": [
+        "SyntheticEnvironment created",
+        "Reproducibility hash generated"
+      ],
+      "preconditions": {
+        "auth_role": "synthetic_cohort_designer"
+      },
+      "test_data": {
+        "task_script_json": {
+          "steps": [
+            "triage",
+            "reconcile"
+          ]
+        }
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['reproducibility_hash'] is not None"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.agents",
+        "app.crud.create_synthetic_environment"
+      ],
+      "tags": [
+        "agent",
+        "environment",
+        "J30"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-A21"
+    },
+    {
+      "use_case_id": "CTMS-UC-015",
+      "component": "clinical_trial_system",
+      "scenario": "Execute an arena run and evaluate metrics",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "AgentRun created",
+        "Metrics generated",
+        "Run completed"
+      ],
+      "preconditions": {
+        "agent_subject_exists": true,
+        "environment_exists": true
+      },
+      "test_data": {
+        "metrics": {
+          "task_success": 0.95,
+          "unsafe_action_rate": 0.01
+        }
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "len(response.json()) >= 2"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.agents",
+        "app.crud.complete_agent_run"
+      ],
+      "tags": [
+        "agent",
+        "arena",
+        "metrics",
+        "J30"
+      ],
+      "estimated_duration": 3,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-A22 and FR-C-A23"
+    },
+    {
+      "use_case_id": "CTMS-UC-016",
+      "component": "clinical_trial_system",
+      "scenario": "Evaluate cohort release gate",
+      "test_type": "positive",
+      "priority": "medium",
+      "expected_outcomes": [
+        "Release gate returns promoted status"
+      ],
+      "preconditions": {
+        "cohort_exists": true
+      },
+      "test_data": {},
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['status'] == 'promoted'"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.agents",
+        "app.crud.evaluate_release_gate"
+      ],
+      "tags": [
+        "agent",
+        "release_gate",
+        "J30"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-A31"
+    },
+    {
+      "use_case_id": "CTMS-UC-017",
+      "component": "clinical_trial_system",
+      "scenario": "Generate a bias report for a cohort",
+      "test_type": "positive",
+      "priority": "medium",
+      "expected_outcomes": [
+        "BiasReport created",
+        "Drift flags recorded"
+      ],
+      "preconditions": {
+        "cohort_exists": true
+      },
+      "test_data": {
+        "demographic_strata": {
+          "age": [
+            "<65",
+            ">=65"
+          ]
+        },
+        "drift_flags": [
+          "drift"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['drift_flags'] == ['drift']"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.agents",
+        "app.crud.create_agent_bias_report"
+      ],
+      "tags": [
+        "agent",
+        "bias",
+        "fairness",
+        "J34"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-A41"
+    },
+    {
+      "use_case_id": "CTMS-UC-018",
+      "component": "clinical_trial_system",
+      "scenario": "Reject study creation with duplicate protocol number",
+      "test_type": "negative",
+      "priority": "medium",
+      "expected_outcomes": [
+        "Request rejected with integrity error"
+      ],
+      "preconditions": {
+        "existing_protocol": "CTMS-DUP-001"
+      },
+      "test_data": {
+        "protocol_number": "CTMS-DUP-001"
+      },
+      "validation_rules": [
+        "response.status_code in [400, 409, 422]"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.studies",
+        "app.crud.create_study"
+      ],
+      "tags": [
+        "study",
+        "validation",
+        "negative"
+      ],
+      "estimated_duration": 1,
+      "automation_status": "automated",
+      "notes": "Duplicate protocol guard"
+    },
+    {
+      "use_case_id": "CTMS-UC-019",
+      "component": "clinical_trial_system",
+      "scenario": "Request a non-existent study",
+      "test_type": "negative",
+      "priority": "low",
+      "expected_outcomes": [
+        "404 Not Found"
+      ],
+      "preconditions": {},
+      "test_data": {
+        "study_id": 99999
+      },
+      "validation_rules": [
+        "response.status_code == 404"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.studies"
+      ],
+      "tags": [
+        "study",
+        "not_found",
+        "negative"
+      ],
+      "estimated_duration": 1,
+      "automation_status": "automated",
+      "notes": "404 path coverage"
+    }
+  ]
+}

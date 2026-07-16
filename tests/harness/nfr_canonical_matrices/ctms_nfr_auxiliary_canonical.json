@@ -1,0 +1,91 @@
+{
+  "schema_version": "BT_CANONICAL_MATRIX_V2_18COL",
+  "matrix_kind": "auxiliary",
+  "metadata": {
+    "subsystem": "clinical-trial-system.nfr",
+    "default_requirement_ids": [
+      "NFR-C-CO-001",
+      "NFR-C-MA-001",
+      "NFR-C-PE-001",
+      "NFR-C-PE-002",
+      "NFR-C-RE-001",
+      "NFR-C-SA-001",
+      "NFR-C-SE-001",
+      "NFR-C-SE-002"
+    ],
+    "iso_25010_characteristic": "Multiple",
+    "iso_25010_subcharacteristic": "Derived",
+    "regulatory_ref": "",
+    "derived_from_nfr_title": "CTMS ISO/IEC 25010:2023 derived NFR traceability",
+    "derived_from_nfr_statement": "Auxiliary traceability matrix linking CTMS derived NFRs to acceptance criteria.",
+    "trace_links": [
+      "FR-C-11"
+    ]
+  },
+  "scenarios": [
+    {
+      "use_case_id": "ctms_nfr_co_001_trace",
+      "scenario_category": "Positive",
+      "requirement_ids": [
+        "NFR-C-CO-001",
+        "FR-C-11"
+      ]
+    },
+    {
+      "use_case_id": "ctms_nfr_ma_001_trace",
+      "scenario_category": "Positive",
+      "requirement_ids": [
+        "NFR-C-MA-001",
+        "FR-C-11"
+      ]
+    },
+    {
+      "use_case_id": "ctms_nfr_pe_001_trace",
+      "scenario_category": "Positive",
+      "requirement_ids": [
+        "NFR-C-PE-001",
+        "FR-C-11"
+      ]
+    },
+    {
+      "use_case_id": "ctms_nfr_pe_002_trace",
+      "scenario_category": "Positive",
+      "requirement_ids": [
+        "NFR-C-PE-002",
+        "FR-C-11"
+      ]
+    },
+    {
+      "use_case_id": "ctms_nfr_re_001_trace",
+      "scenario_category": "Positive",
+      "requirement_ids": [
+        "NFR-C-RE-001",
+        "FR-C-11"
+      ]
+    },
+    {
+      "use_case_id": "ctms_nfr_sa_001_trace",
+      "scenario_category": "Positive",
+      "requirement_ids": [
+        "NFR-C-SA-001",
+        "FR-C-11"
+      ]
+    },
+    {
+      "use_case_id": "ctms_nfr_se_001_trace",
+      "scenario_category": "Positive",
+      "requirement_ids": [
+        "NFR-C-SE-001",
+        "FR-C-11"
+      ]
+    },
+    {
+      "use_case_id": "ctms_nfr_se_002_trace",
+      "scenario_category": "Positive",
+      "requirement_ids": [
+        "NFR-C-SE-002",
+        "FR-C-11"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4978 @@
+{
+  "schema_version": "BT_CANONICAL_MATRIX_V2_18COL",
+  "columns": [
+    "use_case_id",
+    "subsystem",
+    "requirement_ids",
+    "scenario_category",
+    "title",
+    "description",
+    "preconditions",
+    "trigger",
+    "input_payload",
+    "expected_connector_calls",
+    "expected_events",
+    "expected_outputs",
+    "fault_profile",
+    "security_profile",
+    "priority",
+    "automation_status",
+    "estimated_duration_seconds",
+    "tags"
+  ],
+  "metadata": {
+    "subsystem": "ctms",
+    "scenario_count": 100,
+    "distribution": {
+      "positive": 85,
+      "negative": 10,
+      "edge": 5
+    },
+    "default_requirement_ids": [
+      "FR-C-11",
+      "FR-C-12",
+      "FR-C-13",
+      "FR-C-14",
+      "FR-C-21",
+      "FR-C-22",
+      "FR-C-23",
+      "FR-C-24",
+      "FR-C-31",
+      "FR-C-32",
+      "FR-C-33",
+      "FR-C-34",
+      "FR-C-35",
+      "FR-C-41",
+      "FR-C-42",
+      "FR-C-43",
+      "FR-C-44",
+      "FR-C-51",
+      "FR-C-52",
+      "FR-C-53",
+      "FR-C-61",
+      "FR-C-62",
+      "FR-C-71",
+      "FR-C-72",
+      "FR-C-81",
+      "FR-C-83",
+      "FR-C-91",
+      "FR-C-A11",
+      "FR-C-A12",
+      "FR-C-A21",
+      "FR-C-A22",
+      "FR-C-A23",
+      "FR-C-A31",
+      "FR-C-A41",
+      "NFR-C-PE-001",
+      "NFR-C-PE-002",
+      "NFR-C-SE-001",
+      "NFR-C-SE-002",
+      "NFR-C-RE-001",
+      "NFR-C-SA-001",
+      "NFR-C-CO-001",
+      "NFR-C-MA-001"
+    ]
+  },
+  "scenarios": [
+    {
+      "use_case_id": "ctms_POS_FILLER_0001",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-11"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 1 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 1 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0002",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-12"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 2 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 2 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0003",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-13"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 3 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 3 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0004",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-14"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 4 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 4 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0005",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-21"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 5 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 5 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0006",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-22"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 6 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 6 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0007",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-23"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 7 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 7 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0008",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-24"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 8 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 8 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0009",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-31"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 9 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 9 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0010",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-32"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 10 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 10 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0011",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-33"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 11 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 11 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0012",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-34"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 12 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 12 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0013",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-35"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 13 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 13 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0014",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-41"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 14 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 14 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0015",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-42"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 15 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 15 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0016",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-43"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 16 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 16 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0017",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-44"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 17 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 17 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0018",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-51"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 18 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 18 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0019",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-52"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 19 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 19 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0020",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-53"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 20 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 20 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0021",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-61"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 21 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 21 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0022",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-62"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 22 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 22 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0023",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-71"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 23 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 23 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0024",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-72"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 24 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 24 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0025",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-81"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 25 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 25 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0026",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-83"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 26 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 26 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0027",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-91"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 27 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 27 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0028",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-A11"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 28 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 28 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0029",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-A12"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 29 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 29 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0030",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-PE-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 30 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 30 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0031",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-PE-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 31 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 31 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0032",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-SE-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 32 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 32 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0033",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-SE-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 33 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 33 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0034",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-RE-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 34 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 34 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0035",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-SA-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 35 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 35 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0036",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-CO-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 36 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 36 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0037",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-MA-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 37 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 37 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0038",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-11"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 38 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 38 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0039",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-12"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 39 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 39 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0040",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-13"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 40 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 40 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0041",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-14"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 41 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 41 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0042",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-21"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 42 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 42 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0043",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-22"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 43 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 43 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0044",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-23"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 44 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 44 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0045",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-24"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 45 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 45 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0046",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-31"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 46 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 46 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0047",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-32"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 47 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 47 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0048",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-33"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 48 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 48 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0049",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-34"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 49 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 49 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0050",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-35"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 50 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 50 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0051",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-41"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 51 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 51 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0052",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-42"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 52 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 52 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0053",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-43"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 53 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 53 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0054",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-44"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 54 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 54 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0055",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-51"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 55 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 55 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0056",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-52"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 56 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 56 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0057",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-53"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 57 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 57 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0058",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-61"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 58 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 58 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0059",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-62"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 59 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 59 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0060",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-71"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 60 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 60 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0061",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-72"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 61 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 61 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0062",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-81"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 62 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 62 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0063",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-83"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 63 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 63 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0064",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-91"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 64 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 64 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0065",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-A11"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 65 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 65 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0066",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-A12"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 66 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 66 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0067",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-PE-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 67 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 67 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0068",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-PE-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 68 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 68 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0069",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-SE-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 69 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 69 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0070",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-SE-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 70 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 70 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0071",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-RE-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 71 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 71 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0072",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-SA-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 72 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 72 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0073",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-CO-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 73 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 73 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0074",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "NFR-C-MA-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 74 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 74 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0075",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-11"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 75 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 75 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0076",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-12"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 76 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 76 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0077",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-13"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 77 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 77 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0078",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-14"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 78 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 78 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0079",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-21"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 79 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 79 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0080",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-22"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 80 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 80 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0081",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-23"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 81 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 81 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0082",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-24"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 82 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 82 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0083",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-31"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 83 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 83 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0084",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-32"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 84 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 84 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_POS_FILLER_0085",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-33"
+      ],
+      "scenario_category": "Positive",
+      "title": "ctms positive filler scenario 85 (synthesized for 85/10/5 distribution)",
+      "description": "ctms positive filler scenario 85 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "SUCCESS",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0001",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-34"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 1 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 1 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0002",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-35"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 2 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 2 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0003",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-41"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 3 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 3 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0004",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-42"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 4 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 4 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0005",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-43"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 5 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 5 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0006",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-44"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 6 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 6 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0007",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-51"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 7 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 7 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0008",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-52"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 8 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 8 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0009",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-53"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 9 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 9 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_NEG_FILLER_0010",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-61"
+      ],
+      "scenario_category": "Negative",
+      "title": "ctms negative filler scenario 10 (synthesized for 85/10/5 distribution)",
+      "description": "ctms negative filler scenario 10 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "transient_5xx",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_EDG_FILLER_0001",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-62"
+      ],
+      "scenario_category": "Edge",
+      "title": "ctms edge filler scenario 1 (synthesized for 85/10/5 distribution)",
+      "description": "ctms edge filler scenario 1 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "boundary",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_EDG_FILLER_0002",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-71"
+      ],
+      "scenario_category": "Edge",
+      "title": "ctms edge filler scenario 2 (synthesized for 85/10/5 distribution)",
+      "description": "ctms edge filler scenario 2 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "boundary",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_EDG_FILLER_0003",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-72"
+      ],
+      "scenario_category": "Edge",
+      "title": "ctms edge filler scenario 3 (synthesized for 85/10/5 distribution)",
+      "description": "ctms edge filler scenario 3 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "boundary",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_EDG_FILLER_0004",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-81"
+      ],
+      "scenario_category": "Edge",
+      "title": "ctms edge filler scenario 4 (synthesized for 85/10/5 distribution)",
+      "description": "ctms edge filler scenario 4 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "boundary",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    },
+    {
+      "use_case_id": "ctms_EDG_FILLER_0005",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-83"
+      ],
+      "scenario_category": "Edge",
+      "title": "ctms edge filler scenario 5 (synthesized for 85/10/5 distribution)",
+      "description": "ctms edge filler scenario 5 (synthesized for 85/10/5 distribution)",
+      "preconditions": [
+        "service running"
+      ],
+      "trigger": {
+        "api": "POST /api/ctms",
+        "body_ref": "input_payload",
+        "idempotency_key": "idem-seed"
+      },
+      "input_payload": {
+        "correlation_id": "corr-seed",
+        "method": "POST",
+        "path": "/api/ctms",
+        "body": {}
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "final_status": "FAILURE",
+        "assertions": []
+      },
+      "fault_profile": {
+        "inject_at": "connector_call",
+        "mode": "boundary",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "OIDC_JWT",
+        "scopes": [],
+        "transport": "mTLS",
+        "expected_auth_result": "ALLOW"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": []
+    }
+  ]
+}

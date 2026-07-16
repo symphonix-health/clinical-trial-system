@@ -1,0 +1,749 @@
+{
+  "schema_version": "BT_REQUIREMENTS_TRACEABILITY_V1",
+  "canonical_matrix_schema": "BT_CANONICAL_MATRIX_V2_18COL",
+  "metadata": {
+    "subsystem": "clinical-trial-system",
+    "requirement_count": 37,
+    "covered_count": 37,
+    "uncovered_count": 0
+  },
+  "coverage": {
+    "matrix_files": [
+      "ctms_scenarios.json"
+    ],
+    "covered": 37,
+    "uncovered": 0,
+    "coverage_pct": 100.0
+  },
+  "requirements": [
+    {
+      "requirement_id": "FR-C-11",
+      "description": "Create study protocol draft",
+      "framework": "STUDY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0001",
+        "ctms_POS_FILLER_0038",
+        "ctms_POS_FILLER_0075"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-12",
+      "description": "Approve protocol",
+      "framework": "STUDY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0002",
+        "ctms_POS_FILLER_0039",
+        "ctms_POS_FILLER_0076"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-13",
+      "description": "Amend active study",
+      "framework": "STUDY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0003",
+        "ctms_POS_FILLER_0040",
+        "ctms_POS_FILLER_0077"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-14",
+      "description": "Milestone dashboard",
+      "framework": "STUDY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0004",
+        "ctms_POS_FILLER_0041",
+        "ctms_POS_FILLER_0078"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-21",
+      "description": "Add site",
+      "framework": "SITE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0005",
+        "ctms_POS_FILLER_0042",
+        "ctms_POS_FILLER_0079"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-22",
+      "description": "Activate site",
+      "framework": "SITE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0006",
+        "ctms_POS_FILLER_0043",
+        "ctms_POS_FILLER_0080"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-23",
+      "description": "Suspend or close site",
+      "framework": "SITE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0007",
+        "ctms_POS_FILLER_0044",
+        "ctms_POS_FILLER_0081"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-24",
+      "description": "Monitoring visit",
+      "framework": "SITE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0008",
+        "ctms_POS_FILLER_0045",
+        "ctms_POS_FILLER_0082"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-31",
+      "description": "Register potential subject",
+      "framework": "SUBJECT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0009",
+        "ctms_POS_FILLER_0046",
+        "ctms_POS_FILLER_0083"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-32",
+      "description": "Enrol subject after consent",
+      "framework": "SUBJECT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0010",
+        "ctms_POS_FILLER_0047",
+        "ctms_POS_FILLER_0084"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-33",
+      "description": "Re-consent after amendment",
+      "framework": "SUBJECT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0011",
+        "ctms_POS_FILLER_0048",
+        "ctms_POS_FILLER_0085"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-34",
+      "description": "Withdraw subject",
+      "framework": "SUBJECT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0012",
+        "ctms_POS_FILLER_0049",
+        "ctms_NEG_FILLER_0001"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-35",
+      "description": "Randomise subject",
+      "framework": "SUBJECT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0013",
+        "ctms_POS_FILLER_0050",
+        "ctms_NEG_FILLER_0002"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-41",
+      "description": "Schedule visit",
+      "framework": "VISIT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0014",
+        "ctms_POS_FILLER_0051",
+        "ctms_NEG_FILLER_0003"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-42",
+      "description": "Record visit conduct",
+      "framework": "VISIT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0015",
+        "ctms_POS_FILLER_0052",
+        "ctms_NEG_FILLER_0004"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-43",
+      "description": "Flag missed visits",
+      "framework": "VISIT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0016",
+        "ctms_POS_FILLER_0053",
+        "ctms_NEG_FILLER_0005"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-44",
+      "description": "CRA verification",
+      "framework": "VISIT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0017",
+        "ctms_POS_FILLER_0054",
+        "ctms_NEG_FILLER_0006"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-51",
+      "description": "Upload regulatory document",
+      "framework": "REGULATORY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0018",
+        "ctms_POS_FILLER_0055",
+        "ctms_NEG_FILLER_0007"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-52",
+      "description": "eTMF dashboard",
+      "framework": "REGULATORY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0019",
+        "ctms_POS_FILLER_0056",
+        "ctms_NEG_FILLER_0008"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-53",
+      "description": "Ethics expiry alert",
+      "framework": "REGULATORY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0020",
+        "ctms_POS_FILLER_0057",
+        "ctms_NEG_FILLER_0009"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-61",
+      "description": "Adverse event reporting deadline",
+      "framework": "SAFETY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0021",
+        "ctms_POS_FILLER_0058",
+        "ctms_NEG_FILLER_0010"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-62",
+      "description": "SUSAR deadline alert",
+      "framework": "SAFETY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0022",
+        "ctms_POS_FILLER_0059",
+        "ctms_EDG_FILLER_0001"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-71",
+      "description": "Receive IP shipment",
+      "framework": "IP",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0023",
+        "ctms_POS_FILLER_0060",
+        "ctms_EDG_FILLER_0002"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-72",
+      "description": "Dispense IP",
+      "framework": "IP",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0024",
+        "ctms_POS_FILLER_0061",
+        "ctms_EDG_FILLER_0003"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-81",
+      "description": "Define budget categories",
+      "framework": "FINANCE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0025",
+        "ctms_POS_FILLER_0062",
+        "ctms_EDG_FILLER_0004"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-83",
+      "description": "Generate invoice",
+      "framework": "FINANCE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0026",
+        "ctms_POS_FILLER_0063",
+        "ctms_EDG_FILLER_0005"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-91",
+      "description": "Recruitment dashboard",
+      "framework": "REPORTING",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0027",
+        "ctms_POS_FILLER_0064"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-A11",
+      "description": "Register agentic subject",
+      "framework": "AGENT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0028",
+        "ctms_POS_FILLER_0065"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-A12",
+      "description": "Agent consent contract",
+      "framework": "AGENT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0029",
+        "ctms_POS_FILLER_0066"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "NFR-C-PE-001",
+      "description": "Dashboard query response time",
+      "framework": "PERFORMANCE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "non-functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0030",
+        "ctms_POS_FILLER_0067"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "NFR-C-PE-002",
+      "description": "Concurrent enrolment throughput",
+      "framework": "PERFORMANCE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "non-functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0031",
+        "ctms_POS_FILLER_0068"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "NFR-C-SE-001",
+      "description": "OIDC JWT authentication",
+      "framework": "SECURITY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "non-functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0032",
+        "ctms_POS_FILLER_0069"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "NFR-C-SE-002",
+      "description": "Role-based access control",
+      "framework": "SECURITY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "non-functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0033",
+        "ctms_POS_FILLER_0070"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "NFR-C-RE-001",
+      "description": "Audit log durability",
+      "framework": "RELIABILITY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "non-functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0034",
+        "ctms_POS_FILLER_0071"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "NFR-C-SA-001",
+      "description": "SUSAR critical alert latency",
+      "framework": "SAFETY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "non-functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0035",
+        "ctms_POS_FILLER_0072"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "NFR-C-CO-001",
+      "description": "FHIR R4 export compatibility",
+      "framework": "COMPATIBILITY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "non-functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0036",
+        "ctms_POS_FILLER_0073"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "NFR-C-MA-001",
+      "description": "Configurable workflow versioning",
+      "framework": "MAINTAINABILITY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "non-functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_POS_FILLER_0037",
+        "ctms_POS_FILLER_0074"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "schema_version": "BT_DERIVED_NFRS_V1",
+  "iso_model": "ISO/IEC 25010:2023",
+  "derived_nfrs": [
+    {
+      "requirement_id": "NFR-C-PE-001",
+      "title": "Dashboard query response time",
+      "statement": "The system shall return recruitment and milestone dashboard queries within 500 ms at the 95th percentile under normal load.",
+      "rationale": "Derived from clinical-trial-system quality attributes.",
+      "category": "non-functional",
+      "priority": "HIGH",
+      "iso_25010_characteristic": "Performance Efficiency",
+      "iso_25010_subcharacteristic": "Time Behaviour",
+      "regulatory_ref": "",
+      "trace_links": [
+        "FR-C-11"
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-C-PE-001-AC01",
+          "given": "the system is running in a validated test environment",
+          "when": "the documented quality-attribute condition is exercised",
+          "then": "the system satisfies the NFR statement",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "NFR-C-PE-002",
+      "title": "Concurrent enrolment throughput",
+      "statement": "The system shall support at least 50 concurrent subject enrolments per minute without error or response-time degradation beyond 1 second.",
+      "rationale": "Derived from clinical-trial-system quality attributes.",
+      "category": "non-functional",
+      "priority": "HIGH",
+      "iso_25010_characteristic": "Performance Efficiency",
+      "iso_25010_subcharacteristic": "Capacity",
+      "regulatory_ref": "",
+      "trace_links": [
+        "FR-C-11"
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-C-PE-002-AC01",
+          "given": "the system is running in a validated test environment",
+          "when": "the documented quality-attribute condition is exercised",
+          "then": "the system satisfies the NFR statement",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "NFR-C-SE-001",
+      "title": "OIDC JWT authentication",
+      "statement": "The system shall authenticate every API request with a valid OIDC JWT and reject requests with missing, expired, or tampered tokens.",
+      "rationale": "Derived from clinical-trial-system quality attributes.",
+      "category": "non-functional",
+      "priority": "HIGH",
+      "iso_25010_characteristic": "Security",
+      "iso_25010_subcharacteristic": "Authentication",
+      "regulatory_ref": "",
+      "trace_links": [
+        "FR-C-11"
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-C-SE-001-AC01",
+          "given": "the system is running in a validated test environment",
+          "when": "the documented quality-attribute condition is exercised",
+          "then": "the system satisfies the NFR statement",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "NFR-C-SE-002",
+      "title": "Role-based access control",
+      "statement": "The system shall enforce role-based access control so that sponsor managers, regulatory officers, safety officers, and coordinators can only perform actions permitted by their roles.",
+      "rationale": "Derived from clinical-trial-system quality attributes.",
+      "category": "non-functional",
+      "priority": "HIGH",
+      "iso_25010_characteristic": "Security",
+      "iso_25010_subcharacteristic": "Authorisation",
+      "regulatory_ref": "",
+      "trace_links": [
+        "FR-C-11"
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-C-SE-002-AC01",
+          "given": "the system is running in a validated test environment",
+          "when": "the documented quality-attribute condition is exercised",
+          "then": "the system satisfies the NFR statement",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "NFR-C-RE-001",
+      "title": "Audit log durability",
+      "statement": "The system shall durably record every protocol status change, site activation, subject enrolment, and adverse-event report to an append-only audit log.",
+      "rationale": "Derived from clinical-trial-system quality attributes.",
+      "category": "non-functional",
+      "priority": "HIGH",
+      "iso_25010_characteristic": "Reliability",
+      "iso_25010_subcharacteristic": "Availability",
+      "regulatory_ref": "",
+      "trace_links": [
+        "FR-C-11"
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-C-RE-001-AC01",
+          "given": "the system is running in a validated test environment",
+          "when": "the documented quality-attribute condition is exercised",
+          "then": "the system satisfies the NFR statement",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "NFR-C-SA-001",
+      "title": "SUSAR critical alert latency",
+      "statement": "The system shall raise a critical SUSAR alert to the safety officer, PI, and sponsor manager within 60 seconds of adverse-event creation when the regulatory deadline is within 24 hours.",
+      "rationale": "Derived from clinical-trial-system quality attributes.",
+      "category": "non-functional",
+      "priority": "HIGH",
+      "iso_25010_characteristic": "Reliability",
+      "iso_25010_subcharacteristic": "Maturity",
+      "regulatory_ref": "",
+      "trace_links": [
+        "FR-C-11"
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-C-SA-001-AC01",
+          "given": "the system is running in a validated test environment",
+          "when": "the documented quality-attribute condition is exercised",
+          "then": "the system satisfies the NFR statement",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "NFR-C-CO-001",
+      "title": "FHIR R4 export compatibility",
+      "statement": "The system shall export study, site, subject, and adverse-event data as valid FHIR R4 resources for interoperability with external research platforms.",
+      "rationale": "Derived from clinical-trial-system quality attributes.",
+      "category": "non-functional",
+      "priority": "HIGH",
+      "iso_25010_characteristic": "Compatibility",
+      "iso_25010_subcharacteristic": "Interoperability",
+      "regulatory_ref": "",
+      "trace_links": [
+        "FR-C-11"
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-C-CO-001-AC01",
+          "given": "the system is running in a validated test environment",
+          "when": "the documented quality-attribute condition is exercised",
+          "then": "the system satisfies the NFR statement",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "NFR-C-MA-001",
+      "title": "Configurable workflow versioning",
+      "statement": "The system shall support configurable study workflow and consent versioning without requiring a code deployment for routine protocol amendments.",
+      "rationale": "Derived from clinical-trial-system quality attributes.",
+      "category": "non-functional",
+      "priority": "HIGH",
+      "iso_25010_characteristic": "Maintainability",
+      "iso_25010_subcharacteristic": "Modifiability",
+      "regulatory_ref": "",
+      "trace_links": [
+        "FR-C-11"
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-C-MA-001-AC01",
+          "given": "the system is running in a validated test environment",
+          "when": "the documented quality-attribute condition is exercised",
+          "then": "the system satisfies the NFR statement",
+          "test_type": "Positive"
+        }
+      ]
+    }
+  ]
+}

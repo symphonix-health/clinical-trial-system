@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Clinical Trial Management System — enterprise command and control for study operations, subjects, and agent subjects." />
+    <meta name="theme-color" content="#6366F1" />
+    <title>Clinical Trial Management System</title>
+    <link rel="stylesheet" href="/design-system/assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="/design-system/colors_and_type.css" />
+    <link rel="stylesheet" href="/design-system/healthcare/tokens.css" />
+    <script>
+      (function () {
+        const mode = localStorage.getItem('ctms-theme-mode') || 'system'
+        const resolved = mode === 'system'
+          ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : mode
+        document.documentElement.classList.add('theme-' + resolved)
+        document.documentElement.setAttribute('data-theme', resolved)
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

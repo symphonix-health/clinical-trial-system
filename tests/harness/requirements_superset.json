@@ -1,0 +1,320 @@
+{
+  "metadata": {
+    "subsystem": "clinical-trial-system",
+    "requirement_count": 37
+  },
+  "requirements": [
+    {
+      "requirement_id": "FR-C-11",
+      "family": "STUDY",
+      "title": "Create study protocol draft",
+      "statement": "A sponsor manager can create a Study with title, phase, indication, planned sites, and planned subjects. The system stores the protocol draft and emits an audit entry.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-12",
+      "family": "STUDY",
+      "title": "Approve protocol",
+      "statement": "A protocol in draft can be approved by a regulatory officer and PI. The status transitions to approved, a ProtocolVersion is created, and downstream site activation is enabled.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-13",
+      "family": "STUDY",
+      "title": "Amend active study",
+      "statement": "A sponsor manager can amend an active study. A new ProtocolVersion is created, sites are notified, and enrolled subjects are flagged for re-consent if required.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-14",
+      "family": "STUDY",
+      "title": "Milestone dashboard",
+      "statement": "The dashboard shows actual vs planned milestone dates and alerts on overdue milestones.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-21",
+      "family": "SITE",
+      "title": "Add site",
+      "statement": "A sponsor manager can add a site with PI, address, and regulatory contacts. The site is created in pending status and a SiteActivationChecklist is generated.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-22",
+      "family": "SITE",
+      "title": "Activate site",
+      "statement": "A regulatory officer can activate a site once all checklist items are complete. The site status transitions to activated and an audit entry is recorded.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-23",
+      "family": "SITE",
+      "title": "Suspend or close site",
+      "statement": "A sponsor manager or safety officer can suspend or close an activated site. No new enrolments are allowed, scheduled visits are flagged, and the reason is audit-logged.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-24",
+      "family": "SITE",
+      "title": "Monitoring visit",
+      "statement": "A CRA can log a monitoring visit with findings and CAPA. The visit is linked to the site and queries may be raised.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-31",
+      "family": "SUBJECT",
+      "title": "Register potential subject",
+      "statement": "A CRC can register a potential subject with demographics and screening data. The system checks inclusion/exclusion criteria and produces eligible, ineligible, or pending_review.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-32",
+      "family": "SUBJECT",
+      "title": "Enrol subject after consent",
+      "statement": "An eligible subject at an activated site can be enrolled after informed consent is recorded. A unique subject number is assigned and a baseline visit is scheduled.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-33",
+      "family": "SUBJECT",
+      "title": "Re-consent after amendment",
+      "statement": "When an amendment affects enrolled subjects, the system flags them. The CRC records re-consent with the new version; subjects not re-consented are suspended from further IP dispensing.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-34",
+      "family": "SUBJECT",
+      "title": "Withdraw subject",
+      "statement": "An enrolled subject can withdraw consent or be discontinued by the investigator. The withdrawal reason and date are recorded, future visits are cancelled, and a withdrawal-of-consent document is generated.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-35",
+      "family": "SUBJECT",
+      "title": "Randomise subject",
+      "statement": "The system can randomise a subject in a two-arm double-blind study to a stratified arm without revealing treatment mapping to unblinded users.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-41",
+      "family": "VISIT",
+      "title": "Schedule visit",
+      "statement": "A visit scheduled from the study's visit template computes the visit window and creates an Appointment plus a SubjectVisit.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-42",
+      "family": "VISIT",
+      "title": "Record visit conduct",
+      "statement": "Recording actual date, assessments, and findings transitions the SubjectVisit status to completed, missed, or early_terminated, and auto-flags deviations outside the visit window.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-43",
+      "family": "VISIT",
+      "title": "Flag missed visits",
+      "statement": "A nightly task flags scheduled visits that pass window_max_date without occurrence, raises a missed-visit alert, and creates a ProtocolDeviation if required.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-44",
+      "family": "VISIT",
+      "title": "CRA verification",
+      "statement": "A CRA can mark a visit's key data points as verified or query-raised. The query is linked to the subject and visit, and the monitoring status is updated.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-51",
+      "family": "REGULATORY",
+      "title": "Upload regulatory document",
+      "statement": "A regulatory officer can upload a document with type, version, expiry, and optional site. It is stored with a DocumentReference, eTMF folder path, and audit entry.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-52",
+      "family": "REGULATORY",
+      "title": "eTMF dashboard",
+      "statement": "The eTMF dashboard shows per-folder completeness and flags expired documents.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-53",
+      "family": "REGULATORY",
+      "title": "Ethics expiry alert",
+      "statement": "Ethics approval expiry within 60 days raises an alert and blocks site activation if expiry passes.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-61",
+      "family": "SAFETY",
+      "title": "Adverse event reporting deadline",
+      "statement": "An adverse event with onset, severity, seriousness, and causality triggers computation of the regulatory reporting deadline (7- or 15-day for SUSAR), assigns a safety officer, and emits an audit entry.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-62",
+      "family": "SAFETY",
+      "title": "SUSAR deadline alert",
+      "statement": "A SUSAR within 24 hours of deadline or past deadline raises critical alerts to the safety officer, PI, and sponsor manager.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-71",
+      "family": "IP",
+      "title": "Receive IP shipment",
+      "statement": "A site pharmacist can record receipt of an IP shipment with lot, expiry, quantity, and storage condition. Inventory is incremented and a receipt is audit-logged.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-72",
+      "family": "IP",
+      "title": "Dispense IP",
+      "statement": "Dispensing IP to an enrolled subject decrements inventory, creates an IpDispense record, and notifies pharmacy-system / eps if the IP is tracked there.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-81",
+      "family": "FINANCE",
+      "title": "Define budget categories",
+      "statement": "A sponsor manager can define budget categories (start-up, per-subject, procedure, pass-through). The planned budget is stored and actuals accumulate from enrolment and visit events.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-83",
+      "family": "FINANCE",
+      "title": "Generate invoice",
+      "statement": "A finance coordinator can generate a draft invoice from actuals, route it to the sponsor, and link it to supporting events.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-91",
+      "family": "REPORTING",
+      "title": "Recruitment dashboard",
+      "statement": "The recruitment dashboard shows actual vs planned enrolment by site, screen-fail reasons, and dropout rates.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-A11",
+      "family": "AGENT",
+      "title": "Register agentic subject",
+      "statement": "An agent owner can register an AgentSubject with principal_id, persona_key, superpersona_contract_id, model_version, and AgentAttestation trust bundle. The system validates the attestation and emits an audit entry.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "FR-C-A12",
+      "family": "AGENT",
+      "title": "Agent consent contract",
+      "statement": "An owner accepting the AgentConsentContract makes the agent eligible for enrolment in agent-in-the-loop studies.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md"
+    },
+    {
+      "requirement_id": "NFR-C-PE-001",
+      "family": "PERFORMANCE",
+      "title": "Dashboard query response time",
+      "statement": "The system shall return recruitment and milestone dashboard queries within 500 ms at the 95th percentile under normal load.",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "iso_25010_characteristic": "Performance Efficiency",
+      "iso_25010_subcharacteristic": "Time Behaviour"
+    },
+    {
+      "requirement_id": "NFR-C-PE-002",
+      "family": "PERFORMANCE",
+      "title": "Concurrent enrolment throughput",
+      "statement": "The system shall support at least 50 concurrent subject enrolments per minute without error or response-time degradation beyond 1 second.",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "iso_25010_characteristic": "Performance Efficiency",
+      "iso_25010_subcharacteristic": "Capacity"
+    },
+    {
+      "requirement_id": "NFR-C-SE-001",
+      "family": "SECURITY",
+      "title": "OIDC JWT authentication",
+      "statement": "The system shall authenticate every API request with a valid OIDC JWT and reject requests with missing, expired, or tampered tokens.",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "iso_25010_characteristic": "Security",
+      "iso_25010_subcharacteristic": "Authentication"
+    },
+    {
+      "requirement_id": "NFR-C-SE-002",
+      "family": "SECURITY",
+      "title": "Role-based access control",
+      "statement": "The system shall enforce role-based access control so that sponsor managers, regulatory officers, safety officers, and coordinators can only perform actions permitted by their roles.",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "iso_25010_characteristic": "Security",
+      "iso_25010_subcharacteristic": "Authorisation"
+    },
+    {
+      "requirement_id": "NFR-C-RE-001",
+      "family": "RELIABILITY",
+      "title": "Audit log durability",
+      "statement": "The system shall durably record every protocol status change, site activation, subject enrolment, and adverse-event report to an append-only audit log.",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "iso_25010_characteristic": "Reliability",
+      "iso_25010_subcharacteristic": "Availability"
+    },
+    {
+      "requirement_id": "NFR-C-SA-001",
+      "family": "SAFETY",
+      "title": "SUSAR critical alert latency",
+      "statement": "The system shall raise a critical SUSAR alert to the safety officer, PI, and sponsor manager within 60 seconds of adverse-event creation when the regulatory deadline is within 24 hours.",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "iso_25010_characteristic": "Reliability",
+      "iso_25010_subcharacteristic": "Maturity"
+    },
+    {
+      "requirement_id": "NFR-C-CO-001",
+      "family": "COMPATIBILITY",
+      "title": "FHIR R4 export compatibility",
+      "statement": "The system shall export study, site, subject, and adverse-event data as valid FHIR R4 resources for interoperability with external research platforms.",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "iso_25010_characteristic": "Compatibility",
+      "iso_25010_subcharacteristic": "Interoperability"
+    },
+    {
+      "requirement_id": "NFR-C-MA-001",
+      "family": "MAINTAINABILITY",
+      "title": "Configurable workflow versioning",
+      "statement": "The system shall support configurable study workflow and consent versioning without requiring a code deployment for routine protocol amendments.",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "iso_25010_characteristic": "Maintainability",
+      "iso_25010_subcharacteristic": "Modifiability"
+    }
+  ]
+}

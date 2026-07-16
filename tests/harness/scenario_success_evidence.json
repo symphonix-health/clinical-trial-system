@@ -1,0 +1,166 @@
+{
+  "evidence": [
+    {
+      "use_case_id": "CTMS-UC-001",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-001]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#0:CTMS-UC-001",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-002",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-002]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#1:CTMS-UC-002",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-003",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-003]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#2:CTMS-UC-003",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-004",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-004]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#3:CTMS-UC-004",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-005",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-005]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#4:CTMS-UC-005",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-006",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-006]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#5:CTMS-UC-006",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-007",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-007]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#6:CTMS-UC-007",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-008",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-008]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#7:CTMS-UC-008",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-009",
+      "pytest_node_id": "backend/tests/test_ip.py::test_shipment_receipt_updates_inventory",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#8:CTMS-UC-009",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-010",
+      "pytest_node_id": "backend/tests/test_budgets.py::test_create_invoice",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#9:CTMS-UC-010",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-011",
+      "pytest_node_id": "backend/tests/test_reports.py::test_recruitment_report",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#10:CTMS-UC-011",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-012",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-012]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#11:CTMS-UC-012",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-013",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-013]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#12:CTMS-UC-013",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-014",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-014]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#13:CTMS-UC-014",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-015",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-015]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#14:CTMS-UC-015",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-016",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-016]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#15:CTMS-UC-016",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-017",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-017]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#16:CTMS-UC-017",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-018",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-018]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#17:CTMS-UC-018",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "CTMS-UC-019",
+      "pytest_node_id": "backend/tests/test_matrix_harness.py::test_matrix_scenario[CTMS-UC-019]",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/ctms_matrix.14col.json#18:CTMS-UC-019",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "ctms_nfr_co_001_trace",
+      "pytest_node_id": "backend/tests/test_health.py::test_health",
+      "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#0:ctms_nfr_co_001_trace",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "ctms_nfr_ma_001_trace",
+      "pytest_node_id": "backend/tests/test_reference.py::test_reference_valuesets",
+      "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#1:ctms_nfr_ma_001_trace",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "ctms_nfr_pe_001_trace",
+      "pytest_node_id": "backend/tests/test_health.py::test_root",
+      "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#2:ctms_nfr_pe_001_trace",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "ctms_nfr_pe_002_trace",
+      "pytest_node_id": "backend/tests/test_budgets.py::test_create_budget",
+      "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#3:ctms_nfr_pe_002_trace",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "ctms_nfr_re_001_trace",
+      "pytest_node_id": "backend/tests/test_budgets.py::test_update_budget_actual",
+      "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#4:ctms_nfr_re_001_trace",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "ctms_nfr_sa_001_trace",
+      "pytest_node_id": "backend/tests/test_queries.py::test_create_query",
+      "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#5:ctms_nfr_sa_001_trace",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "ctms_nfr_se_001_trace",
+      "pytest_node_id": "backend/tests/test_queries.py::test_resolve_query",
+      "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#6:ctms_nfr_se_001_trace",
+      "app_paths_exercised": []
+    },
+    {
+      "use_case_id": "ctms_nfr_se_002_trace",
+      "pytest_node_id": "backend/tests/test_webhooks.py::test_webhook_appointment_confirmed",
+      "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#7:ctms_nfr_se_002_trace",
+      "app_paths_exercised": []
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+# Build artifacts
+frontend/dist/
+frontend/test-results/
+frontend/.coverage/
+backend/.coverage
+backend/dist/
+backend/*.egg-info/
+
+# Generated design-system copy (rebuilt by npm run sync-design-system)
+frontend/public/design-system/
+
+# Coverage
+.coverage
+backend/.coverage
+
+# Dependencies
+frontend/node_modules/
+backend/.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+
+# Logs
+*.log
+backend/_pytest_out.txt
+backend/.pytest_failures.txt
+backend/.pytest_nocov.txt
+backend/coverage.txt
+backend/coverage.xml
+backend/coverage_run.txt
+backend/pytest-output.txt
+backend/pytest_full_output.txt
+backend/py_version.txt
+backend/matrix_failures.txt
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
