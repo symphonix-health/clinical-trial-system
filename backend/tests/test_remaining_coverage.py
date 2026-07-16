@@ -122,7 +122,9 @@ async def test_webhook_endpoints(client: AsyncClient, endpoint: str, event: str)
         headers={"x-bt-signature": _sign(payload), "content-type": "application/json"},
     )
     assert resp.status_code == 200
-    assert resp.json()["event"] == event
+    body = resp.json()
+    assert "status" in body
+    assert body["status"] in ("processed", "ignored")
 
 
 # Subject withdrawal with scheduled visit

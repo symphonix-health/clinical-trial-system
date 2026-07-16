@@ -308,6 +308,7 @@ class IpDispenseCreate(BaseSchema):
     product_id: int
     quantity_dispensed: int
     quantity_returned: int = 0
+    dispensed_by: str | None = None
 
 
 class IpDispenseOut(BaseSchema):
@@ -317,6 +318,7 @@ class IpDispenseOut(BaseSchema):
     product_id: int
     quantity_dispensed: int
     quantity_returned: int
+    dispensed_by: str | None
     destroyed_at: dt.datetime | None
     destroyed_by: str | None
 
@@ -354,6 +356,7 @@ class QueryCreate(BaseSchema):
     raised_by: str
     assigned_to: str | None = None
     due_date: dt.date | None = None
+    description: str | None = None
     linked_resource: str | None = None
 
 
@@ -368,6 +371,7 @@ class QueryOut(BaseSchema):
     study_id: int
     subject_id: int | None
     raised_by: str
+    description: str | None
     assigned_to: str | None
     status: str
     due_date: dt.date | None

@@ -288,6 +288,7 @@ class IpDispense(Base):
     product_id: Mapped[int] = mapped_column(ForeignKey("investigational_products.id"))
     quantity_dispensed: Mapped[int] = mapped_column(default=0)
     quantity_returned: Mapped[int] = mapped_column(default=0)
+    dispensed_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
     destroyed_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
     destroyed_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
 
@@ -302,6 +303,7 @@ class Query(Base):
     assigned_to: Mapped[str | None] = mapped_column(String(128), nullable=True)
     status: Mapped[str] = mapped_column(String(16), default=QueryStatus.open.value)
     due_date: Mapped[dt.date | None] = mapped_column(DateTime, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     resolution: Mapped[str | None] = mapped_column(Text, nullable=True)
     linked_resource: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
@@ -475,3 +477,42 @@ class AgentBiasReport(Base):
     metric_disparities: Mapped[dict[str, Any]] = mapped_column(JSON)
     drift_flags: Mapped[list[str]] = mapped_column(JSON)
     reviewer_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class AgentEscalation(Base):
+    __tablename__ = "agent_escalations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    event_id: Mapped[str] = mapped_column(String(64), index=True)
+    agent_subject_id: Mapped[int] = mapped_column(ForeignKey("agent_subjects.id"))
+    reason: Mapped[str] = mapped_column(Text)
+    severity: Mapped[str] = mapped_column(String(16), default="medium")
+    reviewed: Mapped[bool] = mapped_column(default=False)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class CouncilTrial(Base):
+    __tablename__ = "council_trials"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    event_id: Mapped[str] = mapped_column(String(64), index=True)
+    council_id: Mapped[str] = mapped_column(String(128))
+    outcome: Mapped[str] = mapped_column(Text)
+    ballot_summary: Mapped[dict[str, Any]] = mapped_column(JSON)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class IntegrationDispatch(Base):
+    __tablename__ = "integration_dispatches"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    event_id: Mapped[str] = mapped_column(String(64), index=True)
+    route: Mapped[str] = mapped_column(String(128))
+    receiver: Mapped[str] = mapped_column(String(64))
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON)
+    status: Mapped[str] = mapped_column(String(16), default="pending")
+    source_system: Mapped[str] = mapped_column(String(64), default="clinical-trial-system")
+    tenant_id: Mapped[str] = mapped_column(String(64), default="SYMPHONIX-DEFAULT")
+    correlation_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
+    sent_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
