@@ -33,7 +33,7 @@ jobs:
         run: mypy app
 
       - name: Run tests with coverage
-        run: pytest tests -q --tb=short --cov-fail-under=85
+        run: pytest tests -q --tb=short --cov-fail-under=100
 
   frontend:
     runs-on: ubuntu-latest

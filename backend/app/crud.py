@@ -193,7 +193,12 @@ async def create_subject(db: AsyncSession, obj_in: schemas.SubjectCreate) -> mod
 
 
 async def get_subject(db: AsyncSession, subject_id: int) -> models.Subject | None:
-    return await db.get(models.Subject, subject_id)
+    result = await db.execute(
+        select(models.Subject)
+        .where(models.Subject.id == subject_id)
+        .options(selectinload(models.Subject.visits))
+    )
+    return result.scalar_one_or_none()
 
 
 async def list_subjects(db: AsyncSession, study_id: int | None = None, site_id: int | None = None) -> list[models.Subject]:
@@ -260,14 +265,22 @@ async def create_visit(db: AsyncSession, obj_in: schemas.SubjectVisitCreate) -> 
 
 
 async def get_visit(db: AsyncSession, visit_id: int) -> models.SubjectVisit | None:
-    return await db.get(models.SubjectVisit, visit_id)
+    result = await db.execute(
+        select(models.SubjectVisit)
+        .where(models.SubjectVisit.id == visit_id)
+        .options(selectinload(models.SubjectVisit.subject))
+    )
+    return result.scalar_one_or_none()
 
 
 async def update_visit(db: AsyncSession, visit: models.SubjectVisit, obj_in: schemas.SubjectVisitUpdate) -> models.SubjectVisit:
     for field, value in obj_in.model_dump(exclude_unset=True).items():
         setattr(visit, field, value)
     if visit.actual_date and visit.status == models.VisitStatus.scheduled.value:
-        if visit.actual_date < visit.window_min_date or visit.actual_date > visit.window_max_date:
+        actual = visit.actual_date.date() if isinstance(visit.actual_date, dt.datetime) else visit.actual_date
+        min_date = visit.window_min_date.date() if isinstance(visit.window_min_date, dt.datetime) else visit.window_min_date
+        max_date = visit.window_max_date.date() if isinstance(visit.window_max_date, dt.datetime) else visit.window_max_date
+        if actual < min_date or actual > max_date:
             await create_protocol_deviation(
                 db,
                 schemas.ProtocolDeviationCreate(

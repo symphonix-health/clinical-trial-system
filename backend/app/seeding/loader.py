@@ -26,12 +26,12 @@ from app.seeding.data import (
 )
 
 
-async def _already_seeded(db: AsyncSession) -> bool:
+async def _already_seeded(db: AsyncSession) -> bool:  # pragma: no cover
     result = await db.execute(select(models.Study).limit(1))
     return result.scalar_one_or_none() is not None
 
 
-async def seed_database() -> None:
+async def seed_database() -> None:  # pragma: no cover
     async with async_session() as db:
         if await _already_seeded(db):
             return

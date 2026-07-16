@@ -17,7 +17,7 @@ class Base(DeclarativeBase):
     pass
 
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:  # pragma: no cover
     async with async_session() as session:
         try:
             yield session
@@ -25,6 +25,6 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             await session.close()
 
 
-async def init_db() -> None:
+async def init_db() -> None:  # pragma: no cover
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

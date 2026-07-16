@@ -12,7 +12,7 @@ from app.seeding.loader import seed_database
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):  # pragma: no cover
     settings = get_settings()
     await init_db()
     await seed_database()
