@@ -45,12 +45,16 @@ asyncio_mode = "auto"
 testpaths = ["tests"]
 pythonpath = ["app"]
 addopts = "--cov=app --cov-report=term-missing"
-# Coverage fail-under is enforced by CI (`pytest --cov-fail-under=85`) so that
-# CAID's subset-driven app-harness gate does not fail on partial coverage.
+# Full-suite coverage target (100%) is enforced by CI (`pytest --cov-fail-under=100`).
+# The default coverage fail-under is left at 0 so that CAID's subset-driven
+# app-harness gate does not fail on partial coverage.
 
 [tool.coverage.run]
 concurrency = ["thread", "greenlet"]
 source = ["app"]
+
+[tool.coverage.report]
+fail_under = 0
 
 [tool.ruff]
 line-length = 120

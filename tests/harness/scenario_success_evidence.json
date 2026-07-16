@@ -158,7 +158,7 @@
     },
     {
       "use_case_id": "ctms_nfr_se_002_trace",
-      "pytest_node_id": "backend/tests/test_webhooks.py::test_webhook_appointment_confirmed",
+      "pytest_node_id": "backend/tests/test_webhooks.py::test_webhook_appointment_confirmed_processed",
       "matrix_row_key": "tests/harness/nfr_canonical_matrices/ctms_nfr_auxiliary_canonical.json#7:ctms_nfr_se_002_trace",
       "app_paths_exercised": []
     }
