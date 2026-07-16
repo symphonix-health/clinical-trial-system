@@ -4,8 +4,9 @@ Constitution compliance (BulletTrain Integration Constitution / ADR-004):
   * This module is the ONLY place that performs outbound HTTP to sibling
     systems for CTMS-driven cascades.
   * CTMS workflow code calls these helpers; the helpers route through the
-    BulletTrain api_gateway cascade hub (``/integration-engine/dispatch``),
-    never dialling a receiver directly.
+    BulletTrain api_gateway connector hub
+    (``/v1/connectors/{connector_name}/exchange``), never dialling a receiver
+    directly.
   * If ``CTMS_CASCADE_HUB_URL`` is unset, the dispatch is queued locally in
     ``IntegrationDispatch`` and no network call is attempted. This keeps unit
     tests hermetic and production behaviour unchanged when the hub is not
@@ -36,12 +37,40 @@ class DispatchSchema(BaseModel):
     """Validated outbound dispatch envelope."""
 
     event_id: str = Field(min_length=3)
-    route: str = Field(pattern=r"^/integration-engine/|^ctms\.")
+    route: str = Field(pattern=r"^ctms\.")
     receiver: str = Field(min_length=2)
     payload: dict[str, Any]
     tenant_id: str = Field(default="SYMPHONIX-DEFAULT", min_length=3)
     source_system: str = Field(default="clinical-trial-system", min_length=2)
     correlation_id: str | None = Field(default=None, max_length=64)
+
+
+# Map receiver name -> BulletTrain connector manifest name. The hub selects the
+# target sibling connector by this name and then matches the resource_type to an
+# exchange route in that connector's manifest.
+_RECEIVER_CONNECTOR_MAP: dict[str, str] = {
+    "citizen-portal": "citizen_portal",
+    "appointment-system": "appointment_system",
+    "analytics-bi": "analytics_bi",
+    "pharmacy-system": "pharmacy_system",
+    "global-agent-registry": "global_agent_registry",
+}
+
+# Map CTMS dotted route -> exchange route resource_type expected by the target
+# sibling connector manifest.
+_ROUTE_RESOURCE_TYPE_MAP: dict[str, str] = {
+    "ctms.subject.enrolled": "SubjectEnrolled",
+    "ctms.visit.scheduled": "VisitScheduled",
+    "ctms.adverse_event.reported": "AdverseEventReported",
+    "ctms.ip.dispensed": "IpDispensed",
+    "ctms.agent.run_completed": "AgentRunCompleted",
+}
+
+
+def _hub_token() -> str:
+    """Resolve the hub bearer token from env, with a dev fallback."""
+
+    return os.environ.get("CTMS_HUB_API_TOKEN", "internal-hub-token").strip()
 
 
 @dataclass(frozen=True)
@@ -50,24 +79,27 @@ class ConnectorPolicy:
 
     max_attempts: int = 3
     timeout_seconds: float = 5.0
-    required_token: str = "internal-hub-token"
-    allowed_receivers: frozenset[str] = frozenset(
-        {
-            "provider-portal",
-            "pharmacy-system",
-            "eps",
-            "appointment-system",
-            "analytics-bi",
-            "citizen-portal",
-            "csaa",
-            "triage-api",
-            "global-agent-registry",
-            "nexus-a2a-protocol",
-            "symphonix-bridge-sdk",
-            "signalbox-mcp",
-        }
-    )
+    required_token: str = _hub_token()
+    allowed_receivers: frozenset[str] = frozenset(_RECEIVER_CONNECTOR_MAP)
     tenant_id: str = "SYMPHONIX-DEFAULT"
+
+
+def _connector_name(receiver: str) -> str:
+    """Resolve a receiver to its BulletTrain connector manifest name."""
+
+    name = _RECEIVER_CONNECTOR_MAP.get(receiver)
+    if not name:
+        raise IntegrationError(f"no connector mapping for receiver {receiver!r}")
+    return name
+
+
+def _resource_type(route: str) -> str:
+    """Resolve a CTMS dotted route to a connector exchange resource_type."""
+
+    resource_type = _ROUTE_RESOURCE_TYPE_MAP.get(route)
+    if not resource_type:
+        raise IntegrationError(f"no resource_type mapping for route {route!r}")
+    return resource_type
 
 
 def _authorise_receiver(receiver: str, policy: ConnectorPolicy) -> None:
@@ -86,12 +118,10 @@ def _check_tenant(validated: DispatchSchema, policy: ConnectorPolicy) -> None:
 
 
 def _normalise_route(route: str) -> str:
-    """Accept either a hub path or a dotted ctms route and normalise to hub path."""
+    """Validate and return a CTMS dotted route."""
 
-    if route.startswith("/integration-engine/"):
-        return route
     if route.startswith("ctms."):
-        return f"/integration-engine/{route.replace('.', '/')}"
+        return route
     raise IntegrationError(f"unsupported route format: {route}")
 
 
@@ -103,7 +133,7 @@ async def _deliver_via_cascade_hub(
     active_policy: ConnectorPolicy,
     http_client: httpx.AsyncClient | None = None,
 ) -> None:
-    """Best-effort delivery to the BulletTrain cascade hub.
+    """Best-effort delivery to the BulletTrain connector hub.
 
     On a 2xx response, mark ``dispatch.status`` as ``sent``. Transport errors
     are logged but not raised so the local queued row remains the only effect.
@@ -113,25 +143,40 @@ async def _deliver_via_cascade_hub(
     if not hub:
         return
 
+    connector_name = _connector_name(validated.receiver)
+    resource_type = _resource_type(validated.route)
+
     client = http_client
     owns_client = client is None
     if client is None:
         client = httpx.AsyncClient(timeout=active_policy.timeout_seconds)
 
     try:
-        envelope = {
+        # Canonical HubExchangeRequest accepted by
+        # services/api_gateway/connector_hub.py. The hub resolves the named
+        # connector manifest, selects the exchange route by resource_type,
+        # HMAC-signs the payload, and delivers to the receiver's webhook.
+        event = {
             "event_id": validated.event_id,
-            "route": dispatch.route,
-            "receiver": validated.receiver,
-            "payload": validated.payload,
-            "correlation_id": correlation_id,
+            "event_type": validated.route,
             "source_system": validated.source_system,
-            "tenant_id": validated.tenant_id,
+            "correlation_id": correlation_id,
+            "payload": validated.payload,
         }
-        target = hub.rstrip("/") + "/integration-engine/dispatch"
+        exchange_request = {
+            "tenant_id": validated.tenant_id,
+            "actor_id": validated.source_system,
+            "correlation_id": correlation_id,
+            "operation": "notify",
+            "resource_type": resource_type,
+            "purpose_of_use": "treatment",
+            "source_system": validated.source_system,
+            "payload": event,
+        }
+        target = hub.rstrip("/") + f"/v1/connectors/{connector_name}/exchange"
         resp = await client.post(
             target,
-            json=envelope,
+            json=exchange_request,
             headers={
                 "X-Correlation-Id": correlation_id,
                 "Authorization": f"Bearer {active_policy.required_token}",
@@ -165,8 +210,10 @@ async def dispatch_via_hub(
     """Queue and best-effort deliver an outbound CTMS integration event.
 
     The dispatch is always persisted in ``IntegrationDispatch``. If
-    ``CTMS_CASCADE_HUB_URL`` is set, the envelope is forwarded to the
-    BulletTrain api_gateway cascade hub; otherwise the row remains pending.
+    ``CTMS_CASCADE_HUB_URL`` is set, a canonical ``HubExchangeRequest`` is
+    forwarded to the BulletTrain api_gateway connector hub
+    (``/v1/connectors/{connector_name}/exchange``); otherwise the row remains
+    pending.
     """
 
     active_policy = policy_override or policy
