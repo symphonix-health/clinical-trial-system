@@ -14,6 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app import models, schemas
+from app.connectors import integration_engine
 
 
 def _next_subject_number(study_id: int, count: int) -> str:
@@ -227,6 +228,17 @@ async def record_consent(db: AsyncSession, subject: models.Subject, obj_in: sche
     db.add(consent)
     await db.commit()
     await db.refresh(consent)
+    # Cascade: notify citizen-portal that a subject has enrolled
+    try:
+        await integration_engine.notify_subject_enrolled(
+            db,
+            subject_id=subject.id,
+            study_id=subject.study_id,
+            site_id=subject.site_id or 0,
+            subject_number=subject.subject_number,
+        )
+    except integration_engine.IntegrationError:
+        pass  # hub delivery is best-effort; enrolment already persisted
     return consent
 
 
@@ -261,6 +273,16 @@ async def create_visit(db: AsyncSession, obj_in: schemas.SubjectVisitCreate) -> 
     db.add(visit)
     await db.commit()
     await db.refresh(visit)
+    # Cascade: notify appointment-system that a visit has been scheduled
+    try:
+        await integration_engine.notify_visit_scheduled(
+            db,
+            visit_id=visit.id,
+            subject_id=visit.subject_id,
+            scheduled_date=str(visit.scheduled_date),
+        )
+    except integration_engine.IntegrationError:
+        pass
     return visit
 
 
@@ -335,6 +357,17 @@ async def create_adverse_event(db: AsyncSession, obj_in: schemas.AdverseEventCre
     db.add(ae)
     await db.commit()
     await db.refresh(ae)
+    # Cascade: notify analytics-bi that an adverse event has been reported
+    try:
+        await integration_engine.notify_adverse_event(
+            db,
+            ae_id=ae.id,
+            subject_id=ae.subject_id,
+            study_id=ae.study_id,
+            seriousness=ae.seriousness,
+        )
+    except integration_engine.IntegrationError:
+        pass
     return ae
 
 
