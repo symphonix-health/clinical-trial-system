@@ -49,3 +49,13 @@ backend/matrix_failures.txt
 # OS
 .DS_Store
 Thumbs.db
+
+# SQLite write-ahead / journal artefacts (test runs leave these behind;
+# *.db and *.sqlite* are already ignored above but the -journal/-wal/-shm
+# sidecar files were not).
+*.db-journal
+*.db-wal
+*.db-shm
+
+# VS Code local task config (per-machine; keep settings.json ignored too).
+.vscode/tasks.json
