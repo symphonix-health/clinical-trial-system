@@ -1,0 +1,31 @@
+{
+  "schema_version": "CAID_MATRIX_INTEGRITY_BASELINE_V1",
+  "detector_version": 2,
+  "repo": "clinical-trial-system",
+  "recorded_at": "2026-07-30",
+  "recorded_by": "caid matrix-integrity --write-baseline",
+  "contract": "Per-file counts for the no-padding and requirement-binding invariants. `padded` and `undefined` are ALLOWANCES and may only ever go DOWN; a file absent from `files` is allowed ZERO, and once both totals reach 0 this repo is enforced at absolute zero automatically. Raising either is a gate failure -- see coverage-shrink-waivers.json (requirement_id 'baseline:<path>') if a raise is genuinely intended. `unbound` is VISIBILITY ONLY and is never a pass/fail lever: gating on it would reward a bulk script that attaches plausible requirement ids to untouched rows, turning an honest unbound count into dishonest traceability. Bindings added to a row whose executable substance did not change are rejected by the separate manufactured_binding check, which needs no baseline.",
+  "lever_metrics": [
+    "padded",
+    "undefined"
+  ],
+  "visibility_metrics": [
+    "unbound"
+  ],
+  "totals": {
+    "files_scanned": 2,
+    "files_with_findings": 1,
+    "rows": 119,
+    "padded": 0,
+    "unbound": 19,
+    "undefined": 0,
+    "weak_assertions_advisory": 0
+  },
+  "files": {
+    "tests/harness/reduced_json_matrices/ctms_matrix.14col.json": {
+      "padded": 0,
+      "unbound": 19,
+      "undefined": 0
+    }
+  }
+}
