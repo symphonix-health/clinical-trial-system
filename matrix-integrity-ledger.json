@@ -1,0 +1,90 @@
+{
+  "schema_version": "CAID_MATRIX_INTEGRITY_LEDGER_V1",
+  "repo": "clinical-trial-system",
+  "recorded_at": "2026-07-30",
+  "note": "Rekeys only. No row was deleted or tombstoned in this repo, so there are no tombstone entries and the retention obligation for deleted audit evidence is not engaged.",
+  "tombstones": [],
+  "replacements": [],
+  "rekeys": [
+    {
+      "requirement_id": "NFR-C-SE-001",
+      "from_atom": "b70cd17b7ba1d88fe1616fbd7685b9af",
+      "to_atom": "051bb047a9a2d2166cb6dd14da4d9a20",
+      "use_case_id": "ctms_POS_0032",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-SEC-001). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "NFR-C-SE-002",
+      "from_atom": "faf25fb00aa1a2c9ad32ccbc0400d663",
+      "to_atom": "cc2932c7e0f5980450377229b164359f",
+      "use_case_id": "ctms_POS_0033",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-SEC-002). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "NFR-C-SE-001",
+      "from_atom": "da4210c5e21e928bb191a904c20a5168",
+      "to_atom": "18a9ac427c7462a462e5de78c9f1712d",
+      "use_case_id": "ctms_POS_0069",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-SEC-001). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "NFR-C-SE-002",
+      "from_atom": "32e79144b5a5854f6161f680ea340c2c",
+      "to_atom": "cb0fcd9dc0f60e2a9dd6b6c82ec4c60e",
+      "use_case_id": "ctms_POS_0070",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-SEC-002). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "FR-C-43",
+      "from_atom": "cd2333207e969203741b5ba7fb2e2012",
+      "to_atom": "e05e51b1e82368b82dc3210e59c627d0",
+      "use_case_id": "ctms_NEG_0005",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-VAL-001). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "FR-C-52",
+      "from_atom": "aaf8bf0778c44e6ff1b310ffe3fe178d",
+      "to_atom": "448c885ed6010490ae21c1425eaa12ad",
+      "use_case_id": "ctms_NEG_0008",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-RPT-001). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "FR-C-61",
+      "from_atom": "15301942673d2a7c924b29921c37342f",
+      "to_atom": "d054e6b1a8417fa1ce0a9edaca9c00a6",
+      "use_case_id": "ctms_NEG_0010",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-VAL-002). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "FR-C-72",
+      "from_atom": "74901ca50b14d6474b3558e23b22b93e",
+      "to_atom": "63d9adf41b0bc1e020a9e628b039f062",
+      "use_case_id": "ctms_EDG_0003",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-IP-001). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "FR-C-81",
+      "from_atom": "122dcf9c1890d55ac398d0a5e610102e",
+      "to_atom": "17a025354b00752342ec2ba56f3f9a43",
+      "use_case_id": "ctms_EDG_0004",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-FIN-001). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "FR-C-83",
+      "from_atom": "053a88b1faf0ae971599107f234ca99b",
+      "to_atom": "c413bf0b569f2fddbb2a681d51ca5191",
+      "use_case_id": "ctms_EDG_0005",
+      "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-FIN-002). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
+      "date": "2026-07-30"
+    }
+  ]
+}

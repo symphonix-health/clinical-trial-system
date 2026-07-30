@@ -192,7 +192,9 @@ async def test_matrix_rows_execute_against_the_real_app(
 
     resolver = _Resolver(seeded_client)
     failures: list[str] = []
+    fixed: list[str] = []
     executed = 0
+    blocked = 0
 
     for entry in EXECUTABLE:
         row = entry["row"]
@@ -200,6 +202,7 @@ async def test_matrix_rows_execute_against_the_real_app(
         payload = row.get("input_payload") or {}
         method = (payload.get("method") or "GET").upper()
         expected = (row.get("expected_outputs") or {}).get("http_status")
+        defect = row.get("blocked_on_defect")
 
         path = await resolver.sub_str(payload.get("path") or "")
         request: dict[str, Any] = {"params": await resolver.sub(payload.get("query") or {})}
@@ -213,14 +216,39 @@ async def test_matrix_rows_execute_against_the_real_app(
             continue
 
         executed += 1
-        if response.status_code != expected:
+        matched = response.status_code == expected
+
+        if defect:
+            # This row's expectation is what the REQUIREMENT demands, not what the
+            # code currently does: the scenario and the requirement agree and the
+            # code is the outlier. It is asserted to STILL FAIL. When the defect is
+            # fixed the row starts matching, and THAT is what we report -- so a fix
+            # can never pass silently while the row still claims to be blocked.
+            blocked += 1
+            if matched:
+                fixed.append(
+                    f"{entry['matrix']}::{uid} {method} {path} now returns the "
+                    f"required {expected}: defect {defect} appears FIXED -- remove "
+                    f"blocked_on_defect from this row so it becomes live coverage"
+                )
+            continue
+
+        if not matched:
             failures.append(
                 f"{entry['matrix']}::{uid} {method} {path} "
                 f"expected {expected}, observed {response.status_code} "
                 f"({response.text[:120]!r})"
             )
 
+    print(
+        f"\nexecuted {executed} rows; {blocked} held at the requirement's expectation "
+        f"pending a code fix (blocked_on_defect)."
+    )
     assert executed == len(EXECUTABLE), f"only {executed}/{len(EXECUTABLE)} dispatched"
+    assert not fixed, (
+        f"{len(fixed)} blocked-on-defect row(s) now satisfy their requirement:\n"
+        + "\n".join(fixed)
+    )
     assert not failures, (
         f"{len(failures)}/{len(EXECUTABLE)} matrix rows did not match observed "
         "behaviour:\n" + "\n".join(failures[:40])

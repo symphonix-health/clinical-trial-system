@@ -711,6 +711,25 @@
             "canonical_hash_after": "0da41a6bf43dfbc9"
           }
         ]
+      },
+      "blocked_on_defect": {
+        "doctrine": "point 1 -- where the scenario and the requirement agree but the CODE disagrees, the CODE is the outlier: the expectation is NOT amended to observed behaviour.",
+        "rows": 10,
+        "defects": [
+          "CTMS-FIN-001",
+          "CTMS-FIN-002",
+          "CTMS-IP-001",
+          "CTMS-RPT-001",
+          "CTMS-SEC-001",
+          "CTMS-SEC-002",
+          "CTMS-VAL-001",
+          "CTMS-VAL-002"
+        ],
+        "harness_contract": "a row carrying blocked_on_defect is asserted to STILL FAIL; when the code starts satisfying it the harness fails and instructs removal of the flag, so a fix can never land silently.",
+        "deliberately_not_blocked": {
+          "FR-C-62#2 (late SUSAR accepted, 200)": "FR-C-62 escalates past-deadline SUSARs rather than rejecting the report, so 200 is the REQUIRED behaviour",
+          "FR-C-71#2 (shipment receipt accepted, 200)": "FR-C-71 requires receipt to be accepted and inventory incremented, so 200 is the REQUIRED behaviour"
+        }
       }
     }
   },
@@ -3088,7 +3107,7 @@
       ],
       "scenario_category": "Positive",
       "title": "GAP: request with no credentials is served -- no authentication layer exists",
-      "description": "NFR-C-SE-001 requires every API request to carry a valid OIDC JWT and requests with missing tokens to be rejected. Dispatched with NO Authorization header. The app registers only CORSMiddleware and declares no auth dependency, so the request is served. Recorded as OBSERVED and tagged requirement-unmet -- this expectation documents a defect, it does not ratify one.",
+      "description": "NFR-C-SE-001 requires every API request to carry a valid OIDC JWT and requests with missing tokens to be rejected. Dispatched with NO Authorization header. The app registers only CORSMiddleware and declares no auth dependency, so the request is served. Recorded as OBSERVED and tagged requirement-unmet -- this expectation documents a defect, it does not ratify one. EXPECTATION HELD AT 401, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-SEC-001; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "no authentication middleware configured in app.main"
       ],
@@ -3109,14 +3128,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 401,
         "final_status": "SUCCESS",
         "observed_latency_ms": 108.9,
         "requirement_intent": "credential-less request rejected",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 401"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -3140,13 +3160,17 @@
       "tags": [
         "nfr",
         "security",
+        "defect-CTMS-SEC-001",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-SEC-001"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-SEC-001"
+      "defect_reference": "CTMS-SEC-001",
+      "blocked_on_defect": "CTMS-SEC-001",
+      "requirement_demands": "NFR-C-SE-001 requires a valid OIDC JWT on every request and missing tokens to be REJECTED"
     },
     {
       "use_case_id": "ctms_POS_0033",
@@ -3156,7 +3180,7 @@
       ],
       "scenario_category": "Positive",
       "title": "GAP: study creation succeeds without any role assertion -- no RBAC exists",
-      "description": "NFR-C-SE-002 requires role-based access control so only permitted roles act. POST a study with no role context at all. No route in the app declares a role dependency, so creation succeeds. Recorded as OBSERVED and tagged requirement-unmet.",
+      "description": "NFR-C-SE-002 requires role-based access control so only permitted roles act. POST a study with no role context at all. No route in the app declares a role dependency, so creation succeeds. Recorded as OBSERVED and tagged requirement-unmet. EXPECTATION HELD AT 403, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-SEC-002; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "no role dependency declared on any route"
       ],
@@ -3195,14 +3219,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 403,
         "final_status": "SUCCESS",
         "observed_latency_ms": 82.7,
         "requirement_intent": "creation refused for a caller without the sponsor-manager role",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 403"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -3227,13 +3252,17 @@
         "nfr",
         "security",
         "rbac",
+        "defect-CTMS-SEC-002",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-SEC-002"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-SEC-002"
+      "defect_reference": "CTMS-SEC-002",
+      "blocked_on_defect": "CTMS-SEC-002",
+      "requirement_demands": "NFR-C-SE-002 requires RBAC; study creation by a caller with no role must be refused"
     },
     {
       "use_case_id": "ctms_POS_0034",
@@ -5668,7 +5697,7 @@
       ],
       "scenario_category": "Positive",
       "title": "GAP: request with a tampered bearer token is served unchanged",
-      "description": "Same requirement, tampered-token limb. Dispatched with a syntactically invalid bearer token. With no auth layer the header is ignored entirely, so the response is indistinguishable from the credential-less case. Recorded as OBSERVED and tagged requirement-unmet.",
+      "description": "Same requirement, tampered-token limb. Dispatched with a syntactically invalid bearer token. With no auth layer the header is ignored entirely, so the response is indistinguishable from the credential-less case. Recorded as OBSERVED and tagged requirement-unmet. EXPECTATION HELD AT 401, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-SEC-001; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "no authentication middleware configured in app.main"
       ],
@@ -5689,14 +5718,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 401,
         "final_status": "SUCCESS",
         "observed_latency_ms": 157.0,
         "requirement_intent": "tampered token rejected",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 401"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -5720,13 +5750,17 @@
       "tags": [
         "nfr",
         "security",
+        "defect-CTMS-SEC-001",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-SEC-001"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-SEC-001"
+      "defect_reference": "CTMS-SEC-001",
+      "blocked_on_defect": "CTMS-SEC-001",
+      "requirement_demands": "NFR-C-SE-001 requires tampered tokens to be REJECTED"
     },
     {
       "use_case_id": "ctms_POS_0070",
@@ -5736,7 +5770,7 @@
       ],
       "scenario_category": "Positive",
       "title": "GAP: site activation status is mutable without any role assertion",
-      "description": "Same requirement, privileged-mutation limb. PATCH a site's activation status -- an action NFR-C-SE-002 reserves to a regulatory officer -- with no role context. It succeeds. Recorded as OBSERVED and tagged requirement-unmet.",
+      "description": "Same requirement, privileged-mutation limb. PATCH a site's activation status -- an action NFR-C-SE-002 reserves to a regulatory officer -- with no role context. It succeeds. Recorded as OBSERVED and tagged requirement-unmet. EXPECTATION HELD AT 403, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-SEC-002; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "no role dependency declared on any route"
       ],
@@ -5761,14 +5795,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 403,
         "final_status": "SUCCESS",
         "observed_latency_ms": 73.3,
         "requirement_intent": "activation refused for a caller without the regulatory-officer role",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 403"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -5793,13 +5828,17 @@
         "nfr",
         "security",
         "rbac",
+        "defect-CTMS-SEC-002",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-SEC-002"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-SEC-002"
+      "defect_reference": "CTMS-SEC-002",
+      "blocked_on_defect": "CTMS-SEC-002",
+      "requirement_demands": "NFR-C-SE-002 reserves site activation to a regulatory officer; a caller with no role must be refused"
     },
     {
       "use_case_id": "ctms_POS_0071",
@@ -7117,7 +7156,7 @@
       ],
       "scenario_category": "Negative",
       "title": "DEFECT: an unrecognised visit status is accepted and stored verbatim",
-      "description": "FR-C-43 depends on visit status to distinguish missed from completed visits. PATCH with status 'not-a-real-status' returns 200 and the value is read back unchanged (proven by read-back), so status is not enum-validated. A missed visit can therefore be recorded as any string, defeating the missed-visit sweep and ProtocolDeviation creation this requirement mandates. Recorded expectation is the OBSERVED 200 and the row is tagged requirement-unmet: this documents the defect, it does not ratify it.",
+      "description": "FR-C-43 depends on visit status to distinguish missed from completed visits. PATCH with status 'not-a-real-status' returns 200 and the value is read back unchanged (proven by read-back), so status is not enum-validated. A missed visit can therefore be recorded as any string, defeating the missed-visit sweep and ProtocolDeviation creation this requirement mandates. Recorded expectation is the OBSERVED 200 and the row is tagged requirement-unmet: this documents the defect, it does not ratify it. EXPECTATION HELD AT 422, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-VAL-001; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "a visit exists"
       ],
@@ -7142,14 +7181,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 422,
         "final_status": "SUCCESS",
         "observed_latency_ms": 45.2,
         "requirement_intent": "refused as unprocessable",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 422"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -7173,13 +7213,17 @@
       "tags": [
         "visits",
         "validation",
+        "defect-CTMS-VAL-001",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-VAL-001"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-VAL-001"
+      "defect_reference": "CTMS-VAL-001",
+      "blocked_on_defect": "CTMS-VAL-001",
+      "requirement_demands": "FR-C-43 relies on visit status to separate missed from completed visits; an unrecognised status must be refused or the missed-visit sweep is unsound"
     },
     {
       "use_case_id": "ctms_NEG_0006",
@@ -7331,7 +7375,7 @@
       ],
       "scenario_category": "Negative",
       "title": "DEFECT: eTMF completeness report is returned for a study that does not exist",
-      "description": "GET the eTMF report for absent study 999999 returns 200 with {'study_id':999999,'folders':[],'expired_count':0}. A caller cannot distinguish 'this study has no expired documents' from 'this study does not exist' -- the reading that matters for FR-C-52's expired-document flagging. The recruitment and safety reports share the defect; ip-accountability correctly returns 400, which is the control proving the guard is feasible. Recorded expectation is the OBSERVED 200, tagged requirement-unmet.",
+      "description": "GET the eTMF report for absent study 999999 returns 200 with {'study_id':999999,'folders':[],'expired_count':0}. A caller cannot distinguish 'this study has no expired documents' from 'this study does not exist' -- the reading that matters for FR-C-52's expired-document flagging. The recruitment and safety reports share the defect; ip-accountability correctly returns 400, which is the control proving the guard is feasible. Recorded expectation is the OBSERVED 200, tagged requirement-unmet. EXPECTATION HELD AT 404, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-RPT-001; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "study id 999999 absent"
       ],
@@ -7352,14 +7396,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 404,
         "final_status": "SUCCESS",
         "observed_latency_ms": 17.8,
         "requirement_intent": "refused as not found",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 404"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -7383,13 +7428,17 @@
       "tags": [
         "reports",
         "etmf",
+        "defect-CTMS-RPT-001",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-RPT-001"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-RPT-001"
+      "defect_reference": "CTMS-RPT-001",
+      "blocked_on_defect": "CTMS-RPT-001",
+      "requirement_demands": "FR-C-52 reports completeness for a real study; a report for an absent study must be refused, as /reports/ip-accountability already does with 400"
     },
     {
       "use_case_id": "ctms_NEG_0009",
@@ -7464,7 +7513,7 @@
       ],
       "scenario_category": "Negative",
       "title": "DEFECT: an adverse event with an unrecognised severity is accepted and stored",
-      "description": "FR-C-61 computes a regulatory reporting deadline from severity, seriousness and causality. POST with severity 'catastrophically-bad' returns 200 and the value is read back unchanged, so severity is not enum-validated despite ae_seriousness being an published reference value set. An unclassifiable severity cannot drive a 7- or 15-day SUSAR deadline. Recorded expectation is the OBSERVED 200, tagged requirement-unmet.",
+      "description": "FR-C-61 computes a regulatory reporting deadline from severity, seriousness and causality. POST with severity 'catastrophically-bad' returns 200 and the value is read back unchanged, so severity is not enum-validated despite ae_seriousness being an published reference value set. An unclassifiable severity cannot drive a 7- or 15-day SUSAR deadline. Recorded expectation is the OBSERVED 200, tagged requirement-unmet. EXPECTATION HELD AT 422, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-VAL-002; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "study and subject exist"
       ],
@@ -7499,14 +7548,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 422,
         "final_status": "SUCCESS",
         "observed_latency_ms": 30.8,
         "requirement_intent": "refused as unprocessable",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 422"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -7530,13 +7580,17 @@
       "tags": [
         "safety",
         "validation",
+        "defect-CTMS-VAL-002",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-VAL-002"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-VAL-002"
+      "defect_reference": "CTMS-VAL-002",
+      "blocked_on_defect": "CTMS-VAL-002",
+      "requirement_demands": "FR-C-61 derives a 7/15-day SUSAR deadline from severity; a severity outside the published ae_seriousness value set must be refused"
     },
     {
       "use_case_id": "ctms_EDG_0001",
@@ -7699,7 +7753,7 @@
       ],
       "scenario_category": "Edge",
       "title": "DEFECT: dispensing more units than are on hand drives inventory negative",
-      "description": "Proven by read-back: product on_hand 200, dispense of 100200 accepted with 200, on_hand afterwards -100000. FR-C-72 requires the dispense to decrement inventory; there is no sufficiency check, so accountability goes negative and the FR-C-74 close-out identity (shipped - dispensed - returned - destroyed = on-hand) cannot balance. This is a regulated IP-accountability control. Recorded expectation is the OBSERVED 200, tagged requirement-unmet.",
+      "description": "Proven by read-back: product on_hand 200, dispense of 100200 accepted with 200, on_hand afterwards -100000. FR-C-72 requires the dispense to decrement inventory; there is no sufficiency check, so accountability goes negative and the FR-C-74 close-out identity (shipped - dispensed - returned - destroyed = on-hand) cannot balance. This is a regulated IP-accountability control. Recorded expectation is the OBSERVED 200, tagged requirement-unmet. EXPECTATION HELD AT 422, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-IP-001; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "product on-hand quantity below the requested amount"
       ],
@@ -7730,14 +7784,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 422,
         "final_status": "SUCCESS",
         "observed_latency_ms": 29.6,
         "requirement_intent": "refused as unprocessable",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 422"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -7762,13 +7817,17 @@
         "ip",
         "dispense",
         "edge",
+        "defect-CTMS-IP-001",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-IP-001"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-IP-001"
+      "defect_reference": "CTMS-IP-001",
+      "blocked_on_defect": "CTMS-IP-001",
+      "requirement_demands": "FR-C-72 and FR-C-74 require IP accountability to balance; a dispense exceeding on-hand inventory must be refused, not allowed to drive on-hand negative"
     },
     {
       "use_case_id": "ctms_EDG_0004",
@@ -7778,7 +7837,7 @@
       ],
       "scenario_category": "Edge",
       "title": "DEFECT: a budget category with a negative planned amount is accepted",
-      "description": "POST planned_amount -25000.00 returns 200 and the negative value is echoed and stored. FR-C-81 makes the planned budget the baseline actuals accumulate against; a negative plan inverts every downstream variance. Recorded expectation is the OBSERVED 200, tagged requirement-unmet.",
+      "description": "POST planned_amount -25000.00 returns 200 and the negative value is echoed and stored. FR-C-81 makes the planned budget the baseline actuals accumulate against; a negative plan inverts every downstream variance. Recorded expectation is the OBSERVED 200, tagged requirement-unmet. EXPECTATION HELD AT 422, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-FIN-001; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "study exists"
       ],
@@ -7809,14 +7868,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 422,
         "final_status": "SUCCESS",
         "observed_latency_ms": 18.3,
         "requirement_intent": "refused as unprocessable",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 422"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -7841,13 +7901,17 @@
         "budgets",
         "edge",
         "validation",
+        "defect-CTMS-FIN-001",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-FIN-001"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-FIN-001"
+      "defect_reference": "CTMS-FIN-001",
+      "blocked_on_defect": "CTMS-FIN-001",
+      "requirement_demands": "FR-C-81 makes the planned budget the baseline actuals accrue against; a negative planned amount must be refused"
     },
     {
       "use_case_id": "ctms_EDG_0005",
@@ -7857,7 +7921,7 @@
       ],
       "scenario_category": "Edge",
       "title": "DEFECT: an invoice for a negative amount is accepted as a draft invoice",
-      "description": "POST amount -500.00 returns 200 and the negative value is stored. FR-C-83 generates a draft invoice from actuals for routing to the sponsor; a negative amount is a credit note and must not pass as an invoice. Recorded expectation is the OBSERVED 200, tagged requirement-unmet.",
+      "description": "POST amount -500.00 returns 200 and the negative value is stored. FR-C-83 generates a draft invoice from actuals for routing to the sponsor; a negative amount is a credit note and must not pass as an invoice. Recorded expectation is the OBSERVED 200, tagged requirement-unmet. EXPECTATION HELD AT 422, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-FIN-002; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
       "preconditions": [
         "study exists"
       ],
@@ -7888,14 +7952,15 @@
       "expected_connector_calls": [],
       "expected_events": [],
       "expected_outputs": {
-        "http_status": 200,
+        "http_status": 422,
         "final_status": "SUCCESS",
         "observed_latency_ms": 22.0,
         "requirement_intent": "refused as unprocessable",
         "requirement_status": "UNMET",
         "assertions": [
-          "http_status == 200"
-        ]
+          "http_status == 422"
+        ],
+        "observed_status_at_authoring": 200
       },
       "fault_profile": {
         "inject_at": "none",
@@ -7920,13 +7985,17 @@
         "budgets",
         "invoice",
         "edge",
+        "defect-CTMS-FIN-002",
         "requirement-unmet",
+        "blocked-on-defect",
         "defect-CTMS-FIN-002"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-FIN-002"
+      "defect_reference": "CTMS-FIN-002",
+      "blocked_on_defect": "CTMS-FIN-002",
+      "requirement_demands": "FR-C-83 generates a draft invoice for sponsor routing; a negative amount is a credit note and must be refused"
     }
   ]
 }

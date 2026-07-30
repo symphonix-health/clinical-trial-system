@@ -1,6 +1,6 @@
 {
   "schema_version": "CAID_MATRIX_INTEGRITY_BASELINE_V1",
-  "detector_version": 2,
+  "detector_version": 3,
   "repo": "clinical-trial-system",
   "recorded_at": "2026-07-30",
   "recorded_by": "caid matrix-integrity --write-baseline",
@@ -12,6 +12,7 @@
   "visibility_metrics": [
     "unbound"
   ],
+  "atom_contract": "`atoms` maps each requirement id to the canonical body hashes bound to it. A coverage ATOM is the PAIR (requirement_id, hash). Deleting duplicate rows that share an atom removes NO atom and is always permitted -- that is why padding deletion needs no waiver. Losing the LAST atom of an active requirement is blocked unless matrix-integrity-ledger.json carries a rekey, an enumerated equivalent-or-stronger replacement, or a tombstone with a fixed reason code. Every binding here is CANDIDATE, not VERIFIED: none has survived a mutation/negation test, because nothing in this corpus has ever executed.",
   "totals": {
     "files_scanned": 2,
     "files_with_findings": 1,
@@ -19,7 +20,9 @@
     "padded": 0,
     "unbound": 19,
     "undefined": 0,
-    "weak_assertions_advisory": 0
+    "weak_assertions_advisory": 0,
+    "requirements_with_atoms": 37,
+    "atoms": 100
   },
   "files": {
     "tests/harness/reduced_json_matrices/ctms_matrix.14col.json": {
@@ -27,5 +30,181 @@
       "unbound": 19,
       "undefined": 0
     }
+  },
+  "atoms": {
+    "FR-C-11": [
+      "6a97b3edff738433752fccb59ce7a1bb",
+      "b60059ab7fa2a586d1a82e81ecc56215",
+      "fd87e1984ceb24fb165b8b294e03da4d"
+    ],
+    "FR-C-12": [
+      "aa1a9ba3ff7b946bb87b3e0fd912357f",
+      "d58611baf44735920ce2cedfbd023a25",
+      "ec9596cc9c06c9ac79ab21451827108f"
+    ],
+    "FR-C-13": [
+      "6162cb47951f916dff24ceb49239b369",
+      "cfd130a9afe7b86c865751220fb8e91b",
+      "d01df7d12f5cd6a9249aea9301119976"
+    ],
+    "FR-C-14": [
+      "0ef39e6442824d92551da119e800474c",
+      "3b1f1c331abacfabb4f8fb4611f0b44b",
+      "607c9402d4b670e85c4f44f83a0cab1d"
+    ],
+    "FR-C-21": [
+      "0cc5f2fa92840e1ad2ce63a12513a71f",
+      "3fbde8b07c513ab15ea24aa5c6fbcb15",
+      "ce277e4c965d6bb4315a6f9b455b33a8"
+    ],
+    "FR-C-22": [
+      "689af253618225c469a024ef086daee8",
+      "8d35c1d779f7701c5aebf44ff5d10843",
+      "bbd2fcec0bc3971163c3264dc04dfc68"
+    ],
+    "FR-C-23": [
+      "10a9d87889bab9c8b3e46c8e8637ba7b",
+      "7f8fcd8bd70e4e26a74d95959fe2b3b0",
+      "de5c528b26b688ad632cc7152be17a83"
+    ],
+    "FR-C-24": [
+      "2ddb2f06853cae99d21f70993354ab07",
+      "6fed5661db851de74bbf1e2399d66fcd",
+      "92844fb761f9d2da33f0755f48112978"
+    ],
+    "FR-C-31": [
+      "4d406289d2ec0c0eec1043add7c621a3",
+      "af6ce8abe78477243edc7ce002208b74",
+      "c2a4c9c8ac825842f8f0167b3d43a8da"
+    ],
+    "FR-C-32": [
+      "4deee5fc84a762386a72d1f2b58efe1f",
+      "77bae54bd9567344bb96ae11705c6e5b",
+      "7c8d913148ec610ce1fb3be3634838c4"
+    ],
+    "FR-C-33": [
+      "1c75b95dc3012aa69eed84aaaa5ff6b3",
+      "6ce9aba3435e9131532f6dd3d5be014c",
+      "ab699041552bb816f2112d06cc352168"
+    ],
+    "FR-C-34": [
+      "62e812b99c66dd69ef4f7d344f953a28",
+      "76a0e16bc262241b67d9c5cc370023fa",
+      "967208bd8e8564a2be7eee283c4423df"
+    ],
+    "FR-C-35": [
+      "7d0e0955449448a584a15611a4de10dd",
+      "9b9204eb8e623fa78f2e5c824ecf13fd",
+      "f65a3f7f750638a7cab065e90b8eb389"
+    ],
+    "FR-C-41": [
+      "4a023686d1ca01c79d8522f3bbd4b5d7",
+      "807082443e094572ceb846707724cadb",
+      "a63937a604d18e91122309796a6098b7"
+    ],
+    "FR-C-42": [
+      "0c7badc5f7a581782dd9af50da2facaf",
+      "11254a580c7062beffb0ccd5da4e008c",
+      "1ad79bdc346f6f9f10d00a2bffe532fc"
+    ],
+    "FR-C-43": [
+      "0fa9fbf97367a76d005ef20bf8beeb12",
+      "9e8692154c938b2b2bee1c54fcf521ba",
+      "e05e51b1e82368b82dc3210e59c627d0"
+    ],
+    "FR-C-44": [
+      "55faabf03d2ab5c55ea211191c727772",
+      "6b991622507d0929eef5d393e4e3daf3",
+      "7cc7c905ff342e37fbb328ab45ccd6b7"
+    ],
+    "FR-C-51": [
+      "177b6423b80d5c020fd6700ab6e11eed",
+      "210fab05738b14bd3f4e33415b4144c8",
+      "ea0ba0ed15bb6ecbdf773168ca3c419e"
+    ],
+    "FR-C-52": [
+      "2488a9dcbd4be2e024156bd0c7818d7c",
+      "448c885ed6010490ae21c1425eaa12ad",
+      "63ff8bec563a3ade19435222f72f7905"
+    ],
+    "FR-C-53": [
+      "28af01fd074537690f24333a6a1422b8",
+      "67e301f0cceafcb75c86c79ac75018fd",
+      "93ca91f28e440baa81f97fa8443f5df6"
+    ],
+    "FR-C-61": [
+      "2a5b3e76429eceb375374d249078907c",
+      "7c20feed7dc3023a4e9935840494654c",
+      "d054e6b1a8417fa1ce0a9edaca9c00a6"
+    ],
+    "FR-C-62": [
+      "6acc2ba4ab23086d62201801843eec16",
+      "9c3c56f329806471d1099233ccb224ac",
+      "f62bb4c5cbc7d8156637e61047aebc19"
+    ],
+    "FR-C-71": [
+      "0efed89b5f4ae968c3bae57f2dabce60",
+      "5bca7458af5ef88d661b2f8af5df7f06",
+      "b7be223acb4ef19cd0e70f4b712edd19"
+    ],
+    "FR-C-72": [
+      "57c7ee2b8183042112576945bd751164",
+      "63d9adf41b0bc1e020a9e628b039f062",
+      "85ce02eaaccf905e65346c88df4778f6"
+    ],
+    "FR-C-81": [
+      "17a025354b00752342ec2ba56f3f9a43",
+      "355f2b5eea4c12c5727b69ca1840ae4f",
+      "f5eda2c096d8ab3128c4763814d3c267"
+    ],
+    "FR-C-83": [
+      "afecbbbf12775a3f7a77150d6b5cadd8",
+      "c413bf0b569f2fddbb2a681d51ca5191",
+      "f59c3ac3defd8c295728ec809caf5b72"
+    ],
+    "FR-C-91": [
+      "11cbf91225b8a9d49ab0cc8cad89b060",
+      "c9db0dccba5db3620956cbb9c1382eca"
+    ],
+    "FR-C-A11": [
+      "d5048d49e1ab1b08c1b29f9e7bdb98c4",
+      "e5f0958db0cd8a9aa89e61b3c096290b"
+    ],
+    "FR-C-A12": [
+      "75fa8599caef946c83ab9c09aa34a27f",
+      "eff0f2d8b07273ae192777de5f76a8f9"
+    ],
+    "NFR-C-CO-001": [
+      "4c8a0940f5039e81b4c4356d0cca4284",
+      "8dcaa8b4b0cf6176744181410d7960db"
+    ],
+    "NFR-C-MA-001": [
+      "6ce7b129f3e8e4759b029c5867a777ac",
+      "b778c9543adda60f76aadae64b8a026d"
+    ],
+    "NFR-C-PE-001": [
+      "05f238f27d88da17265ec4d9325ef8ce",
+      "ee0c1049069135a8f79756e1a7e5b2bd"
+    ],
+    "NFR-C-PE-002": [
+      "30be35e7f30c668ca2027ecc568e11ef",
+      "e8893ad58aa21ee74f85ac3fcc14fc3f"
+    ],
+    "NFR-C-RE-001": [
+      "9763d1e9713e16b8970772ee9dc407f0",
+      "cb1df0b697621a8be4b0c2dfa36ccdd2"
+    ],
+    "NFR-C-SA-001": [
+      "8a94efd1e0d9e714af97f4ed5fb25031",
+      "ccabdf10c143eac7f67e29cd1b9d6b69"
+    ],
+    "NFR-C-SE-001": [
+      "051bb047a9a2d2166cb6dd14da4d9a20",
+      "18a9ac427c7462a462e5de78c9f1712d"
+    ],
+    "NFR-C-SE-002": [
+      "cb0fcd9dc0f60e2a9dd6b6c82ec4c60e",
+      "cc2932c7e0f5980450377229b164359f"
+    ]
   }
 }
