@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "sync-design-system": "powershell -ExecutionPolicy Bypass -File scripts/sync-design-system.ps1",
+    "sync-design-system": "sh scripts/sync-design-system.sh",
     "dev": "npm run sync-design-system && vite",
     "build": "npm run sync-design-system && tsc && vite build",
     "typecheck": "tsc --noEmit",
