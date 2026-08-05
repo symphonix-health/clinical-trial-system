@@ -30,7 +30,11 @@ async def get_query(query_id: int, db: AsyncSession = Depends(get_db)) -> schema
 
 
 @router.patch("/{query_id}", response_model=schemas.QueryOut)
-async def update_query(query_id: int, data: schemas.QueryUpdate, db: AsyncSession = Depends(get_db)) -> schemas.QueryOut:
+async def update_query(
+    query_id: int,
+    data: schemas.QueryUpdate,
+    db: AsyncSession = Depends(get_db)
+) -> schemas.QueryOut:
     query = await crud.get_query(db, query_id)
     if not query:
         raise HTTPException(status_code=404, detail="Query not found")

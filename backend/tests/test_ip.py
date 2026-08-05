@@ -77,7 +77,10 @@ async def test_shipment_receipt_updates_inventory(client: AsyncClient) -> None:
             },
         )
     ).json()["id"]
-    resp = await client.post(f"/api/v1/ip/shipments/{shipment_id}/receive", params={"received_by": "pharm1", "condition_ok": True})
+    resp = await client.post(
+        f"/api/v1/ip/shipments/{shipment_id}/receive",
+        params={"received_by": "pharm1", "condition_ok": True},
+    )
     assert resp.status_code == 200
     product = await client.get(f"/api/v1/ip/products/{product_id}")
     assert product.json()["quantity_on_hand"] == 50

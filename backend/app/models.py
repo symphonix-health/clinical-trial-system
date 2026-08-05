@@ -202,10 +202,10 @@ class Study(Base):
     created_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
-    protocol_versions: Mapped[list["ProtocolVersion"]] = relationship(back_populates="study", lazy="selectin")
-    sites: Mapped[list["Site"]] = relationship(back_populates="study", lazy="selectin")
-    subjects: Mapped[list["Subject"]] = relationship(back_populates="study", lazy="selectin")
-    adverse_events: Mapped[list["AdverseEvent"]] = relationship(back_populates="study", lazy="selectin")
+    protocol_versions: Mapped[list[ProtocolVersion]] = relationship(back_populates="study", lazy="selectin")
+    sites: Mapped[list[Site]] = relationship(back_populates="study", lazy="selectin")
+    subjects: Mapped[list[Subject]] = relationship(back_populates="study", lazy="selectin")
+    adverse_events: Mapped[list[AdverseEvent]] = relationship(back_populates="study", lazy="selectin")
 
 
 class ProtocolVersion(Base):
@@ -219,7 +219,7 @@ class ProtocolVersion(Base):
     amendment_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     pdf_document_reference: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    study: Mapped["Study"] = relationship(back_populates="protocol_versions")
+    study: Mapped[Study] = relationship(back_populates="protocol_versions")
 
 
 class Site(Base):
@@ -235,8 +235,8 @@ class Site(Base):
     address: Mapped[str | None] = mapped_column(Text, nullable=True)
     capacity: Mapped[int] = mapped_column(default=0)
 
-    study: Mapped["Study"] = relationship(back_populates="sites")
-    subjects: Mapped[list["Subject"]] = relationship(back_populates="site", lazy="selectin")
+    study: Mapped[Study] = relationship(back_populates="sites")
+    subjects: Mapped[list[Subject]] = relationship(back_populates="site", lazy="selectin")
 
     __table_args__ = (Index("ix_sites_study_code", "study_id", "site_code", unique=True),)
 
@@ -276,9 +276,9 @@ class Subject(Base):
     consent_withdrawn_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
     kit_code: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
-    study: Mapped["Study"] = relationship(back_populates="subjects")
-    site: Mapped["Site"] = relationship(back_populates="subjects")
-    visits: Mapped[list["SubjectVisit"]] = relationship(back_populates="subject", lazy="selectin")
+    study: Mapped[Study] = relationship(back_populates="subjects")
+    site: Mapped[Site] = relationship(back_populates="subjects")
+    visits: Mapped[list[SubjectVisit]] = relationship(back_populates="subject", lazy="selectin")
 
 
 class InformedConsent(Base):
@@ -319,7 +319,7 @@ class SubjectVisit(Base):
     assessments: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     monitoring_status: Mapped[str | None] = mapped_column(String(16), nullable=True)
 
-    subject: Mapped["Subject"] = relationship(back_populates="visits")
+    subject: Mapped[Subject] = relationship(back_populates="visits")
 
 
 class AdverseEvent(Base):
@@ -347,7 +347,7 @@ class AdverseEvent(Base):
     jurisdiction: Mapped[str] = mapped_column(String(2), default="IE")
     deadline_basis: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
-    study: Mapped["Study"] = relationship(back_populates="adverse_events")
+    study: Mapped[Study] = relationship(back_populates="adverse_events")
 
 
 class ProtocolDeviation(Base):

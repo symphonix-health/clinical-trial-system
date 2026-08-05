@@ -1,6 +1,6 @@
 """Regulatory document endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, schemas
@@ -10,7 +10,10 @@ router = APIRouter(prefix="/regulatory-documents", tags=["regulatory"])
 
 
 @router.post("", response_model=schemas.RegulatoryDocumentOut)
-async def create_document(data: schemas.RegulatoryDocumentCreate, db: AsyncSession = Depends(get_db)) -> schemas.RegulatoryDocumentOut:
+async def create_document(
+    data: schemas.RegulatoryDocumentCreate,
+    db: AsyncSession = Depends(get_db)
+) -> schemas.RegulatoryDocumentOut:
     doc = await crud.create_regulatory_document(db, data)
     return schemas.RegulatoryDocumentOut.model_validate(doc)
 

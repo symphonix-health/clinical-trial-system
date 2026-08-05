@@ -5,7 +5,6 @@ from __future__ import annotations
 import datetime as dt
 from typing import Any
 
-import pytest
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -159,7 +158,7 @@ async def test_process_council_synthesis_duplicate(db_session: AsyncSession) -> 
 
 
 async def test_models_persisted_after_processing(db_session: AsyncSession) -> None:
-    domain = await _seed_minimal_domain(db_session)
+    await _seed_minimal_domain(db_session)
     await inbound_processors.process_agent_escalation(
         db_session,
         {"event_id": "esc-persist-001", "agent_subject_id": 1, "reason": "r", "severity": "low"},

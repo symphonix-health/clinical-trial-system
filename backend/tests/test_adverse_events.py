@@ -92,6 +92,9 @@ async def test_update_ae_status(client: AsyncClient) -> None:
             },
         )
     ).json()["id"]
-    resp = await client.patch(f"/api/v1/adverse-events/{ae_id}", json={"status": "assessed", "narrative": "Narrative text"})
+    resp = await client.patch(
+        f"/api/v1/adverse-events/{ae_id}",
+        json={"status": "assessed", "narrative": "Narrative text"},
+    )
     assert resp.status_code == 200
     assert resp.json()["status"] == "assessed"
