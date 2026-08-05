@@ -2,7 +2,7 @@
   "schema_version": "CAID_MATRIX_INTEGRITY_LEDGER_V1",
   "repo": "clinical-trial-system",
   "recorded_at": "2026-07-30",
-  "note": "Rekeys only. No row was deleted or tombstoned in this repo, so there are no tombstone entries and the retention obligation for deleted audit evidence is not engaged.",
+  "note": "Rekeys only. No row was deleted or tombstoned in this repo, so there are no tombstone entries and the retention obligation for deleted audit evidence is not engaged. 2026-08-05: one further rekey recorded when defect CTMS-IP-001 was fixed and its blocked-on-defect row became live coverage. Still no row deleted or tombstoned.",
   "tombstones": [],
   "replacements": [],
   "rekeys": [
@@ -85,6 +85,14 @@
       "use_case_id": "ctms_EDG_0005",
       "reason": "expectation moved from the OBSERVED status to the status the requirement demands (blocked_on_defect CTMS-FIN-002). The scenario's proposition is unchanged -- it always asserted this behaviour; only the recorded expectation stopped agreeing with the defective code. Atom carried forward, not destroyed.",
       "date": "2026-07-30"
+    },
+    {
+      "requirement_id": "FR-C-72",
+      "from_atom": "63d9adf41b0bc1e020a9e628b039f062",
+      "to_atom": "5cf8c187fb9e659c046add5b15ccdd9c",
+      "use_case_id": "ctms_EDG_0003",
+      "reason": "expectation moved from documenting defect CTMS-IP-001 to asserting the behaviour the requirement always demanded, because the defect was FIXED (app.crud.create_ip_dispense now refuses a dispense exceeding quantity_on_hand). The scenario's proposition is unchanged -- it always asserted 422 -- so blocked_on_defect was removed, requirement_status moved UNMET -> MET, and FR-C-171 was added alongside FR-C-72. Atom carried forward, not destroyed; FR-C-72 keeps its other two rows (ctms_POS_0024, ctms_POS_0061).",
+      "date": "2026-08-05"
     }
   ]
 }

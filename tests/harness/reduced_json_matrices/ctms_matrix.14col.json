@@ -5,7 +5,38 @@
     "executor": "pytest",
     "requirement_ids": [
       "FR-C-11",
+      "FR-C-111",
+      "FR-C-112",
+      "FR-C-113",
+      "FR-C-114",
       "FR-C-12",
+      "FR-C-121",
+      "FR-C-122",
+      "FR-C-123",
+      "FR-C-124",
+      "FR-C-131",
+      "FR-C-132",
+      "FR-C-133",
+      "FR-C-141",
+      "FR-C-142",
+      "FR-C-143",
+      "FR-C-144",
+      "FR-C-145",
+      "FR-C-151",
+      "FR-C-152",
+      "FR-C-153",
+      "FR-C-154",
+      "FR-C-161",
+      "FR-C-162",
+      "FR-C-163",
+      "FR-C-164",
+      "FR-C-171",
+      "FR-C-172",
+      "FR-C-181",
+      "FR-C-182",
+      "FR-C-183",
+      "FR-C-191",
+      "FR-C-192",
       "FR-C-21",
       "FR-C-22",
       "FR-C-31",
@@ -312,7 +343,8 @@
       "test_data": {
         "severity": "severe",
         "seriousness": "life_threatening",
-        "causality": "related"
+        "causality": "related",
+        "expectedness": "unexpected"
       },
       "validation_rules": [
         "response.status_code == 200",
@@ -331,7 +363,7 @@
       ],
       "estimated_duration": 2,
       "automation_status": "automated",
-      "notes": "Covers FR-C-61 and FR-C-62"
+      "notes": "Covers FR-C-61 and FR-C-62 Payload carries expectedness=unexpected: under the national-capability family a SUSAR requires all three ICH E2A limbs (serious, unexpected, suspected-related)."
     },
     {
       "use_case_id": "CTMS-UC-009",
@@ -359,8 +391,8 @@
       ],
       "dependencies": [
         "app.api.v1.endpoints.ip",
-        "app.crud.receive_ip_shipment",
-        "app.crud.dispense_ip"
+        "app.crud.receive_shipment",
+        "app.crud.create_ip_dispense"
       ],
       "tags": [
         "ip",
@@ -369,7 +401,11 @@
       ],
       "estimated_duration": 3,
       "automation_status": "automated",
-      "notes": "Covers FR-C-71 and FR-C-72"
+      "notes": "Covers FR-C-71 and FR-C-72. 2026-08-05: this row had NO runner in _RUNNERS, so it had never executed; its dependencies also named app.crud.receive_ip_shipment / app.crud.dispense_ip, neither of which exists. Runner added and the module paths corrected to the real callables.",
+      "requirement_ids": [
+        "FR-C-71",
+        "FR-C-72"
+      ]
     },
     {
       "use_case_id": "CTMS-UC-010",
@@ -395,6 +431,7 @@
       ],
       "dependencies": [
         "app.api.v1.endpoints.budgets",
+        "app.crud.create_study_budget",
         "app.crud.create_invoice"
       ],
       "tags": [
@@ -404,7 +441,11 @@
       ],
       "estimated_duration": 2,
       "automation_status": "automated",
-      "notes": "Covers FR-C-81 and FR-C-83"
+      "notes": "Covers FR-C-81 and FR-C-83. 2026-08-05: this row had NO runner in _RUNNERS, so it had never executed. Runner added.",
+      "requirement_ids": [
+        "FR-C-81",
+        "FR-C-83"
+      ]
     },
     {
       "use_case_id": "CTMS-UC-011",
@@ -421,7 +462,8 @@
       "test_data": {},
       "validation_rules": [
         "response.status_code == 200",
-        "'actual_enrolled' in response.json()"
+        "'enrolled' in response.json()",
+        "'by_site' in response.json()"
       ],
       "dependencies": [
         "app.api.v1.endpoints.reports",
@@ -434,7 +476,10 @@
       ],
       "estimated_duration": 2,
       "automation_status": "automated",
-      "notes": "Covers FR-C-91"
+      "notes": "Covers FR-C-91. 2026-08-05: this row had NO runner in _RUNNERS, so it had never executed -- which hid the fact that its assertion \"'actual_enrolled' in response.json()\" could never have passed: schemas.RecruitmentReport has no such field. Runner added and the assertion corrected to the fields the contract actually returns.",
+      "requirement_ids": [
+        "FR-C-91"
+      ]
     },
     {
       "use_case_id": "CTMS-UC-012",
@@ -714,6 +759,477 @@
       "estimated_duration": 1,
       "automation_status": "automated",
       "notes": "404 path coverage"
+    },
+    {
+      "use_case_id": "CTMS-UC-021",
+      "component": "clinical_trial_system",
+      "scenario": "Register an Ireland study with its public trial registry and receipt the acknowledgement",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Study created under jurisdiction IE",
+        "Registration dispatched to the CTIS registry and left awaiting a receipt",
+        "Registration reaches registered only on an acknowledgement carrying a valid EU trial number"
+      ],
+      "preconditions": {
+        "auth_role": "sponsor_manager",
+        "jurisdiction": "IE"
+      },
+      "test_data": {
+        "jurisdiction": "IE",
+        "registry_code": "CTIS",
+        "registry_identifier": "2026-512987-14-00",
+        "requirement_ids": [
+          "FR-C-112"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['status'] == 'registered'",
+        "response.json()['registry_identifier'] == '2026-512987-14-00'"
+      ],
+      "dependencies": [
+        "app.api.v1.endpoints.national",
+        "app.national.submit_trial_registration",
+        "app.national.record_registration_receipt"
+      ],
+      "tags": [
+        "national",
+        "trial-registry",
+        "closed-loop",
+        "J36"
+      ],
+      "estimated_duration": 3,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-111 and FR-C-112. Coverage binds to FR-C-112 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-111, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-112"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-111-AC01",
+        "FR-C-112-AC01"
+      ]
+    },
+    {
+      "use_case_id": "CTMS-UC-022",
+      "component": "clinical_trial_system",
+      "scenario": "Delegate site tasks and read the activation blockers back",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Delegation recorded with a derived GCP expiry",
+        "Site readiness lists every blocking reason it finds"
+      ],
+      "preconditions": {
+        "auth_role": "regulatory_officer",
+        "site_status": "pending"
+      },
+      "test_data": {
+        "role": "research_nurse",
+        "gcp_training_date": "2026-01-05",
+        "requirement_ids": [
+          "FR-C-114"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['ready_for_activation'] == false",
+        "len(response.json()['blocking_reasons']) > 0",
+        "response.json()['delegations_active'] == 1"
+      ],
+      "dependencies": [
+        "app.national.create_investigator_delegation",
+        "app.national.site_readiness"
+      ],
+      "tags": [
+        "national",
+        "delegation",
+        "credentialing",
+        "J36"
+      ],
+      "estimated_duration": 3,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-113 and FR-C-114. Coverage binds to FR-C-114 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-113, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-114"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-113-AC01",
+        "FR-C-114-AC01"
+      ]
+    },
+    {
+      "use_case_id": "CTMS-UC-023",
+      "component": "clinical_trial_system",
+      "scenario": "An ethics submission is decided by a named chair with conditions",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Submission recorded against the pack's ethics authority",
+        "A decision without a named decider is refused",
+        "The recorded decision names the deciding human and carries its conditions",
+        "The next statutory report date is derived from the pack"
+      ],
+      "preconditions": {
+        "auth_role": "regulatory_officer",
+        "jurisdiction": "UK"
+      },
+      "test_data": {
+        "authority_kind": "ethics",
+        "submission_type": "initial",
+        "requirement_ids": [
+          "FR-C-122"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['decision'] == 'approved_with_conditions'",
+        "response.json()['decided_by'] != null",
+        "response.json()['next_report_due'] != null"
+      ],
+      "dependencies": [
+        "app.national.create_regulatory_approval",
+        "app.national.record_approval_decision"
+      ],
+      "tags": [
+        "national",
+        "regulatory",
+        "human-authority",
+        "J37"
+      ],
+      "estimated_duration": 3,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-121, FR-C-122 and FR-C-123. Coverage binds to FR-C-122 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-121, FR-C-123, FR-C-124, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-122"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-121-AC01",
+        "FR-C-122-AC01",
+        "FR-C-123-AC01",
+        "FR-C-124-AC01"
+      ]
+    },
+    {
+      "use_case_id": "CTMS-UC-024",
+      "component": "clinical_trial_system",
+      "scenario": "Hub pre-screen returns criterion verdicts and the outcome is derived",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Pre-screen queued through the hub with criteria only",
+        "A partial evaluation is refused",
+        "A failed exclusion criterion derives an ineligible outcome"
+      ],
+      "preconditions": {
+        "auth_role": "crc",
+        "consent_basis": "research_contact_consent"
+      },
+      "test_data": {
+        "candidate_reference": "CAND-M14-001",
+        "criteria": [
+          "age_18_or_over",
+          "ecog_0_to_2",
+          "no_prior_kinase_inhibitor"
+        ],
+        "requirement_ids": [
+          "FR-C-132"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['outcome'] == 'ineligible'",
+        "response.json()['source_system'] == 'bullettrain-hub'"
+      ],
+      "dependencies": [
+        "app.national.request_eligibility_screening",
+        "app.national.record_eligibility_outcome"
+      ],
+      "tags": [
+        "national",
+        "eligibility",
+        "hub-consume",
+        "J38"
+      ],
+      "estimated_duration": 3,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-131, FR-C-132 and FR-C-133. Coverage binds to FR-C-132 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-131, FR-C-133, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-132"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-131-AC01",
+        "FR-C-132-AC01",
+        "FR-C-133-AC01"
+      ]
+    },
+    {
+      "use_case_id": "CTMS-UC-025",
+      "component": "clinical_trial_system",
+      "scenario": "Amendment suspends dispensing until re-consent, and withdrawal stops it for good",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Dispensing succeeds while consent is active",
+        "Re-consent flagging suspends dispensing",
+        "Re-consent restores dispensing",
+        "Withdrawal cancels visits, blocks dispensing and empties the participant surface"
+      ],
+      "preconditions": {
+        "auth_role": "crc",
+        "subject_status": "enrolled"
+      },
+      "test_data": {
+        "protocol_version": "v4.0",
+        "withdrawal_scope": "full",
+        "requirement_ids": [
+          "FR-C-145"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['consent_state'] == 'withdrawn'",
+        "response.json()['upcoming_visits'] == []"
+      ],
+      "dependencies": [
+        "app.crud.flag_reconsent_required",
+        "app.crud.withdraw_subject",
+        "app.crud.create_ip_dispense",
+        "app.national.participant_summary"
+      ],
+      "tags": [
+        "national",
+        "consent",
+        "withdrawal",
+        "propagation",
+        "J39",
+        "J40"
+      ],
+      "estimated_duration": 5,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-141..FR-C-145 end to end. Coverage binds to FR-C-145 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-141, FR-C-142, FR-C-143, FR-C-144, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-145"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-141-AC01",
+        "FR-C-142-AC01",
+        "FR-C-143-AC01",
+        "FR-C-144-AC01",
+        "FR-C-145-AC01"
+      ]
+    },
+    {
+      "use_case_id": "CTMS-UC-026",
+      "component": "clinical_trial_system",
+      "scenario": "Stratified allocation, blinded kit issue and emergency unblinding",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Subject allocated from a deterministic permuted-block list",
+        "Blinded read returns a kit code and no arm",
+        "Unblinding records the requester and the named authoriser"
+      ],
+      "preconditions": {
+        "auth_role": "crc",
+        "blinding": "double_blind"
+      },
+      "test_data": {
+        "stratification_factors": {
+          "region": "munster",
+          "prior_therapy": "no"
+        },
+        "requirement_ids": [
+          "FR-C-154"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['self_authorised'] == false",
+        "'arm_' in response.json()['arm_revealed']",
+        "response.json()['allocation_id'] != null"
+      ],
+      "dependencies": [
+        "app.crud.ensure_allocation_list",
+        "app.crud.randomise_subject",
+        "app.crud.unblind_subject"
+      ],
+      "tags": [
+        "national",
+        "randomisation",
+        "blinding",
+        "J41"
+      ],
+      "estimated_duration": 4,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-151..FR-C-154. Coverage binds to FR-C-154 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-151, FR-C-152, FR-C-153, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-154"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-151-AC01",
+        "FR-C-152-AC01",
+        "FR-C-153-AC01",
+        "FR-C-154-AC01"
+      ]
+    },
+    {
+      "use_case_id": "CTMS-UC-027",
+      "component": "clinical_trial_system",
+      "scenario": "Fatal SUSAR is reported on the country-pack clock and receipted by the authority",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Fatal, unexpected, related reaction flagged as a SUSAR",
+        "Deadline computed from the country pack with its basis recorded",
+        "A recipient outside the jurisdiction is refused",
+        "Acknowledgement closes the loop"
+      ],
+      "preconditions": {
+        "auth_role": "safety_officer",
+        "jurisdiction": "UK"
+      },
+      "test_data": {
+        "seriousness": "fatal",
+        "expectedness": "unexpected",
+        "causality": "related",
+        "requirement_ids": [
+          "FR-C-164"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "response.json()['status'] == 'acknowledged'",
+        "response.json()['acknowledgement_reference'] != null",
+        "response.json()['recipient_code'] == 'MHRA'"
+      ],
+      "dependencies": [
+        "app.crud.create_adverse_event",
+        "app.national.submit_safety_report",
+        "app.national.record_safety_acknowledgement"
+      ],
+      "tags": [
+        "national",
+        "safety",
+        "susar",
+        "closed-loop",
+        "J42"
+      ],
+      "estimated_duration": 4,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-161..FR-C-164. Coverage binds to FR-C-164 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-161, FR-C-162, FR-C-163, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-164"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-161-AC01",
+        "FR-C-162-AC01",
+        "FR-C-163-AC01",
+        "FR-C-164-AC01"
+      ]
+    },
+    {
+      "use_case_id": "CTMS-UC-028",
+      "component": "clinical_trial_system",
+      "scenario": "Investigational product accountability holds and the participant is reimbursed",
+      "test_type": "positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "A dispense above on-hand quantity is refused",
+        "A dispense within stock notifies the pharmacy sibling",
+        "An over-cap payment is flagged and approved by a named human",
+        "The participant summary carries the payment"
+      ],
+      "preconditions": {
+        "auth_role": "finance_coordinator",
+        "jurisdiction": "UK"
+      },
+      "test_data": {
+        "over_cap_amount": 210.0,
+        "requirement_ids": [
+          "FR-C-181"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 200",
+        "len(response.json()['reimbursements']) >= 1",
+        "response.json()['reimbursement_currency'] == 'GBP'"
+      ],
+      "dependencies": [
+        "app.crud.create_ip_dispense",
+        "app.national.create_reimbursement",
+        "app.national.approve_reimbursement",
+        "app.national.participant_summary"
+      ],
+      "tags": [
+        "national",
+        "ip",
+        "participant",
+        "reimbursement",
+        "J43"
+      ],
+      "estimated_duration": 5,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-171, FR-C-172 and FR-C-181..FR-C-183. Coverage binds to FR-C-181 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-171, FR-C-172, FR-C-182, FR-C-183, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-181"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-171-AC01",
+        "FR-C-172-AC01",
+        "FR-C-181-AC01",
+        "FR-C-182-AC01",
+        "FR-C-183-AC01"
+      ]
+    },
+    {
+      "use_case_id": "CTMS-UC-029",
+      "component": "clinical_trial_system",
+      "scenario": "Country packs are versioned data and an unknown jurisdiction is refused",
+      "test_type": "negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "All four packs load, validate and carry official sources",
+        "An unknown jurisdiction is refused rather than defaulted"
+      ],
+      "preconditions": {
+        "packs": [
+          "IE",
+          "UK",
+          "KE",
+          "US"
+        ]
+      },
+      "test_data": {
+        "unknown_jurisdiction": "ZZ",
+        "requirement_ids": [
+          "FR-C-192"
+        ]
+      },
+      "validation_rules": [
+        "response.status_code == 404",
+        "'unknown jurisdiction' in response.json()['detail']"
+      ],
+      "dependencies": [
+        "app.country_packs.loader.get_pack",
+        "app.api.v1.endpoints.national.get_country_pack"
+      ],
+      "tags": [
+        "national",
+        "country-pack",
+        "policy-as-data",
+        "negative"
+      ],
+      "estimated_duration": 2,
+      "automation_status": "automated",
+      "notes": "Covers FR-C-191 and FR-C-192 (country policy packs). Coverage binds to FR-C-192 only -- the requirement this row's validation_rules discriminate. The journey also walks FR-C-191, which carry their own executable rows in ctms_scenarios.json; binding them all here would claim one piece of executable substance satisfies several distinct obligations.",
+      "requirement_ids": [
+        "FR-C-192"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-C-191-AC01",
+        "FR-C-192-AC01"
+      ]
     }
   ]
 }

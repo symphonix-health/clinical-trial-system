@@ -1,7 +1,7 @@
 {
   "metadata": {
     "subsystem": "clinical-trial-system",
-    "requirement_count": 37
+    "requirement_count": 68
   },
   "requirements": [
     {
@@ -315,6 +315,564 @@
       "source": "docs/REQUIREMENTS.md",
       "iso_25010_characteristic": "Maintainability",
       "iso_25010_subcharacteristic": "Modifiability"
+    },
+    {
+      "requirement_id": "FR-C-111",
+      "family": "STUDY",
+      "title": "Study jurisdiction selects the country pack",
+      "statement": "The system shall record a jurisdiction on every study and resolve registry format, approval authorities, statutory deadlines, consent rules and reimbursement rules from that jurisdiction's versioned country pack rather than from conditional logic.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-111-AC01",
+          "given": "a study is created declaring a jurisdiction",
+          "when": "any policy value is resolved for it",
+          "then": "the value comes from that jurisdiction's versioned country pack",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-112",
+      "family": "STUDY",
+      "title": "Public trial-registry submission and receipt",
+      "statement": "The system shall submit a study to its jurisdiction's public trial registry through the BulletTrain hub and shall mark it registered only on an acknowledgement carrying a registry identifier valid for that jurisdiction, recording a rejection with its reason otherwise.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-112-AC01",
+          "given": "a study has been submitted to its public trial registry",
+          "when": "the registry acknowledges with an identifier valid for the jurisdiction",
+          "then": "the registration becomes registered and carries the receipt reference",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-113",
+      "family": "SITE",
+      "title": "Investigator delegation log",
+      "statement": "The system shall maintain a site delegation log naming the delegating principal investigator, the delegated person, the delegated tasks and the professional registration, deriving GCP training expiry from the jurisdiction's validity period.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-113-AC01",
+          "given": "a principal investigator delegates a task at a site",
+          "when": "the delegation is recorded",
+          "then": "GCP training expiry is derived from the jurisdiction's validity period",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-114",
+      "family": "SITE",
+      "title": "Site activation readiness with explicit blockers",
+      "statement": "The system shall report site activation readiness together with every blocking reason found, including incomplete checklist, absent delegation, expired GCP training and missing current ethics approval.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-114-AC01",
+          "given": "a site has an expired GCP credential",
+          "when": "readiness is requested",
+          "then": "the expired credential is returned as a named blocking reason",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-121",
+      "family": "REGULATORY",
+      "title": "Ethics and competent-authority submissions",
+      "statement": "The system shall record ethics and competent-authority submissions with a recognised submission type and an authority code resolved from the jurisdiction's country pack.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-121-AC01",
+          "given": "a submission is made to the ethics or competent authority",
+          "when": "it is recorded",
+          "then": "the authority code comes from the jurisdiction's country pack",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-122",
+      "family": "REGULATORY",
+      "title": "Named human approval decisions",
+      "statement": "The system shall require a named decider for every regulatory decision, shall require at least one condition for an approval with conditions, shall reject unknown decision values and shall refuse to overwrite a terminal decision.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-122-AC01",
+          "given": "a regulatory decision is recorded",
+          "when": "no deciding human is named",
+          "then": "the decision is refused",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-123",
+      "family": "REGULATORY",
+      "title": "Approval expiry and statutory report clocks",
+      "statement": "The system shall record an approval expiry and the next statutory report due date computed from the country pack's annual safety-report interval.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-123-AC01",
+          "given": "a submission is approved",
+          "when": "the decision is recorded",
+          "then": "an approval expiry and the next statutory report date are stored",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-124",
+      "family": "REGULATORY",
+      "title": "Approvals and statutory reports falling due",
+      "statement": "The system shall report approvals expiring and statutory reports falling due within a configurable window.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-124-AC01",
+          "given": "approvals with expiry dates and report dates exist",
+          "when": "the due report is requested for a window",
+          "then": "those falling inside the window are listed",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-131",
+      "family": "ELIGIBILITY",
+      "title": "Hub-mediated criteria-only pre-screen request",
+      "statement": "The system shall request eligibility pre-screening through the BulletTrain hub carrying only a pseudonymous candidate reference, the criterion list and the consent basis, and shall refuse a request with no criteria.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-131-AC01",
+          "given": "a candidate is pre-screened",
+          "when": "the request is dispatched",
+          "then": "only a pseudonymous reference, the criteria and the consent basis leave CTMS",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-132",
+      "family": "ELIGIBILITY",
+      "title": "Derived eligibility outcome",
+      "statement": "The system shall derive the eligibility outcome from the returned criterion verdicts, treating any failed criterion as ineligible and any unevaluable criterion as pending review, and shall refuse an evaluation that omits a requested criterion.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-132-AC01",
+          "given": "criterion verdicts are returned",
+          "when": "one criterion has failed",
+          "then": "the derived outcome is ineligible",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-133",
+      "family": "ELIGIBILITY",
+      "title": "Auditable pre-screen decisions",
+      "statement": "The system shall audit-log every eligibility pre-screen outcome with the reviewing human or the source system that produced it.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-133-AC01",
+          "given": "a pre-screen outcome is recorded",
+          "when": "the outcome is applied",
+          "then": "an audit entry names the reviewer or source system",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-141",
+      "family": "CONSENT",
+      "title": "Consent lifecycle record",
+      "statement": "The system shall record consent as a lifecycle event carrying its type, the protocol version consented to, who gave it, any witness and any future-use opt-in, and shall move the subject to an active consent state.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-141-AC01",
+          "given": "a subject re-consents to an amended protocol",
+          "when": "the consent is recorded",
+          "then": "the consent state returns to active and the protocol version is stored",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-142",
+      "family": "CONSENT",
+      "title": "Explicit re-consent flagging",
+      "statement": "The system shall flag enrolled subjects for re-consent against an amended protocol version, moving them to a re-consent-required state and audit-logging the flagging per subject.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-142-AC01",
+          "given": "an amendment requires re-consent",
+          "when": "enrolled subjects are flagged",
+          "then": "each subject moves to re_consent_required and the flagging is audited",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-143",
+      "family": "CONSENT",
+      "title": "Withdrawal cancels future activity",
+      "statement": "The system shall, on withdrawal of consent, set the subject's consent state to withdrawn, stamp the withdrawal time and scope on the consent record and cancel every scheduled visit.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-143-AC01",
+          "given": "a subject withdraws consent",
+          "when": "the withdrawal is recorded",
+          "then": "scheduled visits are cancelled and the scope is stamped on the consent",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-144",
+      "family": "CONSENT",
+      "title": "Consent state gates investigational product",
+      "statement": "The system shall refuse to dispense investigational product to a subject whose consent is withdrawn or who is pending re-consent.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-144-AC01",
+          "given": "a subject's consent is withdrawn or pending re-consent",
+          "when": "investigational product is dispensed to them",
+          "then": "the dispense is refused as unprocessable",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-145",
+      "family": "CONSENT",
+      "title": "Withdrawal propagates to every downstream surface",
+      "statement": "The system shall propagate a consent withdrawal through the hub to the participant surface and the dispensing surface, and shall stop presenting upcoming visits on the participant summary.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-145-AC01",
+          "given": "a subject withdraws consent",
+          "when": "the withdrawal is propagated",
+          "then": "citizen-portal and pharmacy-system are both notified and the participant surface stops offering visits",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-151",
+      "family": "RANDOMISATION",
+      "title": "Deterministic stratified allocation list",
+      "statement": "The system shall generate a stratified permuted-block allocation list per study and stratum, deterministically from the protocol number and stratum key, so that the allocation can be reconstructed for audit.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-151-AC01",
+          "given": "a study and stratum have no allocation list",
+          "when": "a subject of that stratum is randomised",
+          "then": "a deterministic permuted-block list is generated first",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-152",
+      "family": "RANDOMISATION",
+      "title": "Allocation consumes the next free slot",
+      "statement": "The system shall allocate the next free slot of the subject's stratum, record the allocating actor, write an audit entry and refuse allocation when the list is exhausted.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-152-AC01",
+          "given": "an allocation list exists",
+          "when": "a subject is randomised",
+          "then": "the next free slot is consumed and an audit entry is written",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-153",
+      "family": "RANDOMISATION",
+      "title": "Blinded allocation read",
+      "statement": "The system shall return only the kit code and stratum on the blinded allocation read, never the treatment arm.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-153-AC01",
+          "given": "a subject has been randomised",
+          "when": "the blinded allocation is read",
+          "then": "the kit code is returned and the treatment arm is not",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-154",
+      "family": "RANDOMISATION",
+      "title": "Emergency unblinding with named authoriser",
+      "statement": "The system shall record the requester, the named authoriser, the reason and the urgency of an emergency unblinding, and shall flag the case where requester and authoriser are the same person.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-154-AC01",
+          "given": "an emergency unblinding is authorised",
+          "when": "it is recorded",
+          "then": "the requester, the named authoriser, the reason and the arm are stored",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-161",
+      "family": "SAFETY",
+      "title": "Three-limb SUSAR determination",
+      "statement": "The system shall determine a SUSAR from all three ICH E2A limbs -- serious, unexpected and suspected to be related to the investigational product -- while honouring an explicitly asserted SUSAR flag.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-161-AC01",
+          "given": "a serious, unexpected, suspected-related reaction is reported",
+          "when": "it is assessed",
+          "then": "it is flagged as a SUSAR",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-162",
+      "family": "SAFETY",
+      "title": "Country-pack statutory reporting deadline",
+      "statement": "The system shall compute the statutory reporting deadline from the study's country pack and shall record the basis used, comprising pack code, pack version, classification and day count.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-162-AC01",
+          "given": "a SUSAR is fatal or life-threatening",
+          "when": "its deadline is computed",
+          "then": "the country pack's expedited window is applied and the basis recorded",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-163",
+      "family": "SAFETY",
+      "title": "Safety report submission to a recognised recipient",
+      "statement": "The system shall submit a safety report only to a recipient recognised by the jurisdiction's pack, recording the submitting human and a submission reference and dispatching through the hub.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-163-AC01",
+          "given": "a safety report is submitted",
+          "when": "the recipient is not one the jurisdiction recognises",
+          "then": "the submission is refused",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-164",
+      "family": "SAFETY",
+      "title": "Safety loop closes on acknowledgement",
+      "statement": "The system shall close the safety reporting loop only on an acknowledgement carrying a receipt reference, shall record a rejection with its reason, and shall report submissions past their statutory deadline without acknowledgement as overdue.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-164-AC01",
+          "given": "a safety report has been submitted",
+          "when": "the authority acknowledges it",
+          "then": "the submission becomes acknowledged and stops appearing as overdue",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-171",
+      "family": "IP",
+      "title": "Dispense cannot exceed on-hand inventory",
+      "statement": "The system shall refuse a dispense that exceeds the product's on-hand quantity so that the close-out accountability identity can balance.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-171-AC01",
+          "given": "a product has fewer units on hand than requested",
+          "when": "a dispense is attempted",
+          "then": "the dispense is refused so accountability can balance",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-172",
+      "family": "IP",
+      "title": "CTMS-initiated dispense notifies the dispensing sibling",
+      "statement": "The system shall notify the pharmacy and prescribing siblings through the BulletTrain hub for a dispense initiated in CTMS, not only for one arriving on an inbound webhook.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-172-AC01",
+          "given": "a dispense is initiated inside CTMS",
+          "when": "it is recorded",
+          "then": "the pharmacy sibling is notified through the BulletTrain hub",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-181",
+      "family": "PARTICIPANT",
+      "title": "Participant summary contract",
+      "statement": "The system shall expose a participant summary contract carrying study, consent state, re-consent requirement, upcoming visits, reimbursements and results availability for the citizen portal to render, while remaining the canonical owner of that state.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-181-AC01",
+          "given": "a participant exists",
+          "when": "the participant summary is requested",
+          "then": "consent state, upcoming visits, reimbursements and results availability are returned",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-182",
+      "family": "PARTICIPANT",
+      "title": "Reimbursement policy from the country pack",
+      "statement": "The system shall take reimbursement currency and per-visit guidance cap from the study's country pack, flag a payment above the cap, refuse a non-positive amount and refuse an inconvenience payment in a jurisdiction that does not permit one.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-182-AC01",
+          "given": "a payment exceeds the jurisdiction's per-visit guidance cap",
+          "when": "it is recorded",
+          "then": "it is stored in the pack's currency and flagged as over the cap",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-183",
+      "family": "PARTICIPANT",
+      "title": "Named approval of participant payments",
+      "statement": "The system shall require a named approver for a participant payment, shall refuse a second approval and shall notify the citizen portal of every state change through the hub.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-183-AC01",
+          "given": "a flagged payment is approved",
+          "when": "the approval is recorded",
+          "then": "the approving human is named and a second approval is refused",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-191",
+      "family": "COUNTRY_PACK",
+      "title": "Country policy is versioned validated data",
+      "statement": "The system shall hold country policy as versioned data declaring a schema version, pack version, effective-from date and official sources, and shall fail to load a pack that omits a statutory section rather than silently removing a deadline.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-191-AC01",
+          "given": "a country pack omits a statutory section",
+          "when": "it is loaded",
+          "then": "loading fails rather than the deadline disappearing",
+          "test_type": "Positive"
+        }
+      ]
+    },
+    {
+      "requirement_id": "FR-C-192",
+      "family": "COUNTRY_PACK",
+      "title": "Country packs exposed read-only",
+      "statement": "The system shall expose the country packs read-only, individually and as a set, and shall refuse an unknown jurisdiction.",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "national_capability_family": true,
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-C-192-AC01",
+          "given": "an unknown jurisdiction is requested",
+          "when": "the pack endpoint is called",
+          "then": "the request is refused",
+          "test_type": "Positive"
+        }
+      ]
     }
   ]
 }

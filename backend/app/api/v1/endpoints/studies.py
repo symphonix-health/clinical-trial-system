@@ -52,3 +52,20 @@ async def create_protocol_version(study_id: int, data: schemas.ProtocolVersionCr
     data.study_id = study_id
     pv = await crud.create_protocol_version(db, data)
     return schemas.ProtocolVersionOut.model_validate(pv)
+
+
+@router.post("/{study_id}/flag-reconsent", response_model=list[schemas.SubjectOut])
+async def flag_reconsent(
+    study_id: int, protocol_version: str, db: AsyncSession = Depends(get_db)
+) -> list[schemas.SubjectOut]:
+    """Flag enrolled subjects for re-consent against an amended protocol.
+
+    FR-C-33 / REQ-CTS-NAT-004. Flagged subjects are suspended from further IP
+    dispensing until a re-consent is recorded.
+    """
+
+    study = await crud.get_study(db, study_id)
+    if not study:
+        raise HTTPException(status_code=404, detail="Study not found")
+    flagged = await crud.flag_reconsent_required(db, study_id, protocol_version)
+    return [schemas.SubjectOut.model_validate(s) for s in flagged]

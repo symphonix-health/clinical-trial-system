@@ -1,0 +1,88 @@
+{
+  "schema_version": "CTMS_COUNTRY_PACK_V1",
+  "code": "IE",
+  "name": "Ireland",
+  "pack_version": "1.0.0",
+  "effective_from": "2026-01-31",
+  "review_due": "2027-01-31",
+  "is_default": true,
+  "competent_authority": {
+    "code": "HPRA",
+    "name": "Health Products Regulatory Authority",
+    "role": "clinical_trial_authorisation",
+    "submission_channel": "CTIS"
+  },
+  "ethics_authority": {
+    "code": "NREC-CT",
+    "name": "National Research Ethics Committee for Clinical Trials",
+    "role": "ethics_opinion",
+    "decision_authority": "named_committee_chair",
+    "auto_approval_permitted": false
+  },
+  "trial_registry": {
+    "code": "CTIS",
+    "name": "EU Clinical Trials Information System",
+    "identifier_label": "EU trial number",
+    "identifier_pattern": "^\\d{4}-5\\d{5}-\\d{2}-\\d{2}$",
+    "identifier_example": "2026-512345-21-00",
+    "public_disclosure_required": true,
+    "registration_before_first_enrolment": true
+  },
+  "safety_reporting": {
+    "susar_fatal_or_life_threatening_days": 7,
+    "susar_other_days": 15,
+    "non_susar_serious_days": 15,
+    "annual_safety_report_interval_days": 365,
+    "recipients": ["HPRA", "NREC-CT", "CTIS"],
+    "acknowledgement_expected": true,
+    "acknowledgement_sla_days": 5
+  },
+  "consent": {
+    "age_of_majority": 18,
+    "assent_required_below_age": 18,
+    "proxy_consent_permitted": true,
+    "proxy_roles": ["legal_representative", "next_of_kin"],
+    "witness_required_when_unable_to_read": true,
+    "future_use_requires_explicit_opt_in": true,
+    "withdrawal_effective_immediately": true,
+    "data_retained_after_withdrawal": "data_collected_before_withdrawal_retained"
+  },
+  "site_credentialing": {
+    "investigator_delegation_log_required": true,
+    "gcp_training_validity_days": 1095,
+    "insurance_evidence_required": true
+  },
+  "participant_reimbursement": {
+    "currency": "EUR",
+    "expense_reimbursement_permitted": true,
+    "inconvenience_payment_permitted": true,
+    "per_visit_guidance_cap": 100.0,
+    "ethics_approval_required_for_payments": true
+  },
+  "sources": [
+    {
+      "title": "Clinical trials of medicinal products for human use",
+      "publisher": "Health Products Regulatory Authority",
+      "url": "https://www.hpra.ie/homepage/medicines/regulatory-information/clinical-trials",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "National Research Ethics Committees",
+      "publisher": "National Office for Research Ethics Committees",
+      "url": "https://www.nrecoffice.ie/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "Regulation (EU) No 536/2014 on clinical trials on medicinal products for human use",
+      "publisher": "European Union",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32014R0536",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "Clinical Trials Information System (CTIS)",
+      "publisher": "European Medicines Agency",
+      "url": "https://euclinicaltrials.eu/",
+      "accessed": "2026-08-05"
+    }
+  ]
+}

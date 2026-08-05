@@ -99,6 +99,85 @@ class CohortType(str, PyEnum):
     human_ai_mixed = "human_ai_mixed"
 
 
+# --- National capability vocabulary (REQ-CTS-NAT-001..008) -------------------
+
+
+class RegistrationStatus(str, PyEnum):
+    """Public trial-registry lifecycle. ``registered`` requires a receipt."""
+
+    draft = "draft"
+    submitted = "submitted"
+    registered = "registered"
+    rejected = "rejected"
+    withdrawn = "withdrawn"
+
+
+class SubmissionType(str, PyEnum):
+    initial = "initial"
+    amendment = "amendment"
+    renewal = "renewal"
+    annual_report = "annual_report"
+    end_of_trial = "end_of_trial"
+    urgent_safety_measure = "urgent_safety_measure"
+
+
+class ApprovalDecision(str, PyEnum):
+    """Ethics / competent-authority outcome. Nothing auto-approves."""
+
+    pending = "pending"
+    approved = "approved"
+    approved_with_conditions = "approved_with_conditions"
+    rejected = "rejected"
+    withdrawn = "withdrawn"
+
+
+class DelegationStatus(str, PyEnum):
+    active = "active"
+    expired = "expired"
+    revoked = "revoked"
+
+
+class EligibilityOutcome(str, PyEnum):
+    eligible = "eligible"
+    ineligible = "ineligible"
+    pending_review = "pending_review"
+
+
+class ConsentType(str, PyEnum):
+    initial = "initial"
+    re_consent = "re_consent"
+    assent = "assent"
+    proxy = "proxy"
+
+
+class ConsentState(str, PyEnum):
+    """Derived consent posture used by every downstream guard."""
+
+    not_consented = "not_consented"
+    active = "active"
+    re_consent_required = "re_consent_required"
+    withdrawn = "withdrawn"
+
+
+class AEExpectedness(str, PyEnum):
+    expected = "expected"
+    unexpected = "unexpected"
+
+
+class SafetySubmissionStatus(str, PyEnum):
+    pending = "pending"
+    submitted = "submitted"
+    acknowledged = "acknowledged"
+    rejected = "rejected"
+
+
+class ReimbursementStatus(str, PyEnum):
+    requested = "requested"
+    approved = "approved"
+    paid = "paid"
+    rejected = "rejected"
+
+
 class Study(Base):
     __tablename__ = "studies"
 
@@ -110,6 +189,11 @@ class Study(Base):
     therapeutic_area: Mapped[str] = mapped_column(String(64))
     status: Mapped[str] = mapped_column(String(16), default=StudyStatus.draft.value)
     sponsor: Mapped[str] = mapped_column(String(128))
+    # REQ-CTS-NAT-001: the jurisdiction whose country pack governs this study's
+    # registry format, approval authorities, statutory deadlines and consent
+    # rules. Never branched on in code -- it selects a pack.
+    jurisdiction: Mapped[str] = mapped_column(String(2), default="IE")
+    sponsor_organisation_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     planned_sites: Mapped[int] = mapped_column(default=0)
     planned_subjects: Mapped[int] = mapped_column(default=0)
     start_date: Mapped[dt.date | None] = mapped_column(DateTime, nullable=True)
@@ -182,6 +266,15 @@ class Subject(Base):
     randomisation_arm: Mapped[str | None] = mapped_column(String(32), nullable=True)
     stratification_factors: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     demographics: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    # REQ-CTS-NAT-004: the single consent posture every downstream surface
+    # (IP dispensing, visit scheduling, participant portal) consults. A
+    # withdrawal that does not reach these surfaces is a defect, not a
+    # documentation gap, so the state is stored rather than recomputed ad hoc.
+    consent_state: Mapped[str] = mapped_column(
+        String(24), default=ConsentState.not_consented.value
+    )
+    consent_withdrawn_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    kit_code: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
     study: Mapped["Study"] = relationship(back_populates="subjects")
     site: Mapped["Site"] = relationship(back_populates="subjects")
@@ -198,6 +291,17 @@ class InformedConsent(Base):
     withdrawn_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
     withdrawal_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     document_reference: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    # REQ-CTS-NAT-004: consent is a lifecycle, not a boolean. The type
+    # distinguishes an initial consent from a re-consent against an amended
+    # protocol, and from assent / proxy consent taken under the jurisdiction's
+    # own rules (country pack ``consent`` section).
+    consent_type: Mapped[str] = mapped_column(String(16), default=ConsentType.initial.value)
+    protocol_version: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    given_by: Mapped[str] = mapped_column(String(64), default="subject")
+    witnessed_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    future_use_opt_in: Mapped[bool] = mapped_column(default=False)
+    withdrawal_scope: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    jurisdiction: Mapped[str] = mapped_column(String(2), default="IE")
 
 
 class SubjectVisit(Base):
@@ -234,6 +338,14 @@ class AdverseEvent(Base):
     status: Mapped[str] = mapped_column(String(16), default=AEStatus.reported.value)
     narrative: Mapped[str | None] = mapped_column(Text, nullable=True)
     submission_reference: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    # REQ-CTS-NAT-006: the missing third limb of the SUSAR test. Without
+    # expectedness a "SUSAR" flag is only Serious + Related, which is not what
+    # ICH E2A defines and not what the statutory clock is keyed to.
+    expectedness: Mapped[str] = mapped_column(
+        String(16), default=AEExpectedness.expected.value
+    )
+    jurisdiction: Mapped[str] = mapped_column(String(2), default="IE")
+    deadline_basis: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
     study: Mapped["Study"] = relationship(back_populates="adverse_events")
 
@@ -500,6 +612,230 @@ class CouncilTrial(Base):
     outcome: Mapped[str] = mapped_column(Text)
     ballot_summary: Mapped[dict[str, Any]] = mapped_column(JSON)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+# --- National capability tables (REQ-CTS-NAT-001..008) ----------------------
+
+
+class TrialRegistration(Base):
+    """Public/national trial-registry entry for a study (REQ-CTS-NAT-001).
+
+    Registration is a CLOSED LOOP: ``submitted`` is a dispatch, not a
+    completion. ``registered`` requires an acknowledgement carrying the
+    registry-issued identifier, which must match the jurisdiction pack's
+    identifier pattern.
+    """
+
+    __tablename__ = "trial_registrations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    study_id: Mapped[int] = mapped_column(ForeignKey("studies.id"), index=True)
+    jurisdiction: Mapped[str] = mapped_column(String(2))
+    registry_code: Mapped[str] = mapped_column(String(16))
+    registry_identifier: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    status: Mapped[str] = mapped_column(String(16), default=RegistrationStatus.draft.value)
+    submitted_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    acknowledged_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    receipt_reference: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    public_disclosure_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    correlation_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+    __table_args__ = (
+        Index("ix_trial_registrations_study_registry", "study_id", "registry_code", unique=True),
+    )
+
+
+class InvestigatorDelegation(Base):
+    """Site delegation log entry (REQ-CTS-NAT-001).
+
+    Research governance is a named-human domain: every delegated task is
+    delegated BY a named principal investigator TO a named person, for a
+    bounded period, against evidence of GCP training that expires.
+    """
+
+    __tablename__ = "investigator_delegations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("sites.id"), index=True)
+    person_id: Mapped[str] = mapped_column(String(64), index=True)
+    person_name: Mapped[str] = mapped_column(String(128))
+    role: Mapped[str] = mapped_column(String(64))
+    delegated_tasks: Mapped[list[str]] = mapped_column(JSON)
+    delegated_by: Mapped[str] = mapped_column(String(64))
+    gcp_training_date: Mapped[dt.date] = mapped_column(Date)
+    gcp_training_expiry: Mapped[dt.date] = mapped_column(Date)
+    professional_registration: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    start_date: Mapped[dt.date] = mapped_column(Date)
+    end_date: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    status: Mapped[str] = mapped_column(String(16), default=DelegationStatus.active.value)
+
+
+class RegulatoryApproval(Base):
+    """Ethics / competent-authority submission and its decision (REQ-CTS-NAT-002).
+
+    Nothing auto-approves: ``decided_by`` is mandatory before a decision may
+    leave ``pending``, conditions are carried explicitly, and renewals /
+    annual reports have their own statutory due dates from the country pack.
+    """
+
+    __tablename__ = "regulatory_approvals"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    study_id: Mapped[int] = mapped_column(ForeignKey("studies.id"), index=True)
+    site_id: Mapped[int | None] = mapped_column(ForeignKey("sites.id"), nullable=True)
+    jurisdiction: Mapped[str] = mapped_column(String(2))
+    authority_code: Mapped[str] = mapped_column(String(32))
+    authority_kind: Mapped[str] = mapped_column(String(32))
+    submission_type: Mapped[str] = mapped_column(String(32))
+    submission_reference: Mapped[str] = mapped_column(String(128), index=True)
+    submitted_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
+    decision: Mapped[str] = mapped_column(String(32), default=ApprovalDecision.pending.value)
+    decision_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    decided_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    conditions: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
+    approval_expiry: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    next_report_due: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    protocol_version: Mapped[str | None] = mapped_column(String(16), nullable=True)
+
+
+class EligibilityScreening(Base):
+    """Hub-mediated cohort pre-screening request/outcome (REQ-CTS-NAT-003).
+
+    CTMS never reads a candidate's full care record: it sends a criteria
+    request through the BulletTrain hub and stores only the criterion-level
+    verdicts that come back, against a pseudonymous candidate reference.
+    """
+
+    __tablename__ = "eligibility_screenings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    study_id: Mapped[int] = mapped_column(ForeignKey("studies.id"), index=True)
+    site_id: Mapped[int | None] = mapped_column(ForeignKey("sites.id"), nullable=True)
+    subject_id: Mapped[int | None] = mapped_column(ForeignKey("subjects.id"), nullable=True)
+    candidate_reference: Mapped[str] = mapped_column(String(64), index=True)
+    consent_basis: Mapped[str] = mapped_column(String(64))
+    requested_by: Mapped[str] = mapped_column(String(128))
+    requested_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
+    criteria_requested: Mapped[list[str]] = mapped_column(JSON)
+    criteria_evaluated: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    outcome: Mapped[str] = mapped_column(
+        String(16), default=EligibilityOutcome.pending_review.value
+    )
+    outcome_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    reviewed_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    source_system: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    correlation_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+
+
+class RandomisationAllocation(Base):
+    """One slot of a pre-generated, stratified, blinded allocation list
+    (REQ-CTS-NAT-005).
+
+    The arm is decided when the LIST is generated, not when a subject arrives,
+    which is what makes the allocation auditable and reproducible. Blinded
+    users are handed ``kit_code``; ``arm_code`` is the treatment mapping.
+    """
+
+    __tablename__ = "randomisation_allocations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    study_id: Mapped[int] = mapped_column(ForeignKey("studies.id"), index=True)
+    stratum_key: Mapped[str] = mapped_column(String(128), index=True)
+    sequence_number: Mapped[int] = mapped_column()
+    arm_code: Mapped[str] = mapped_column(String(32))
+    kit_code: Mapped[str] = mapped_column(String(32), unique=True)
+    block_id: Mapped[str] = mapped_column(String(32))
+    allocated_subject_id: Mapped[int | None] = mapped_column(
+        ForeignKey("subjects.id"), nullable=True
+    )
+    allocated_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    allocated_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
+
+    __table_args__ = (
+        Index(
+            "ix_allocation_study_stratum_seq",
+            "study_id",
+            "stratum_key",
+            "sequence_number",
+            unique=True,
+        ),
+    )
+
+
+class UnblindingEvent(Base):
+    """An emergency unblinding, with its named authoriser (REQ-CTS-NAT-005).
+
+    Unblinding is a human-authority decision. The requester and the authoriser
+    are recorded separately so a self-authorised unblinding is visible.
+    """
+
+    __tablename__ = "unblinding_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    subject_id: Mapped[int] = mapped_column(ForeignKey("subjects.id"), index=True)
+    allocation_id: Mapped[int | None] = mapped_column(
+        ForeignKey("randomisation_allocations.id"), nullable=True
+    )
+    requested_by: Mapped[str] = mapped_column(String(128))
+    authorised_by: Mapped[str] = mapped_column(String(128))
+    reason: Mapped[str] = mapped_column(Text)
+    urgency: Mapped[str] = mapped_column(String(16), default="emergency")
+    arm_revealed: Mapped[str] = mapped_column(String(32))
+    unblinded_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
+    self_authorised: Mapped[bool] = mapped_column(default=False)
+
+
+class SafetySubmission(Base):
+    """An expedited safety report and the regulator's receipt (REQ-CTS-NAT-006).
+
+    Dispatch is not completion: ``acknowledged`` requires a receipt reference
+    from the recipient. ``due_at`` comes from the study's country pack.
+    """
+
+    __tablename__ = "safety_submissions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    adverse_event_id: Mapped[int] = mapped_column(ForeignKey("adverse_events.id"), index=True)
+    jurisdiction: Mapped[str] = mapped_column(String(2))
+    recipient_code: Mapped[str] = mapped_column(String(32))
+    report_type: Mapped[str] = mapped_column(String(32))
+    due_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    submitted_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    submitted_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    submission_reference: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    acknowledged_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    acknowledgement_reference: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(
+        String(16), default=SafetySubmissionStatus.pending.value
+    )
+    correlation_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+
+class ParticipantReimbursement(Base):
+    """A participant expense / inconvenience payment (REQ-CTS-NAT-008).
+
+    CTMS owns the record; citizen-portal renders it. Currency and the
+    guidance cap come from the study's country pack.
+    """
+
+    __tablename__ = "participant_reimbursements"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    subject_id: Mapped[int] = mapped_column(ForeignKey("subjects.id"), index=True)
+    visit_id: Mapped[int | None] = mapped_column(ForeignKey("subject_visits.id"), nullable=True)
+    category: Mapped[str] = mapped_column(String(32))
+    amount: Mapped[float] = mapped_column(default=0.0)
+    currency: Mapped[str] = mapped_column(String(3))
+    status: Mapped[str] = mapped_column(
+        String(16), default=ReimbursementStatus.requested.value
+    )
+    requested_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
+    approved_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    paid_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
+    exceeds_guidance_cap: Mapped[bool] = mapped_column(default=False)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class IntegrationDispatch(Base):

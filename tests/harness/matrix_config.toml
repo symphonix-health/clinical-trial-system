@@ -19,6 +19,15 @@ ctms = [
     "FR-C-81", "FR-C-83", "FR-C-91", "FR-C-A11", "FR-C-A12", "FR-C-A21", "FR-C-A22", "FR-C-A23", "FR-C-A31", "FR-C-A41",
     "NFR-C-PE-001", "NFR-C-PE-002", "NFR-C-SE-001", "NFR-C-SE-002",
     "NFR-C-RE-001", "NFR-C-SA-001", "NFR-C-CO-001", "NFR-C-MA-001",
+    # National capability families (the national-capability family..008), 2026-08-05
+    "FR-C-111", "FR-C-112", "FR-C-113", "FR-C-114",
+    "FR-C-121", "FR-C-122", "FR-C-123", "FR-C-124",
+    "FR-C-131", "FR-C-132", "FR-C-133", "FR-C-141",
+    "FR-C-142", "FR-C-143", "FR-C-144", "FR-C-145",
+    "FR-C-151", "FR-C-152", "FR-C-153", "FR-C-154",
+    "FR-C-161", "FR-C-162", "FR-C-163", "FR-C-164",
+    "FR-C-171", "FR-C-172", "FR-C-181", "FR-C-182",
+    "FR-C-183", "FR-C-191", "FR-C-192",
 ]
 
 [compliance_policy]

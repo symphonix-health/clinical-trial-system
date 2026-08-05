@@ -3,15 +3,15 @@
   "canonical_matrix_schema": "BT_CANONICAL_MATRIX_V2_18COL",
   "metadata": {
     "subsystem": "clinical-trial-system",
-    "requirement_count": 37,
-    "covered_count": 37,
+    "requirement_count": 68,
+    "covered_count": 68,
     "uncovered_count": 0
   },
   "coverage": {
     "matrix_files": [
       "ctms_scenarios.json"
     ],
-    "covered": 37,
+    "covered": 68,
     "uncovered": 0,
     "coverage_pct": 100.0
   },
@@ -739,6 +739,586 @@
       "scenario_ids": [
         "ctms_POS_0037",
         "ctms_POS_0074"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-111",
+      "description": "Study jurisdiction selects the country pack",
+      "framework": "STUDY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0004"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-112",
+      "description": "Public trial-registry submission and receipt",
+      "framework": "STUDY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 4,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0002",
+        "ctms_NAT_POS_0005",
+        "ctms_NAT_POS_0006",
+        "ctms_NAT_POS_0007"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-113",
+      "description": "Investigator delegation log",
+      "framework": "SITE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_POS_0008",
+        "ctms_NAT_POS_0009"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-114",
+      "description": "Site activation readiness with explicit blockers",
+      "framework": "SITE",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_NAT_EDG_0001",
+        "ctms_NAT_NEG_0003",
+        "ctms_NAT_POS_0010"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-121",
+      "description": "Ethics and competent-authority submissions",
+      "framework": "REGULATORY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0004",
+        "ctms_NAT_POS_0011"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-122",
+      "description": "Named human approval decisions",
+      "framework": "REGULATORY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0005",
+        "ctms_NAT_NEG_0006",
+        "ctms_NAT_POS_0012"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-123",
+      "description": "Approval expiry and statutory report clocks",
+      "framework": "REGULATORY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0012"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-124",
+      "description": "Approvals and statutory reports falling due",
+      "framework": "REGULATORY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0013"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-131",
+      "description": "Hub-mediated criteria-only pre-screen request",
+      "framework": "ELIGIBILITY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0007",
+        "ctms_NAT_POS_0014"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-132",
+      "description": "Derived eligibility outcome",
+      "framework": "ELIGIBILITY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0008",
+        "ctms_NAT_POS_0015"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-133",
+      "description": "Auditable pre-screen decisions",
+      "framework": "ELIGIBILITY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0016"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-141",
+      "description": "Consent lifecycle record",
+      "framework": "CONSENT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0019"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-142",
+      "description": "Explicit re-consent flagging",
+      "framework": "CONSENT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0018"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-143",
+      "description": "Withdrawal cancels future activity",
+      "framework": "CONSENT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0021"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-144",
+      "description": "Consent state gates investigational product",
+      "framework": "CONSENT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0009",
+        "ctms_NAT_NEG_0010",
+        "ctms_NAT_POS_0020"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-145",
+      "description": "Withdrawal propagates to every downstream surface",
+      "framework": "CONSENT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0022"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-151",
+      "description": "Deterministic stratified allocation list",
+      "framework": "RANDOMISATION",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0023"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-152",
+      "description": "Allocation consumes the next free slot",
+      "framework": "RANDOMISATION",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0023"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-153",
+      "description": "Blinded allocation read",
+      "framework": "RANDOMISATION",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0011",
+        "ctms_NAT_POS_0024"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-154",
+      "description": "Emergency unblinding with named authoriser",
+      "framework": "RANDOMISATION",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_EDG_0002",
+        "ctms_NAT_POS_0025"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-161",
+      "description": "Three-limb SUSAR determination",
+      "framework": "SAFETY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0026"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-162",
+      "description": "Country-pack statutory reporting deadline",
+      "framework": "SAFETY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0026"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-163",
+      "description": "Safety report submission to a recognised recipient",
+      "framework": "SAFETY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0012",
+        "ctms_NAT_POS_0027"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-164",
+      "description": "Safety loop closes on acknowledgement",
+      "framework": "SAFETY",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_POS_0028",
+        "ctms_NAT_POS_0029"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-171",
+      "description": "Dispense cannot exceed on-hand inventory",
+      "framework": "IP",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_EDG_0003"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-172",
+      "description": "CTMS-initiated dispense notifies the dispensing sibling",
+      "framework": "IP",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_POS_0017"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-181",
+      "description": "Participant summary contract",
+      "framework": "PARTICIPANT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 1,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0015"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-182",
+      "description": "Reimbursement policy from the country pack",
+      "framework": "PARTICIPANT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 3,
+      "scenario_ids": [
+        "ctms_NAT_EDG_0003",
+        "ctms_NAT_NEG_0013",
+        "ctms_NAT_POS_0030"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-183",
+      "description": "Named approval of participant payments",
+      "framework": "PARTICIPANT",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0014",
+        "ctms_NAT_POS_0031"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-191",
+      "description": "Country policy is versioned validated data",
+      "framework": "COUNTRY_PACK",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_POS_0001",
+        "ctms_NAT_POS_0002"
+      ],
+      "matrix_files": [
+        "ctms_scenarios.json"
+      ],
+      "coverage_status": "covered"
+    },
+    {
+      "requirement_id": "FR-C-192",
+      "description": "Country packs exposed read-only",
+      "framework": "COUNTRY_PACK",
+      "jurisdiction": "docs/REQUIREMENTS.md",
+      "priority": "functional",
+      "subsystems": [
+        "ctms"
+      ],
+      "scenario_count": 2,
+      "scenario_ids": [
+        "ctms_NAT_NEG_0001",
+        "ctms_NAT_POS_0003"
       ],
       "matrix_files": [
         "ctms_scenarios.json"

@@ -8,6 +8,7 @@ from app.api.v1.endpoints import (
     budgets,
     health,
     ip,
+    national,
     queries,
     reference,
     regulatory,
@@ -33,4 +34,5 @@ api_router.include_router(queries.router)
 api_router.include_router(budgets.router)
 api_router.include_router(reports.router)
 api_router.include_router(agents.router)
+api_router.include_router(national.router)
 api_router.include_router(webhooks.router)

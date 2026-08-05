@@ -54,6 +54,14 @@ _RECEIVER_CONNECTOR_MAP: dict[str, str] = {
     "analytics-bi": "analytics_bi",
     "pharmacy-system": "pharmacy_system",
     "global-agent-registry": "global_agent_registry",
+    # National capability receivers (REQ-CTS-NAT-001/002/006). These are
+    # EXTERNAL national rails (public trial registry, competent authority,
+    # ethics authority) reached through the hub, never dialled directly. The
+    # BulletTrain manifests for them do not exist yet -- see
+    # backend/tests/test_bt_connector_seam.py, which pins that fact read-only
+    # and flips RED the moment BT registers them.
+    "national-trial-registry": "national_trial_registry",
+    "national-safety-authority": "national_safety_authority",
 }
 
 # Map CTMS dotted route -> exchange route resource_type expected by the target
@@ -64,7 +72,27 @@ _ROUTE_RESOURCE_TYPE_MAP: dict[str, str] = {
     "ctms.adverse_event.reported": "AdverseEventReported",
     "ctms.ip.dispensed": "IpDispensed",
     "ctms.agent.run_completed": "AgentRunCompleted",
+    # National capability routes (REQ-CTS-NAT-001..008).
+    "ctms.consent.withdrawn": "ResearchConsentWithdrawn",
+    "ctms.eligibility.prescreen_requested": "ResearchEligibilityPreScreen",
+    "ctms.trial.registration_submitted": "TrialRegistrationSubmitted",
+    "ctms.safety.report_submitted": "SafetyReportSubmitted",
+    "ctms.participant.reimbursement_issued": "ParticipantReimbursementIssued",
 }
+
+# Routes whose target resource_type is NOT yet registered in any BulletTrain
+# connector manifest. The dispatch is still queued in ``IntegrationDispatch``
+# (so the CTMS side is complete and replayable) but the loop is NOT closed.
+# Graded honestly as "implemented to the queue" in the disposition ledger.
+UNREGISTERED_BT_RESOURCE_TYPES: frozenset[str] = frozenset(
+    {
+        "ResearchConsentWithdrawn",
+        "ResearchEligibilityPreScreen",
+        "TrialRegistrationSubmitted",
+        "SafetyReportSubmitted",
+        "ParticipantReimbursementIssued",
+    }
+)
 
 
 def _hub_token() -> str:
@@ -385,6 +413,168 @@ async def notify_agent_run_completed(
             "run_id": run_id,
             "agent_subject_ids": agent_subject_ids,
             "metrics_snapshot": metrics_snapshot,
+        },
+        correlation_id=correlation_id,
+    )
+
+
+# --- National capability cascades (REQ-CTS-NAT-001..008) --------------------
+
+
+async def notify_consent_withdrawn(
+    session: AsyncSession,
+    *,
+    subject_id: int,
+    study_id: int,
+    subject_number: str,
+    withdrawal_scope: str,
+    withdrawn_at: str,
+    cancelled_visits: int,
+    correlation_id: str | None = None,
+) -> list[models.IntegrationDispatch]:
+    """Propagate a consent withdrawal to every downstream sibling.
+
+    REQ-CTS-NAT-004. Withdrawal is fanned out to BOTH the participant surface
+    (citizen-portal) and the dispensing surface (pharmacy-system): a
+    withdrawal that reaches only one of them leaves the other acting on
+    consent the participant has revoked.
+    """
+
+    payload = {
+        "subject_id": subject_id,
+        "study_id": study_id,
+        "subject_number": subject_number,
+        "withdrawal_scope": withdrawal_scope,
+        "withdrawn_at": withdrawn_at,
+        "cancelled_visits": cancelled_visits,
+    }
+    dispatches: list[models.IntegrationDispatch] = []
+    for receiver in ("citizen-portal", "pharmacy-system"):
+        dispatches.append(
+            await dispatch_via_hub(
+                session,
+                event_id=f"ctms-consent-withdrawn-{subject_id}-{receiver}",
+                route="ctms.consent.withdrawn",
+                receiver=receiver,
+                payload=payload,
+                correlation_id=correlation_id or f"ctms-consent-withdrawn-{subject_id}",
+            )
+        )
+    return dispatches
+
+
+async def request_eligibility_prescreen(
+    session: AsyncSession,
+    *,
+    screening_id: int,
+    study_id: int,
+    candidate_reference: str,
+    criteria_requested: list[str],
+    consent_basis: str,
+    correlation_id: str | None = None,
+) -> models.IntegrationDispatch:
+    """Ask the hub to evaluate inclusion/exclusion criteria for a candidate.
+
+    REQ-CTS-NAT-003 (HUB-CONSUME). Only the criterion list and a pseudonymous
+    candidate reference leave CTMS -- never a request for the full record.
+    """
+
+    return await dispatch_via_hub(
+        session,
+        event_id=f"ctms-eligibility-{screening_id}",
+        route="ctms.eligibility.prescreen_requested",
+        receiver="analytics-bi",
+        payload={
+            "screening_id": screening_id,
+            "study_id": study_id,
+            "candidate_reference": candidate_reference,
+            "criteria_requested": criteria_requested,
+            "consent_basis": consent_basis,
+            "minimum_necessary": True,
+        },
+        correlation_id=correlation_id,
+    )
+
+
+async def notify_trial_registration_submitted(
+    session: AsyncSession,
+    *,
+    registration_id: int,
+    study_id: int,
+    jurisdiction: str,
+    registry_code: str,
+    correlation_id: str | None = None,
+) -> models.IntegrationDispatch:
+    """Submit a study to the jurisdiction's public trial registry."""
+
+    return await dispatch_via_hub(
+        session,
+        event_id=f"ctms-trial-registration-{registration_id}",
+        route="ctms.trial.registration_submitted",
+        receiver="national-trial-registry",
+        payload={
+            "registration_id": registration_id,
+            "study_id": study_id,
+            "jurisdiction": jurisdiction,
+            "registry_code": registry_code,
+        },
+        correlation_id=correlation_id,
+    )
+
+
+async def notify_safety_report_submitted(
+    session: AsyncSession,
+    *,
+    submission_id: int,
+    adverse_event_id: int,
+    jurisdiction: str,
+    recipient_code: str,
+    report_type: str,
+    due_at: str | None,
+    correlation_id: str | None = None,
+) -> models.IntegrationDispatch:
+    """Send an expedited safety report to the competent authority."""
+
+    return await dispatch_via_hub(
+        session,
+        event_id=f"ctms-safety-submission-{submission_id}",
+        route="ctms.safety.report_submitted",
+        receiver="national-safety-authority",
+        payload={
+            "submission_id": submission_id,
+            "adverse_event_id": adverse_event_id,
+            "jurisdiction": jurisdiction,
+            "recipient_code": recipient_code,
+            "report_type": report_type,
+            "due_at": due_at,
+        },
+        correlation_id=correlation_id,
+    )
+
+
+async def notify_participant_reimbursement(
+    session: AsyncSession,
+    *,
+    reimbursement_id: int,
+    subject_id: int,
+    amount: float,
+    currency: str,
+    status: str,
+    correlation_id: str | None = None,
+) -> models.IntegrationDispatch:
+    """Tell citizen-portal a participant payment changed state."""
+
+    return await dispatch_via_hub(
+        session,
+        event_id=f"ctms-reimbursement-{reimbursement_id}-{status}",
+        route="ctms.participant.reimbursement_issued",
+        receiver="citizen-portal",
+        payload={
+            "reimbursement_id": reimbursement_id,
+            "subject_id": subject_id,
+            "amount": amount,
+            "currency": currency,
+            "status": status,
         },
         correlation_id=correlation_id,
     )

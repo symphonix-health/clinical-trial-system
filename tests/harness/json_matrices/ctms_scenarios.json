@@ -22,17 +22,48 @@
   ],
   "metadata": {
     "subsystem": "ctms",
-    "scenario_count": 100,
+    "scenario_count": 149,
     "distribution": {
-      "positive": 85,
-      "negative": 10,
-      "edge": 5
+      "positive": 116,
+      "negative": 25,
+      "edge": 8
     },
     "default_requirement_ids": [
       "FR-C-11",
+      "FR-C-111",
+      "FR-C-112",
+      "FR-C-113",
+      "FR-C-114",
       "FR-C-12",
+      "FR-C-121",
+      "FR-C-122",
+      "FR-C-123",
+      "FR-C-124",
       "FR-C-13",
+      "FR-C-131",
+      "FR-C-132",
+      "FR-C-133",
       "FR-C-14",
+      "FR-C-141",
+      "FR-C-142",
+      "FR-C-143",
+      "FR-C-144",
+      "FR-C-145",
+      "FR-C-151",
+      "FR-C-152",
+      "FR-C-153",
+      "FR-C-154",
+      "FR-C-161",
+      "FR-C-162",
+      "FR-C-163",
+      "FR-C-164",
+      "FR-C-171",
+      "FR-C-172",
+      "FR-C-181",
+      "FR-C-182",
+      "FR-C-183",
+      "FR-C-191",
+      "FR-C-192",
       "FR-C-21",
       "FR-C-22",
       "FR-C-23",
@@ -63,14 +94,14 @@
       "FR-C-A23",
       "FR-C-A31",
       "FR-C-A41",
+      "NFR-C-CO-001",
+      "NFR-C-MA-001",
       "NFR-C-PE-001",
       "NFR-C-PE-002",
-      "NFR-C-SE-001",
-      "NFR-C-SE-002",
       "NFR-C-RE-001",
       "NFR-C-SA-001",
-      "NFR-C-CO-001",
-      "NFR-C-MA-001"
+      "NFR-C-SE-001",
+      "NFR-C-SE-002"
     ],
     "replacement": {
       "date": "2026-07-30",
@@ -731,6 +762,48 @@
           "FR-C-71#2 (shipment receipt accepted, 200)": "FR-C-71 requires receipt to be accepted and inventory incremented, so 200 is the REQUIRED behaviour"
         }
       }
+    },
+    "national_capability_extension": {
+      "date": "2026-08-05",
+      "audit": "docs/national-capability-audit.md",
+      "ledger": "docs/NATIONAL_CAPABILITY_DISPOSITION_LEDGER.md",
+      "rows_added": 49,
+      "requirements_added": [
+        "FR-C-111",
+        "FR-C-112",
+        "FR-C-113",
+        "FR-C-114",
+        "FR-C-121",
+        "FR-C-122",
+        "FR-C-123",
+        "FR-C-124",
+        "FR-C-131",
+        "FR-C-132",
+        "FR-C-133",
+        "FR-C-141",
+        "FR-C-142",
+        "FR-C-143",
+        "FR-C-144",
+        "FR-C-145",
+        "FR-C-151",
+        "FR-C-152",
+        "FR-C-153",
+        "FR-C-154",
+        "FR-C-161",
+        "FR-C-162",
+        "FR-C-163",
+        "FR-C-164",
+        "FR-C-171",
+        "FR-C-172",
+        "FR-C-181",
+        "FR-C-182",
+        "FR-C-183",
+        "FR-C-191",
+        "FR-C-192"
+      ],
+      "method": "every added row dispatches a real request against the seeded CTMS ASGI app through backend/tests/test_matrix_scenario_execution.py; expected_outputs.http_status is the status the REQUIREMENT demands and the run proves the code delivers it",
+      "distribution_note": "the 85/10/5 split is no longer held: the added rows are deliberately 25-negative-heavy overall because the national families are mostly refusal/authority controls (wrong-registry identifier, unnamed decider, partial eligibility evaluation, dispensing after withdrawal). Padding positives back to 85% would have meant inventing rows with no executable substance, which the matrix-integrity gate exists to prevent.",
+      "latency_note": "observed_latency_ms is null on the added rows: latency was not measured for them, and copying a plausible number would be a fabricated measurement"
     }
   },
   "scenarios": [
@@ -7749,11 +7822,12 @@
       "use_case_id": "ctms_EDG_0003",
       "subsystem": "ctms",
       "requirement_ids": [
-        "FR-C-72"
+        "FR-C-72",
+        "FR-C-171"
       ],
       "scenario_category": "Edge",
-      "title": "DEFECT: dispensing more units than are on hand drives inventory negative",
-      "description": "Proven by read-back: product on_hand 200, dispense of 100200 accepted with 200, on_hand afterwards -100000. FR-C-72 requires the dispense to decrement inventory; there is no sufficiency check, so accountability goes negative and the FR-C-74 close-out identity (shipped - dispensed - returned - destroyed = on-hand) cannot balance. This is a regulated IP-accountability control. Recorded expectation is the OBSERVED 200, tagged requirement-unmet. EXPECTATION HELD AT 422, NOT the observed 200: the scenario and the requirement agree and the CODE is the outlier, so recording 200 would canonise the defect as the requirement. Marked blocked-on-defect CTMS-IP-001; the harness asserts this row STILL fails and reports it the moment the code starts satisfying the requirement.",
+      "title": "Dispensing more units than are on hand is refused (CTMS-IP-001 fixed)",
+      "description": "Boundary case: request a dispense larger than the product's on-hand quantity. Until 2026-08-05 this was accepted and drove on_hand to -100000, so the FR-C-74 close-out identity (shipped - dispensed - returned - destroyed = on-hand) could not balance; the row was held at 422 with blocked_on_defect CTMS-IP-001. the national-capability family added the sufficiency check in app.crud.create_ip_dispense, so the row is now LIVE coverage: it asserts the refusal, not the defect. The proposition is unchanged -- only the code caught up with it.",
       "preconditions": [
         "product on-hand quantity below the requested amount"
       ],
@@ -7785,14 +7859,15 @@
       "expected_events": [],
       "expected_outputs": {
         "http_status": 422,
-        "final_status": "SUCCESS",
+        "final_status": "FAILURE",
         "observed_latency_ms": 29.6,
         "requirement_intent": "refused as unprocessable",
-        "requirement_status": "UNMET",
+        "requirement_status": "MET",
         "assertions": [
           "http_status == 422"
         ],
-        "observed_status_at_authoring": 200
+        "observed_status_at_authoring": 200,
+        "fixed_by": "the national-capability family inventory sufficiency guard, 2026-08-05"
       },
       "fault_profile": {
         "inject_at": "none",
@@ -7817,16 +7892,13 @@
         "ip",
         "dispense",
         "edge",
-        "defect-CTMS-IP-001",
-        "requirement-unmet",
-        "blocked-on-defect",
-        "defect-CTMS-IP-001"
+        "inventory-sufficiency",
+        "CTMS-IP-001-fixed"
       ],
       "validation_rules": [
         "executed by backend/tests/test_matrix_scenario_execution.py"
       ],
-      "defect_reference": "CTMS-IP-001",
-      "blocked_on_defect": "CTMS-IP-001",
+      "defect_reference": "CTMS-IP-001 (fixed 2026-08-05)",
       "requirement_demands": "FR-C-72 and FR-C-74 require IP accountability to balance; a dispense exceeding on-hand inventory must be refused, not allowed to drive on-hand negative"
     },
     {
@@ -7996,6 +8068,3423 @@
       "defect_reference": "CTMS-FIN-002",
       "blocked_on_defect": "CTMS-FIN-002",
       "requirement_demands": "FR-C-83 generates a draft invoice for sponsor routing; a negative amount is a credit note and must be refused"
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0001",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-191"
+      ],
+      "scenario_category": "Positive",
+      "title": "Every shipped country pack loads and validates",
+      "description": "GET the full pack set. Each pack is validated on load against the CTMS_COUNTRY_PACK_V1 contract, so a pack missing a statutory section raises rather than silently dropping a deadline.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/country-packs",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/country-packs"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/country-packs",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0001"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "all packs load and validate",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "country-pack",
+        "policy-as-data"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0002",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-191"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ireland pack exposes its authorities, deadlines and sources",
+      "description": "GET the IE pack -- the operating jurisdiction named by the national capability audit. It carries HPRA as competent authority, NREC-CT as ethics authority, CTIS as registry, the 7/15-day SUSAR clocks and four official sources with access dates.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/country-packs/IE",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/country-packs/IE"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/country-packs/IE",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0002"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "Ireland pack served with sources and effective date",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "country-pack",
+        "ireland"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0003",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-192"
+      ],
+      "scenario_category": "Positive",
+      "title": "Kenya pack carries the NACOSTI research-licence delta",
+      "description": "GET the KE pack. Its ethics section adds the NACOSTI research licence alongside the accredited ERC, and its consent section adds Swahili translation -- deltas that must be data, not code branches.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/country-packs/KE",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/country-packs/KE"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/country-packs/KE",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0003"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "Kenya pack served with its jurisdiction delta",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "country-pack",
+        "kenya"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0001",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-192"
+      ],
+      "scenario_category": "Negative",
+      "title": "An unknown jurisdiction is refused",
+      "description": "GET a pack for a jurisdiction with no pack on disk. Serving a default would silently apply the wrong statutory deadlines.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/country-packs/ZZ",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/country-packs/ZZ"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/country-packs/ZZ",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_neg_0001"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 404,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "unknown jurisdiction refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 404"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "country-pack",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0004",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-111"
+      ],
+      "scenario_category": "Positive",
+      "title": "A study is created under the Ireland jurisdiction",
+      "description": "POST a study declaring jurisdiction IE. Every downstream policy lookup for this study -- registry format, safety clocks, consent rules, reimbursement currency -- now resolves from the IE pack.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/studies",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/studies"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/studies",
+        "query": {},
+        "body": {
+          "protocol_number": "NAT-IE-2026-011",
+          "title": "Ireland national-capability reference study",
+          "phase": "II",
+          "indication": "chronic heart failure",
+          "therapeutic_area": "cardiology",
+          "sponsor": "Symphonix Research Ireland Ltd",
+          "sponsor_organisation_id": "ORG-SYM-IE-011",
+          "jurisdiction": "IE",
+          "planned_sites": 2,
+          "planned_subjects": 40
+        },
+        "correlation_id": "corr-ctms_nat_pos_0004"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "study created against the IE country pack",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "study",
+        "jurisdiction",
+        "ireland"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0005",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-112"
+      ],
+      "scenario_category": "Positive",
+      "title": "A study is submitted to its public trial registry through the hub",
+      "description": "POST a registry submission for the UK oncology study. The dispatch is queued in IntegrationDispatch; the registration moves to submitted, NOT registered -- dispatch is not completion.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/trial-registrations",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/trial-registrations"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/trial-registrations",
+        "query": {},
+        "body": {
+          "study_id": "{study}",
+          "public_disclosure_url": null
+        },
+        "correlation_id": "corr-ctms_nat_pos_0005"
+      },
+      "expected_connector_calls": [
+        {
+          "receiver": "national-trial-registry",
+          "route": "ctms.trial.registration_submitted",
+          "resource_type": "TrialRegistrationSubmitted",
+          "bt_registration_status": "NOT_REGISTERED_IN_BULLETTRAIN"
+        }
+      ],
+      "expected_events": [
+        "ctms.trial.registration_submitted"
+      ],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "registration dispatched and left awaiting a receipt",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "trial-registry",
+        "closed-loop"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0002",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-112"
+      ],
+      "scenario_category": "Negative",
+      "title": "A registry receipt carrying another jurisdiction's identifier is refused",
+      "description": "POST an acknowledgement quoting a ClinicalTrials.gov NCT number against a UK study whose registry is ISRCTN. Storing it would make the study appear registered in a registry it never reached.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/trial-registrations/{new_registration}/receipt",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/trial-registrations/{new_registration}/receipt"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/trial-registrations/{new_registration}/receipt",
+        "query": {},
+        "body": {
+          "registry_identifier": "NCT01234567",
+          "receipt_reference": "WRONG-REGISTRY-ACK-001",
+          "accepted": true
+        },
+        "correlation_id": "corr-ctms_nat_neg_0002"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "identifier format mismatch refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "trial-registry",
+        "negative",
+        "identifier-format"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0006",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-112"
+      ],
+      "scenario_category": "Positive",
+      "title": "A valid registry acknowledgement closes the registration loop",
+      "description": "POST the registry's acknowledgement with a well-formed ISRCTN number. Only now does the registration reach registered, carrying the receipt reference that proves the registry accepted it.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/trial-registrations/{new_registration}/receipt",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/trial-registrations/{new_registration}/receipt"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/trial-registrations/{new_registration}/receipt",
+        "query": {},
+        "body": {
+          "registry_identifier": "ISRCTN90114327",
+          "receipt_reference": "ISRCTN-ACK-2026-009011",
+          "accepted": true
+        },
+        "correlation_id": "corr-ctms_nat_pos_0006"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "registration acknowledged and receipted",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "trial-registry",
+        "closed-loop",
+        "receipt"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0007",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-112"
+      ],
+      "scenario_category": "Positive",
+      "title": "Registrations for a study are listed with their loop state",
+      "description": "GET the registrations for the study so an operator can see which are receipted, which are awaiting a receipt and which were rejected.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/trial-registrations",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/trial-registrations"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/trial-registrations",
+        "query": {
+          "study_id": "{study}"
+        },
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0007"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "registrations listed",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "trial-registry",
+        "read"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0008",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-113"
+      ],
+      "scenario_category": "Positive",
+      "title": "A delegated task is added to the site delegation log",
+      "description": "POST a delegation-log entry for a research nurse. GCP expiry is derived from the jurisdiction's validity period rather than supplied by the caller, so an out-of-date certificate cannot be back-dated in.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/delegations",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/delegations"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/delegations",
+        "query": {},
+        "body": {
+          "site_id": "{site}",
+          "person_id": "rn_nat_004",
+          "person_name": "Siobhan Kelleher",
+          "role": "research_nurse",
+          "delegated_tasks": [
+            "vital_signs",
+            "ip_administration",
+            "ae_capture"
+          ],
+          "delegated_by": "dr_sarah_chen",
+          "gcp_training_date": "2026-02-14",
+          "professional_registration": "NMC-91277",
+          "start_date": "2026-03-01"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0008"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "delegation recorded with derived GCP expiry",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "delegation",
+        "credentialing"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0009",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-113"
+      ],
+      "scenario_category": "Positive",
+      "title": "The delegation log for a site is readable",
+      "description": "GET the delegation log. Reading it also re-evaluates active entries whose GCP training has lapsed since they were written.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/delegations",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/delegations"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/delegations",
+        "query": {
+          "site_id": "{site}"
+        },
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0009"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "delegation log served",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "delegation",
+        "read"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0010",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-114"
+      ],
+      "scenario_category": "Positive",
+      "title": "Site readiness is reported with its blocking reasons",
+      "description": "GET readiness for an activated oncology site. The response enumerates checklist state, delegation counts, ethics approval and every blocking reason rather than collapsing to a boolean.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/sites/{site}/readiness",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/sites/{site}/readiness"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/sites/{site}/readiness",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0010"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "readiness reported with explicit blockers",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "site",
+        "readiness"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_EDG_0001",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-114"
+      ],
+      "scenario_category": "Edge",
+      "title": "Expired GCP training blocks a site that is otherwise complete",
+      "description": "GET readiness for the Irish paediatric site whose pharmacist's GCP certificate expired in 2025. The site is not ready even though its activation checklist is complete -- the expired credential is the blocker, and it is named.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/sites/{ie_site}/readiness",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/sites/{ie_site}/readiness"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/sites/{ie_site}/readiness",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_edg_0001"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "expired credential surfaces as a named blocker",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "site",
+        "readiness",
+        "edge",
+        "expired-gcp"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0003",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-114"
+      ],
+      "scenario_category": "Negative",
+      "title": "Readiness for an unknown site is refused",
+      "description": "GET readiness for a site id that does not exist. Returning an empty ready-for-activation object would read as a green light.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/sites/999999/readiness",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/sites/999999/readiness"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/sites/999999/readiness",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_neg_0003"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 404,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "unknown site refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 404"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "site",
+        "readiness",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0011",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-121"
+      ],
+      "scenario_category": "Positive",
+      "title": "An ethics amendment submission is recorded",
+      "description": "POST an amendment submission to the study's ethics authority. The authority code is resolved from the country pack, so a UK study records HRA-REC without the caller naming it.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/regulatory-approvals",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/regulatory-approvals"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/regulatory-approvals",
+        "query": {},
+        "body": {
+          "study_id": "{study}",
+          "authority_kind": "ethics",
+          "submission_type": "amendment",
+          "submission_reference": "IRAS-318442-AM07",
+          "protocol_version": "v3.0"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0011"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "submission recorded against the pack's ethics authority",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "regulatory",
+        "ethics",
+        "amendment"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0004",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-121"
+      ],
+      "scenario_category": "Negative",
+      "title": "A submission to an authority kind that does not exist is refused",
+      "description": "POST a submission naming 'sponsor' as the deciding authority. Only the ethics authority and the competent authority may decide.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/regulatory-approvals",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/regulatory-approvals"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/regulatory-approvals",
+        "query": {},
+        "body": {
+          "study_id": "{study}",
+          "authority_kind": "sponsor",
+          "submission_type": "initial",
+          "submission_reference": "BOGUS-AUTHORITY-001"
+        },
+        "correlation_id": "corr-ctms_nat_neg_0004"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "unknown authority kind refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "regulatory",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0005",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-122"
+      ],
+      "scenario_category": "Negative",
+      "title": "Approval with conditions but no conditions is refused",
+      "description": "POST a decision of approved_with_conditions carrying an empty condition list. A conditional approval whose conditions are not written down is indistinguishable from an unconditional one.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/regulatory-approvals/{new_approval}/decision",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/regulatory-approvals/{new_approval}/decision"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/regulatory-approvals/{new_approval}/decision",
+        "query": {},
+        "body": {
+          "decision": "approved_with_conditions",
+          "decided_by": "Prof Helen Whitmore (REC chair)",
+          "conditions": null
+        },
+        "correlation_id": "corr-ctms_nat_neg_0005"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "conditional approval without conditions refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "regulatory",
+        "negative",
+        "human-authority"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0012",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-122",
+        "FR-C-123"
+      ],
+      "scenario_category": "Positive",
+      "title": "A named REC chair approves the amendment",
+      "description": "POST the decision with the deciding human named. The approval expiry is stored and the next statutory report date is computed from the pack's annual interval -- neither is guessed by the caller.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/regulatory-approvals/{new_approval}/decision",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/regulatory-approvals/{new_approval}/decision"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/regulatory-approvals/{new_approval}/decision",
+        "query": {},
+        "body": {
+          "decision": "approved",
+          "decided_by": "Prof Helen Whitmore (REC chair, London-Surrey Borders)",
+          "approval_expiry": "2028-03-31"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0012"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "named human decision recorded with statutory clocks",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "regulatory",
+        "human-authority",
+        "approval"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0006",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-122"
+      ],
+      "scenario_category": "Negative",
+      "title": "A recorded decision cannot be overwritten",
+      "description": "POST a second, contradictory decision on the same submission. Overwriting would destroy the regulatory record of what was actually decided and by whom.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/regulatory-approvals/{new_approval}/decision",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/regulatory-approvals/{new_approval}/decision"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/regulatory-approvals/{new_approval}/decision",
+        "query": {},
+        "body": {
+          "decision": "rejected",
+          "decided_by": "someone_else"
+        },
+        "correlation_id": "corr-ctms_nat_neg_0006"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 409,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "terminal decision protected from overwrite",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 409"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "regulatory",
+        "negative",
+        "immutability"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0013",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-124"
+      ],
+      "scenario_category": "Positive",
+      "title": "Approvals expiring and reports falling due are reported",
+      "description": "GET the due report over a 400-day window so both the seeded annual report dates and the approval expiries fall inside it.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/regulatory-approvals/due/{study}",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/regulatory-approvals/due/{study}"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/regulatory-approvals/due/{study}",
+        "query": {
+          "within_days": 400
+        },
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0013"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "expiring approvals and due reports listed",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "regulatory",
+        "renewal",
+        "statutory-return"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0014",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-131"
+      ],
+      "scenario_category": "Positive",
+      "title": "A criteria-only pre-screen is requested through the hub",
+      "description": "POST a pre-screen carrying a pseudonymous candidate reference, three criteria and the consent basis. No care record is requested and none is stored -- only the criterion verdicts come back.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/eligibility-screenings",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/eligibility-screenings"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/eligibility-screenings",
+        "query": {},
+        "body": {
+          "study_id": "{study}",
+          "site_id": "{site}",
+          "candidate_reference": "CAND-NAT-9001",
+          "consent_basis": "research_contact_consent",
+          "requested_by": "crc_nat_1",
+          "criteria_requested": [
+            "age_18_or_over",
+            "ecog_0_to_2",
+            "no_prior_kinase_inhibitor"
+          ]
+        },
+        "correlation_id": "corr-ctms_nat_pos_0014"
+      },
+      "expected_connector_calls": [
+        {
+          "receiver": "analytics-bi",
+          "route": "ctms.eligibility.prescreen_requested",
+          "resource_type": "ResearchEligibilityPreScreen",
+          "bt_registration_status": "NOT_REGISTERED_IN_BULLETTRAIN"
+        }
+      ],
+      "expected_events": [
+        "ctms.eligibility.prescreen_requested"
+      ],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "pre-screen queued through the hub",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "eligibility",
+        "hub-consume",
+        "minimum-necessary"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0007",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-131"
+      ],
+      "scenario_category": "Negative",
+      "title": "A pre-screen with no criteria is refused",
+      "description": "POST a pre-screen with an empty criterion list. An open-ended request is exactly the full-record exposure the hub-consume design forbids.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/eligibility-screenings",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/eligibility-screenings"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/eligibility-screenings",
+        "query": {},
+        "body": {
+          "study_id": "{study}",
+          "candidate_reference": "CAND-NAT-9002",
+          "consent_basis": "research_contact_consent",
+          "requested_by": "crc_nat_1",
+          "criteria_requested": []
+        },
+        "correlation_id": "corr-ctms_nat_neg_0007"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "criterion-less request refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "eligibility",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0008",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-132"
+      ],
+      "scenario_category": "Negative",
+      "title": "An evaluation that skips a requested criterion is refused",
+      "description": "POST verdicts for two of the three requested criteria. Deriving an outcome from a partial evaluation would silently drop an exclusion criterion.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/eligibility-screenings/{new_screening}/outcome",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/eligibility-screenings/{new_screening}/outcome"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/eligibility-screenings/{new_screening}/outcome",
+        "query": {},
+        "body": {
+          "criteria_evaluated": {
+            "age_18_or_over": true,
+            "ecog_0_to_2": true
+          },
+          "reviewed_by": "dr_sarah_chen"
+        },
+        "correlation_id": "corr-ctms_nat_neg_0008"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "incomplete evaluation refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "eligibility",
+        "negative",
+        "completeness"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0015",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-132"
+      ],
+      "scenario_category": "Positive",
+      "title": "A failed exclusion criterion derives an ineligible outcome",
+      "description": "POST all three verdicts with the prior-therapy criterion failed. The outcome is DERIVED as ineligible; the caller never asserts it, so a caller cannot declare a candidate eligible against the evidence.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/eligibility-screenings/{new_screening}/outcome",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/eligibility-screenings/{new_screening}/outcome"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/eligibility-screenings/{new_screening}/outcome",
+        "query": {},
+        "body": {
+          "criteria_evaluated": {
+            "age_18_or_over": true,
+            "ecog_0_to_2": true,
+            "no_prior_kinase_inhibitor": false
+          },
+          "reviewed_by": "dr_sarah_chen",
+          "source_system": "bullettrain-hub"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0015"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "ineligible outcome derived from the verdicts",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "eligibility",
+        "derived-outcome",
+        "audit"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0016",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-133"
+      ],
+      "scenario_category": "Positive",
+      "title": "Pre-screens for a study are listed for review",
+      "description": "GET the pre-screens so a reviewer can see which candidates are awaiting human review and which have a machine-derived outcome.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/eligibility-screenings",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/eligibility-screenings"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/eligibility-screenings",
+        "query": {
+          "study_id": "{study}"
+        },
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0016"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "pre-screens listed",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "eligibility",
+        "read"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0017",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-172"
+      ],
+      "scenario_category": "Positive",
+      "title": "A CTMS-initiated dispense notifies the pharmacy sibling",
+      "description": "POST a dispense recorded by the site pharmacist inside CTMS. Before the national-capability family only the INBOUND pharmacy webhook path dispatched ctms.ip.dispensed, so a CTMS-initiated dispense never reached the hub.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/ip/dispenses",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/ip/dispenses"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/ip/dispenses",
+        "query": {},
+        "body": {
+          "subject_id": "{subject}",
+          "product_id": "{product}",
+          "quantity_dispensed": 5,
+          "dispensed_by": "pharm_nat_101"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0017"
+      },
+      "expected_connector_calls": [
+        {
+          "receiver": "pharmacy-system",
+          "route": "ctms.ip.dispensed",
+          "resource_type": "IpDispensed",
+          "bt_registration_status": "REGISTERED_IN_BULLETTRAIN"
+        }
+      ],
+      "expected_events": [
+        "ctms.ip.dispensed"
+      ],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "dispense recorded and notified through the hub",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "ip",
+        "dispense",
+        "hub-mediation"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0018",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-142"
+      ],
+      "scenario_category": "Positive",
+      "title": "A protocol amendment flags enrolled subjects for re-consent",
+      "description": "POST the re-consent flag for protocol v3.0. Every enrolled, non-withdrawn subject of the study moves to re_consent_required and each flagging is audit-logged individually.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/studies/{study}/flag-reconsent",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/studies/{study}/flag-reconsent"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/studies/{study}/flag-reconsent",
+        "query": {
+          "protocol_version": "v3.0"
+        },
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0018"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "enrolled subjects flagged for re-consent",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "consent",
+        "amendment",
+        "re-consent"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0009",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-144"
+      ],
+      "scenario_category": "Negative",
+      "title": "Dispensing to a subject pending re-consent is refused",
+      "description": "POST the same dispense again now that the subject awaits re-consent. FR-C-33 suspends dispensing until re-consent is recorded; before this wave nothing in the dispense path consulted consent at all.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/ip/dispenses",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/ip/dispenses"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/ip/dispenses",
+        "query": {},
+        "body": {
+          "subject_id": "{subject}",
+          "product_id": "{product}",
+          "quantity_dispensed": 5,
+          "dispensed_by": "pharm_nat_101"
+        },
+        "correlation_id": "corr-ctms_nat_neg_0009"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "dispensing suspended pending re-consent",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "ip",
+        "consent",
+        "negative",
+        "propagation"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0019",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-141"
+      ],
+      "scenario_category": "Positive",
+      "title": "Re-consent against the amended protocol is recorded",
+      "description": "POST a re_consent record naming the amended protocol version, the person who gave it and the witness. Recording it returns the subject to an active consent state.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/subjects/{subject}/consent",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/subjects/{subject}/consent"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/subjects/{subject}/consent",
+        "query": {},
+        "body": {
+          "subject_id": "{subject}",
+          "consent_version": "v3.0",
+          "consent_date": "2026-08-05T10:15:00",
+          "document_reference": "reconsent_v3.0_nat.pdf",
+          "consent_type": "re_consent",
+          "protocol_version": "v3.0",
+          "given_by": "subject",
+          "witnessed_by": "rn_nat_004",
+          "future_use_opt_in": true
+        },
+        "correlation_id": "corr-ctms_nat_pos_0019"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "re-consent recorded and consent state restored",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "consent",
+        "re-consent",
+        "lifecycle"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0020",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-144"
+      ],
+      "scenario_category": "Positive",
+      "title": "Dispensing resumes once re-consent is recorded",
+      "description": "POST the dispense a third time. The suspension lifts because the consent state changed, not because a flag was cleared by hand -- the guard and the lifecycle read the same field.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/ip/dispenses",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/ip/dispenses"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/ip/dispenses",
+        "query": {},
+        "body": {
+          "subject_id": "{subject}",
+          "product_id": "{product}",
+          "quantity_dispensed": 2,
+          "dispensed_by": "pharm_nat_101"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0020"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "dispensing resumes after re-consent",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "ip",
+        "consent",
+        "propagation"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0021",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-143"
+      ],
+      "scenario_category": "Positive",
+      "title": "Withdrawal cancels visits and is propagated to both siblings",
+      "description": "POST a full withdrawal of consent. Scheduled visits are cancelled, the scope is stamped on the consent record, and the withdrawal is fanned out to citizen-portal AND pharmacy-system -- reaching only one of them would leave the other acting on revoked consent.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/subjects/{nat_withdraw_subject}/withdraw",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/subjects/{nat_withdraw_subject}/withdraw"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/subjects/{nat_withdraw_subject}/withdraw",
+        "query": {
+          "reason": "participant withdrew consent at week 12",
+          "withdrawal_scope": "full"
+        },
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0021"
+      },
+      "expected_connector_calls": [
+        {
+          "receiver": "citizen-portal",
+          "route": "ctms.consent.withdrawn",
+          "resource_type": "ResearchConsentWithdrawn",
+          "bt_registration_status": "NOT_REGISTERED_IN_BULLETTRAIN"
+        },
+        {
+          "receiver": "pharmacy-system",
+          "route": "ctms.consent.withdrawn",
+          "resource_type": "ResearchConsentWithdrawn",
+          "bt_registration_status": "NOT_REGISTERED_IN_BULLETTRAIN"
+        }
+      ],
+      "expected_events": [
+        "ctms.consent.withdrawn"
+      ],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "withdrawal recorded and propagated",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "consent",
+        "withdrawal",
+        "propagation",
+        "hub-mediation"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0010",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-144"
+      ],
+      "scenario_category": "Negative",
+      "title": "Dispensing to a withdrawn subject is refused",
+      "description": "POST a dispense for the subject who has just withdrawn. This is the propagation defect the family exists to close: a withdrawal that does not reach the dispensing surface is a real defect, not a documentation gap.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/ip/dispenses",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/ip/dispenses"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/ip/dispenses",
+        "query": {},
+        "body": {
+          "subject_id": "{nat_withdraw_subject}",
+          "product_id": "{product}",
+          "quantity_dispensed": 1,
+          "dispensed_by": "pharm_nat_101"
+        },
+        "correlation_id": "corr-ctms_nat_neg_0010"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "dispensing refused after withdrawal",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "ip",
+        "consent",
+        "withdrawal",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0022",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-145"
+      ],
+      "scenario_category": "Positive",
+      "title": "The participant surface stops offering visits after withdrawal",
+      "description": "GET the participant summary for the withdrawn subject. The consent state is withdrawn and no upcoming visits are offered, so the surface citizen-portal renders agrees with the surface pharmacy enforces.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/participants/{nat_withdraw_subject}/summary",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/participants/{nat_withdraw_subject}/summary"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/participants/{nat_withdraw_subject}/summary",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0022"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "participant surface reflects the withdrawal",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "participant",
+        "withdrawal",
+        "propagation"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0023",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-151",
+        "FR-C-152"
+      ],
+      "scenario_category": "Positive",
+      "title": "A subject is allocated from a stratified permuted-block list",
+      "description": "POST randomisation with two stratification factors. The stratum's allocation list is generated deterministically from the protocol number and stratum key, then the next free slot is consumed and audit-logged against the allocating coordinator.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/subjects/{nat_subject}/randomise",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/subjects/{nat_subject}/randomise"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/subjects/{nat_subject}/randomise",
+        "query": {},
+        "body": {
+          "stratification_factors": {
+            "region": "leinster",
+            "prior_therapy": "no"
+          },
+          "randomised_by": "crc_nat_1"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0023"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "allocation consumed from the stratified list",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "randomisation",
+        "stratification",
+        "audit"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0024",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-153"
+      ],
+      "scenario_category": "Positive",
+      "title": "The blinded allocation read returns a kit code, not an arm",
+      "description": "GET the allocation for the randomised subject. The response carries the kit code, stratum and sequence number only -- the treatment mapping is not on this surface.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/subjects/{nat_subject}/allocation",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/subjects/{nat_subject}/allocation"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/subjects/{nat_subject}/allocation",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0024"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "kit code served without the treatment arm",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "randomisation",
+        "blinding"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0011",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-153"
+      ],
+      "scenario_category": "Negative",
+      "title": "An allocation read for an unrandomised subject is refused",
+      "description": "GET the allocation for a subject still in screening, which has never been randomised. Returning an empty allocation would be indistinguishable from a blinded one. The first draft aimed this at a seeded enrolled subject, which DOES now hold an allocation because the seeder binds its historic arms to real allocation slots.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/subjects/{unrandomised_subject}/allocation",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/subjects/{unrandomised_subject}/allocation"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/subjects/{unrandomised_subject}/allocation",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_neg_0011"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 404,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "unrandomised subject refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 404"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "randomisation",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0025",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-154"
+      ],
+      "scenario_category": "Positive",
+      "title": "Emergency unblinding records its named authoriser",
+      "description": "POST an emergency unblinding requested by the site coordinator and authorised by the principal investigator. The arm is revealed only here, and the two names are stored separately so a self-authorised unblinding is visible rather than indistinguishable.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/subjects/{nat_subject}/unblind",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/subjects/{nat_subject}/unblind"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/subjects/{nat_subject}/unblind",
+        "query": {},
+        "body": {
+          "requested_by": "crc_nat_1",
+          "authorised_by": "dr_sarah_chen",
+          "reason": "suspected anaphylaxis, treatment decision requires the arm",
+          "urgency": "emergency"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0025"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "unblinding recorded against a named authoriser",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "randomisation",
+        "unblinding",
+        "human-authority"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_EDG_0002",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-154"
+      ],
+      "scenario_category": "Edge",
+      "title": "Unblinding a subject with no allocation is refused",
+      "description": "POST an unblinding for a subject still in screening, with no arm and no allocation. There is nothing to reveal, and inventing an arm would corrupt the blind. The first draft of this row aimed at a SEEDED subject and observed 200: seeded subjects carried an arm written straight onto the row with no allocation record behind it, so the unblinding surface would have revealed an arm no allocation list ever assigned. That is now refused (crud.unblind_subject) and the seeder binds its historic arms to real allocation slots.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/subjects/{unrandomised_subject}/unblind",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/subjects/{unrandomised_subject}/unblind"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/subjects/{unrandomised_subject}/unblind",
+        "query": {},
+        "body": {
+          "requested_by": "crc_nat_1",
+          "authorised_by": "crc_nat_1",
+          "reason": "probe: subject was never randomised",
+          "urgency": "routine"
+        },
+        "correlation_id": "corr-ctms_nat_edg_0002"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 409,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "unblinding refused for an unrandomised subject",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 409"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "randomisation",
+        "unblinding",
+        "edge"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0026",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-161",
+        "FR-C-162"
+      ],
+      "scenario_category": "Positive",
+      "title": "A fatal, unexpected, related reaction is flagged SUSAR with a 7-day clock",
+      "description": "POST a FATAL adverse event that is unexpected and related. Before the national-capability family the SUSAR rule was seriousness == life_threatening AND causality related, so this exact event -- the most severe class -- was NOT auto-flagged, and the deadline rule gave it 1 day instead of the statutory 7.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/adverse-events",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/adverse-events"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/adverse-events",
+        "query": {},
+        "body": {
+          "study_id": "{study}",
+          "subject_id": "{subject}",
+          "onset_date": "2026-08-03",
+          "severity": "fatal",
+          "seriousness": "fatal",
+          "causality": "related",
+          "expectedness": "unexpected",
+          "narrative": "Fatal hepatic failure, not listed in the reference safety information"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0026"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "SUSAR flagged and the pack's 7-day clock applied",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "safety",
+        "susar",
+        "country-pack"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0027",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-163"
+      ],
+      "scenario_category": "Positive",
+      "title": "The SUSAR is submitted to a recipient the jurisdiction recognises",
+      "description": "POST the expedited report to MHRA, a recipient listed in the UK pack. The submission records the submitting human and dispatches through the hub; the adverse event moves to submitted.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/adverse-events/{nat_ae}/safety-submissions",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/adverse-events/{nat_ae}/safety-submissions"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/adverse-events/{nat_ae}/safety-submissions",
+        "query": {},
+        "body": {
+          "submitted_by": "safety_officer_nat_1",
+          "recipient_code": "MHRA",
+          "submission_reference": "SUSAR-2026-000871"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0027"
+      },
+      "expected_connector_calls": [
+        {
+          "receiver": "national-safety-authority",
+          "route": "ctms.safety.report_submitted",
+          "resource_type": "SafetyReportSubmitted",
+          "bt_registration_status": "NOT_REGISTERED_IN_BULLETTRAIN"
+        }
+      ],
+      "expected_events": [
+        "ctms.safety.report_submitted"
+      ],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "safety report submitted to a recognised recipient",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "safety",
+        "susar",
+        "submission",
+        "hub-mediation"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0012",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-163"
+      ],
+      "scenario_category": "Negative",
+      "title": "A safety report to another jurisdiction's authority is refused",
+      "description": "POST the same report to the FDA against a UK study. Sending a UK SUSAR to a US authority is not a routing inconvenience -- it is a failure to report to the authority that is owed the report.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/adverse-events/{nat_ae}/safety-submissions",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/adverse-events/{nat_ae}/safety-submissions"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/adverse-events/{nat_ae}/safety-submissions",
+        "query": {},
+        "body": {
+          "submitted_by": "safety_officer_nat_1",
+          "recipient_code": "FDA",
+          "submission_reference": "SUSAR-2026-000872"
+        },
+        "correlation_id": "corr-ctms_nat_neg_0012"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "recipient outside the jurisdiction refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "safety",
+        "negative",
+        "country-pack"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0028",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-164"
+      ],
+      "scenario_category": "Positive",
+      "title": "The authority acknowledgement closes the safety loop",
+      "description": "POST the authority's acknowledgement carrying its receipt reference. Until this arrives the report is submitted-but-unreceipted, which the benchmark forbids treating as completion.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/safety-submissions/{new_submission}/acknowledgement",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/safety-submissions/{new_submission}/acknowledgement"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/safety-submissions/{new_submission}/acknowledgement",
+        "query": {},
+        "body": {
+          "acknowledgement_reference": "MHRA-ACK-2026-4471",
+          "accepted": true
+        },
+        "correlation_id": "corr-ctms_nat_pos_0028"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "safety loop closed on a receipted acknowledgement",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P0",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "safety",
+        "closed-loop",
+        "receipt"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0029",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-164"
+      ],
+      "scenario_category": "Positive",
+      "title": "Overdue unacknowledged safety reports are reportable",
+      "description": "GET the overdue safety report for the study. An acknowledged submission never appears here; one past its statutory clock without a receipt always does.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/reports/safety-overdue/{study}",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/reports/safety-overdue/{study}"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/reports/safety-overdue/{study}",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0029"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "overdue safety submissions reported",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "safety",
+        "closed-loop",
+        "reporting"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0030",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-182"
+      ],
+      "scenario_category": "Positive",
+      "title": "A travel reimbursement takes its currency from the country pack",
+      "description": "POST a travel claim. The currency is not supplied by the caller: it comes from the study's jurisdiction pack, so a UK study cannot record a euro payment by accident.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/reimbursements",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/reimbursements"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/reimbursements",
+        "query": {},
+        "body": {
+          "subject_id": "{subject}",
+          "category": "travel",
+          "amount": 45.0,
+          "notes": "Return rail fare, week-12 visit"
+        },
+        "correlation_id": "corr-ctms_nat_pos_0030"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "reimbursement recorded in the pack's currency",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "participant",
+        "reimbursement",
+        "country-pack"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_EDG_0003",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-182"
+      ],
+      "scenario_category": "Edge",
+      "title": "A payment above the jurisdiction's guidance cap is flagged, not refused",
+      "description": "POST a claim above the UK pack's per-visit guidance cap. Ethics guidance caps are guidance: the payment is recorded and FLAGGED for review rather than silently blocked or silently allowed.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/reimbursements",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/reimbursements"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/reimbursements",
+        "query": {},
+        "body": {
+          "subject_id": "{subject}",
+          "category": "travel",
+          "amount": 250.0,
+          "notes": "Overnight accommodation for a 2-day PK visit"
+        },
+        "correlation_id": "corr-ctms_nat_edg_0003"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "over-cap payment flagged for review",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "participant",
+        "reimbursement",
+        "edge",
+        "guidance-cap"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0013",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-182"
+      ],
+      "scenario_category": "Negative",
+      "title": "A non-positive reimbursement amount is refused",
+      "description": "POST a claim for a negative amount. CTMS-FIN-001 and CTMS-FIN-002 show what happens when a money field is not validated; this surface does not repeat it.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/reimbursements",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/reimbursements"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/reimbursements",
+        "query": {},
+        "body": {
+          "subject_id": "{subject}",
+          "category": "travel",
+          "amount": -25.0,
+          "notes": "probe: negative amount"
+        },
+        "correlation_id": "corr-ctms_nat_neg_0013"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 422,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "non-positive amount refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 422"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "participant",
+        "reimbursement",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_POS_0031",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-183"
+      ],
+      "scenario_category": "Positive",
+      "title": "A named coordinator approves the flagged payment",
+      "description": "POST the approval naming the approving human. Every state change is notified to citizen-portal so the participant sees the same status the sponsor sees.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/reimbursements/{new_reimbursement}/approve",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/reimbursements/{new_reimbursement}/approve"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/reimbursements/{new_reimbursement}/approve",
+        "query": {
+          "approved_by": "finance_coordinator_nat_1"
+        },
+        "body": null,
+        "correlation_id": "corr-ctms_nat_pos_0031"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 200,
+        "final_status": "SUCCESS",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "payment approved by a named human",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 200"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "participant",
+        "reimbursement",
+        "human-authority"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0014",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-183"
+      ],
+      "scenario_category": "Negative",
+      "title": "A payment cannot be approved twice",
+      "description": "POST the same approval again. A second approval would create a second authorisation for one payment.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "POST /api/v1/reimbursements/{new_reimbursement}/approve",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "POST /api/v1/reimbursements/{new_reimbursement}/approve"
+      },
+      "input_payload": {
+        "method": "POST",
+        "path": "/api/v1/reimbursements/{new_reimbursement}/approve",
+        "query": {
+          "approved_by": "finance_coordinator_nat_1"
+        },
+        "body": null,
+        "correlation_id": "corr-ctms_nat_neg_0014"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 409,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "double approval refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 409"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "participant",
+        "reimbursement",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
+    },
+    {
+      "use_case_id": "ctms_NAT_NEG_0015",
+      "subsystem": "ctms",
+      "requirement_ids": [
+        "FR-C-181"
+      ],
+      "scenario_category": "Negative",
+      "title": "A participant summary for an unknown subject is refused",
+      "description": "GET the participant summary for a subject id that does not exist. An empty summary rendered in citizen-portal would look like a participant with nothing scheduled.",
+      "preconditions": [
+        "seeded CTMS database"
+      ],
+      "trigger": {
+        "api": "GET /api/v1/participants/999999/summary",
+        "body_ref": "input_payload",
+        "resolved_at_execution": "GET /api/v1/participants/999999/summary"
+      },
+      "input_payload": {
+        "method": "GET",
+        "path": "/api/v1/participants/999999/summary",
+        "query": {},
+        "body": null,
+        "correlation_id": "corr-ctms_nat_neg_0015"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "http_status": 404,
+        "final_status": "FAILURE",
+        "observed_latency_ms": null,
+        "latency_note": "not measured for this row; the row asserts status and side effect, not latency",
+        "requirement_intent": "unknown participant refused",
+        "requirement_status": "MET",
+        "assertions": [
+          "http_status == 404"
+        ]
+      },
+      "fault_profile": {
+        "inject_at": "none",
+        "mode": "none",
+        "severity": "low",
+        "retry_policy": {
+          "max_retries": 0,
+          "backoff_ms": 0
+        }
+      },
+      "security_profile": {
+        "auth": "NONE_ENFORCED",
+        "scopes": [],
+        "transport": "http",
+        "expected_auth_result": "NOT_ENFORCED",
+        "note": "no authentication layer implemented -- see defect CTMS-SEC-001"
+      },
+      "priority": "P1",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 5,
+      "tags": [
+        "participant",
+        "negative"
+      ],
+      "validation_rules": [
+        "executed by backend/tests/test_matrix_scenario_execution.py"
+      ]
     }
   ]
 }

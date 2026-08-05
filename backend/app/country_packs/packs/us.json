@@ -1,0 +1,94 @@
+{
+  "schema_version": "CTMS_COUNTRY_PACK_V1",
+  "code": "US",
+  "name": "United States",
+  "pack_version": "1.0.0",
+  "effective_from": "2026-01-31",
+  "review_due": "2027-01-31",
+  "is_default": false,
+  "competent_authority": {
+    "code": "FDA",
+    "name": "Food and Drug Administration",
+    "role": "investigational_new_drug_oversight",
+    "submission_channel": "FDA-ESG"
+  },
+  "ethics_authority": {
+    "code": "IRB",
+    "name": "Institutional Review Board",
+    "role": "ethics_opinion",
+    "decision_authority": "named_irb_chair",
+    "auto_approval_permitted": false
+  },
+  "trial_registry": {
+    "code": "CTGOV",
+    "name": "ClinicalTrials.gov",
+    "identifier_label": "NCT number",
+    "identifier_pattern": "^NCT\\d{8}$",
+    "identifier_example": "NCT01234567",
+    "public_disclosure_required": true,
+    "registration_before_first_enrolment": true,
+    "results_submission_days_after_completion": 365
+  },
+  "safety_reporting": {
+    "susar_fatal_or_life_threatening_days": 7,
+    "susar_other_days": 15,
+    "non_susar_serious_days": 15,
+    "annual_safety_report_interval_days": 365,
+    "recipients": ["FDA", "IRB"],
+    "acknowledgement_expected": true,
+    "acknowledgement_sla_days": 5,
+    "statutory_basis": "21 CFR 312.32(c)"
+  },
+  "consent": {
+    "age_of_majority": 18,
+    "assent_required_below_age": 18,
+    "proxy_consent_permitted": true,
+    "proxy_roles": ["legally_authorized_representative"],
+    "witness_required_when_unable_to_read": true,
+    "future_use_requires_explicit_opt_in": true,
+    "withdrawal_effective_immediately": true,
+    "data_retained_after_withdrawal": "data_collected_before_withdrawal_retained",
+    "privacy_authorisation_required": true,
+    "privacy_authorisation_basis": "HIPAA 45 CFR 164.508"
+  },
+  "site_credentialing": {
+    "investigator_delegation_log_required": true,
+    "gcp_training_validity_days": 1095,
+    "insurance_evidence_required": true,
+    "form_1572_required": true
+  },
+  "participant_reimbursement": {
+    "currency": "USD",
+    "expense_reimbursement_permitted": true,
+    "inconvenience_payment_permitted": true,
+    "per_visit_guidance_cap": 120.0,
+    "ethics_approval_required_for_payments": true,
+    "tax_reportable_threshold": 600.0
+  },
+  "sources": [
+    {
+      "title": "21 CFR 312.32 IND safety reporting",
+      "publisher": "US Government Publishing Office / eCFR",
+      "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-D/part-312/subpart-B/section-312.32",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "45 CFR 46 Protection of Human Subjects (Common Rule)",
+      "publisher": "US Department of Health and Human Services",
+      "url": "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-A/part-46",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "ClinicalTrials.gov protocol registration and results system",
+      "publisher": "National Library of Medicine",
+      "url": "https://clinicaltrials.gov/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "HIPAA authorisation for research, 45 CFR 164.508",
+      "publisher": "US Department of Health and Human Services",
+      "url": "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-E/section-164.508",
+      "accessed": "2026-08-05"
+    }
+  ]
+}

@@ -20,6 +20,8 @@ class StudyCreate(BaseSchema):
     indication: str
     therapeutic_area: str
     sponsor: str
+    jurisdiction: str = "IE"
+    sponsor_organisation_id: str | None = None
     planned_sites: int = 0
     planned_subjects: int = 0
     start_date: dt.date | None = None
@@ -44,6 +46,8 @@ class StudyOut(BaseSchema):
     therapeutic_area: str
     status: str
     sponsor: str
+    jurisdiction: str
+    sponsor_organisation_id: str | None
     planned_sites: int
     planned_subjects: int
     start_date: dt.date | None
@@ -139,6 +143,9 @@ class SubjectOut(BaseSchema):
     randomisation_arm: str | None
     stratification_factors: dict[str, Any] | None
     demographics: dict[str, Any] | None
+    consent_state: str
+    consent_withdrawn_at: dt.datetime | None
+    kit_code: str | None
 
 
 class InformedConsentCreate(BaseSchema):
@@ -146,6 +153,11 @@ class InformedConsentCreate(BaseSchema):
     consent_version: str
     consent_date: dt.datetime
     document_reference: str | None = None
+    consent_type: str = "initial"
+    protocol_version: str | None = None
+    given_by: str = "subject"
+    witnessed_by: str | None = None
+    future_use_opt_in: bool = False
 
 
 class InformedConsentOut(BaseSchema):
@@ -156,10 +168,18 @@ class InformedConsentOut(BaseSchema):
     withdrawn_at: dt.datetime | None
     withdrawal_reason: str | None
     document_reference: str | None
+    consent_type: str
+    protocol_version: str | None
+    given_by: str
+    witnessed_by: str | None
+    future_use_opt_in: bool
+    withdrawal_scope: str | None
+    jurisdiction: str
 
 
 class RandomiseSubject(BaseSchema):
     stratification_factors: dict[str, Any] | None = None
+    randomised_by: str | None = None
 
 
 # Visits
@@ -205,6 +225,7 @@ class AdverseEventCreate(BaseSchema):
     outcome: str | None = None
     susar_flag: bool = False
     narrative: str | None = None
+    expectedness: str = "expected"
 
 
 class AdverseEventUpdate(BaseSchema):
@@ -216,6 +237,7 @@ class AdverseEventUpdate(BaseSchema):
     narrative: str | None = None
     status: str | None = None
     submission_reference: str | None = None
+    expectedness: str | None = None
 
 
 class AdverseEventOut(BaseSchema):
@@ -232,6 +254,9 @@ class AdverseEventOut(BaseSchema):
     status: str
     narrative: str | None
     submission_reference: str | None
+    expectedness: str
+    jurisdiction: str
+    deadline_basis: str | None
 
 
 # Protocol deviations
@@ -677,3 +702,273 @@ class AccountabilityReport(BaseSchema):
     returned: int
     destroyed: int
     on_hand: int
+
+
+# --- National capability schemas (REQ-CTS-NAT-001..008) ---------------------
+
+
+class CountryPackOut(BaseSchema):
+    code: str
+    name: str
+    pack_version: str
+    effective_from: dt.date
+    competent_authority: dict[str, Any]
+    ethics_authority: dict[str, Any]
+    trial_registry: dict[str, Any]
+    safety_reporting: dict[str, Any]
+    consent: dict[str, Any]
+    site_credentialing: dict[str, Any]
+    participant_reimbursement: dict[str, Any]
+    sources: list[dict[str, Any]]
+
+
+class TrialRegistrationCreate(BaseSchema):
+    study_id: int
+    registry_code: str | None = None
+    public_disclosure_url: str | None = None
+
+
+class TrialRegistrationReceipt(BaseSchema):
+    registry_identifier: str
+    receipt_reference: str
+    accepted: bool = True
+    rejection_reason: str | None = None
+
+
+class TrialRegistrationOut(BaseSchema):
+    id: int
+    study_id: int
+    jurisdiction: str
+    registry_code: str
+    registry_identifier: str | None
+    status: str
+    submitted_at: dt.datetime | None
+    acknowledged_at: dt.datetime | None
+    receipt_reference: str | None
+    rejection_reason: str | None
+    public_disclosure_url: str | None
+    correlation_id: str | None
+
+
+class InvestigatorDelegationCreate(BaseSchema):
+    site_id: int
+    person_id: str
+    person_name: str
+    role: str
+    delegated_tasks: list[str]
+    delegated_by: str
+    gcp_training_date: dt.date
+    professional_registration: str | None = None
+    start_date: dt.date
+    end_date: dt.date | None = None
+
+
+class InvestigatorDelegationOut(BaseSchema):
+    id: int
+    site_id: int
+    person_id: str
+    person_name: str
+    role: str
+    delegated_tasks: list[str]
+    delegated_by: str
+    gcp_training_date: dt.date
+    gcp_training_expiry: dt.date
+    professional_registration: str | None
+    start_date: dt.date
+    end_date: dt.date | None
+    status: str
+
+
+class SiteReadinessOut(BaseSchema):
+    site_id: int
+    jurisdiction: str
+    checklist_complete: bool
+    delegation_log_present: bool
+    delegations_active: int
+    delegations_expired: int
+    ethics_approved: bool
+    blocking_reasons: list[str]
+    ready_for_activation: bool
+
+
+class RegulatoryApprovalCreate(BaseSchema):
+    study_id: int
+    site_id: int | None = None
+    authority_kind: str = "ethics"
+    submission_type: str = "initial"
+    submission_reference: str
+    protocol_version: str | None = None
+
+
+class RegulatoryDecision(BaseSchema):
+    decision: str
+    decided_by: str
+    conditions: list[dict[str, Any]] | None = None
+    approval_expiry: dt.date | None = None
+
+
+class RegulatoryApprovalOut(BaseSchema):
+    id: int
+    study_id: int
+    site_id: int | None
+    jurisdiction: str
+    authority_code: str
+    authority_kind: str
+    submission_type: str
+    submission_reference: str
+    submitted_at: dt.datetime
+    decision: str
+    decision_at: dt.datetime | None
+    decided_by: str | None
+    conditions: list[dict[str, Any]] | None
+    approval_expiry: dt.date | None
+    next_report_due: dt.date | None
+    protocol_version: str | None
+
+
+class EligibilityScreeningCreate(BaseSchema):
+    study_id: int
+    site_id: int | None = None
+    candidate_reference: str
+    consent_basis: str
+    requested_by: str
+    criteria_requested: list[str]
+
+
+class EligibilityOutcomeIn(BaseSchema):
+    criteria_evaluated: dict[str, Any]
+    reviewed_by: str | None = None
+    source_system: str = "bullettrain-hub"
+
+
+class EligibilityScreeningOut(BaseSchema):
+    id: int
+    study_id: int
+    site_id: int | None
+    subject_id: int | None
+    candidate_reference: str
+    consent_basis: str
+    requested_by: str
+    requested_at: dt.datetime
+    criteria_requested: list[str]
+    criteria_evaluated: dict[str, Any] | None
+    outcome: str
+    outcome_at: dt.datetime | None
+    reviewed_by: str | None
+    source_system: str | None
+    correlation_id: str | None
+
+
+class RandomisationAllocationOut(BaseSchema):
+    id: int
+    study_id: int
+    stratum_key: str
+    sequence_number: int
+    kit_code: str
+    block_id: str
+    allocated_subject_id: int | None
+    allocated_at: dt.datetime | None
+    allocated_by: str | None
+
+
+class RandomisationResult(BaseSchema):
+    """Blinded response: the caller receives a kit code, not the arm."""
+
+    subject_id: int
+    stratum_key: str
+    kit_code: str
+    sequence_number: int
+    blinded: bool = True
+
+
+class UnblindingRequest(BaseSchema):
+    requested_by: str
+    authorised_by: str
+    reason: str
+    urgency: str = "emergency"
+
+
+class UnblindingEventOut(BaseSchema):
+    id: int
+    subject_id: int
+    allocation_id: int | None
+    requested_by: str
+    authorised_by: str
+    reason: str
+    urgency: str
+    arm_revealed: str
+    unblinded_at: dt.datetime
+    self_authorised: bool
+
+
+class SafetySubmissionCreate(BaseSchema):
+    submitted_by: str
+    recipient_code: str | None = None
+    submission_reference: str
+
+
+class SafetyAcknowledgement(BaseSchema):
+    acknowledgement_reference: str
+    accepted: bool = True
+    rejection_reason: str | None = None
+
+
+class SafetySubmissionOut(BaseSchema):
+    id: int
+    adverse_event_id: int
+    jurisdiction: str
+    recipient_code: str
+    report_type: str
+    due_at: dt.datetime | None
+    submitted_at: dt.datetime | None
+    submitted_by: str | None
+    submission_reference: str | None
+    acknowledged_at: dt.datetime | None
+    acknowledgement_reference: str | None
+    rejection_reason: str | None
+    status: str
+    correlation_id: str | None
+
+
+class ParticipantReimbursementCreate(BaseSchema):
+    subject_id: int
+    visit_id: int | None = None
+    category: str
+    amount: float
+    notes: str | None = None
+
+
+class ParticipantReimbursementOut(BaseSchema):
+    id: int
+    subject_id: int
+    visit_id: int | None
+    category: str
+    amount: float
+    currency: str
+    status: str
+    requested_at: dt.datetime
+    approved_by: str | None
+    paid_at: dt.datetime | None
+    exceeds_guidance_cap: bool
+    notes: str | None
+
+
+class ParticipantSummaryOut(BaseSchema):
+    """The participant-facing projection citizen-portal renders.
+
+    CTMS remains the canonical owner (benchmark rule 1); citizen-portal is a
+    surface over this contract, not a second source of truth.
+    """
+
+    subject_id: int
+    subject_number: str
+    study_title: str
+    jurisdiction: str
+    consent_state: str
+    consent_version: str | None
+    re_consent_required: bool
+    withdrawal_effective_immediately: bool
+    upcoming_visits: list[dict[str, Any]]
+    reimbursements: list[dict[str, Any]]
+    reimbursement_currency: str
+    results_available: bool

@@ -1,0 +1,88 @@
+{
+  "schema_version": "CTMS_COUNTRY_PACK_V1",
+  "code": "UK",
+  "name": "United Kingdom",
+  "pack_version": "1.0.0",
+  "effective_from": "2026-01-31",
+  "review_due": "2027-01-31",
+  "is_default": false,
+  "competent_authority": {
+    "code": "MHRA",
+    "name": "Medicines and Healthcare products Regulatory Agency",
+    "role": "clinical_trial_authorisation",
+    "submission_channel": "IRAS"
+  },
+  "ethics_authority": {
+    "code": "HRA-REC",
+    "name": "Health Research Authority Research Ethics Committee",
+    "role": "ethics_opinion",
+    "decision_authority": "named_committee_chair",
+    "auto_approval_permitted": false
+  },
+  "trial_registry": {
+    "code": "ISRCTN",
+    "name": "ISRCTN Registry",
+    "identifier_label": "ISRCTN number",
+    "identifier_pattern": "^ISRCTN\\d{8}$",
+    "identifier_example": "ISRCTN12345678",
+    "public_disclosure_required": true,
+    "registration_before_first_enrolment": true
+  },
+  "safety_reporting": {
+    "susar_fatal_or_life_threatening_days": 7,
+    "susar_other_days": 15,
+    "non_susar_serious_days": 15,
+    "annual_safety_report_interval_days": 365,
+    "recipients": ["MHRA", "HRA-REC"],
+    "acknowledgement_expected": true,
+    "acknowledgement_sla_days": 5
+  },
+  "consent": {
+    "age_of_majority": 16,
+    "assent_required_below_age": 16,
+    "proxy_consent_permitted": true,
+    "proxy_roles": ["legal_representative", "personal_consultee", "nominated_consultee"],
+    "witness_required_when_unable_to_read": true,
+    "future_use_requires_explicit_opt_in": true,
+    "withdrawal_effective_immediately": true,
+    "data_retained_after_withdrawal": "data_collected_before_withdrawal_retained"
+  },
+  "site_credentialing": {
+    "investigator_delegation_log_required": true,
+    "gcp_training_validity_days": 730,
+    "insurance_evidence_required": true
+  },
+  "participant_reimbursement": {
+    "currency": "GBP",
+    "expense_reimbursement_permitted": true,
+    "inconvenience_payment_permitted": true,
+    "per_visit_guidance_cap": 75.0,
+    "ethics_approval_required_for_payments": true
+  },
+  "sources": [
+    {
+      "title": "Clinical trials for medicines: apply for authorisation in the UK",
+      "publisher": "Medicines and Healthcare products Regulatory Agency",
+      "url": "https://www.gov.uk/guidance/clinical-trials-for-medicines-apply-for-authorisation-in-the-uk",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "Integrated Research Application System (IRAS)",
+      "publisher": "Health Research Authority",
+      "url": "https://www.myresearchproject.org.uk/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "Research registration and research project identifiers",
+      "publisher": "Health Research Authority",
+      "url": "https://www.hra.nhs.uk/planning-and-improving-research/research-planning/research-registration-research-project-identifiers/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "ISRCTN Registry",
+      "publisher": "BMC / Springer Nature",
+      "url": "https://www.isrctn.com/",
+      "accessed": "2026-08-05"
+    }
+  ]
+}

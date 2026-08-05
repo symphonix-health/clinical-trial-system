@@ -15,6 +15,8 @@ from sqlalchemy.orm import selectinload
 
 from app import models, schemas
 from app.connectors import integration_engine
+from app.country_packs import get_pack
+from app.country_packs.loader import is_susar, susar_deadline_days
 
 
 def _next_subject_number(study_id: int, count: int) -> str:
@@ -26,11 +28,29 @@ def _sha256_chain(previous_hash: str | None, payload: str) -> str:
     return hashlib.sha256(f"{base}:{payload}".encode()).hexdigest()
 
 
-def _compute_susar_deadline(seriousness: str, onset_date: dt.date) -> dt.datetime | None:
-    if seriousness in ("serious", "life_threatening", "fatal"):
-        days = 7 if seriousness == "serious" else 1
-        return dt.datetime.combine(onset_date + dt.timedelta(days=days), dt.time.max)
-    return None
+def _compute_susar_deadline(
+    seriousness: str,
+    onset_date: dt.date,
+    expectedness: str = "expected",
+    causality: str = "not_related",
+    jurisdiction: str | None = None,
+) -> tuple[dt.datetime | None, str | None]:
+    """Statutory reporting deadline and the basis it was computed from.
+
+    REQ-CTS-NAT-006. The day counts come from the study's country pack
+    (``safety_reporting``), never from a literal in this module. The previous
+    implementation mapped ``serious`` to 7 days and ``life_threatening`` /
+    ``fatal`` to 1 day, which matched neither FR-C-61 ("7- or 15-day") nor
+    ICH E2A / EU CTR 536/2014 Art. 42 / 21 CFR 312.32(c).
+    """
+
+    days = susar_deadline_days(seriousness, expectedness, causality, jurisdiction)
+    if days is None:
+        return None, None
+    pack = get_pack(jurisdiction)
+    kind = "susar" if is_susar(seriousness, expectedness, causality) else "serious_non_susar"
+    basis = f"{pack['code']}:{pack['pack_version']}:{kind}:{days}d"
+    return dt.datetime.combine(onset_date + dt.timedelta(days=days), dt.time.max), basis
 
 
 # Audit
@@ -221,10 +241,21 @@ async def update_subject(db: AsyncSession, subject: models.Subject, obj_in: sche
 
 
 async def record_consent(db: AsyncSession, subject: models.Subject, obj_in: schemas.InformedConsentCreate) -> models.InformedConsent:
+    """Record consent, re-consent, assent or proxy consent.
+
+    REQ-CTS-NAT-004. Recording any consent moves the subject's
+    ``consent_state`` to ``active``, which is what clears a pending
+    re-consent block on IP dispensing (FR-C-33).
+    """
+
+    study = await get_study(db, subject.study_id)
+    jurisdiction = study.jurisdiction if study else "IE"
     subject.consent_version = obj_in.consent_version
     subject.consent_date = obj_in.consent_date.date()
     subject.enrolment_status = models.EnrolmentStatus.enrolled.value
-    consent = models.InformedConsent(**obj_in.model_dump())
+    subject.consent_state = models.ConsentState.active.value
+    subject.consent_withdrawn_at = None
+    consent = models.InformedConsent(**obj_in.model_dump(), jurisdiction=jurisdiction)
     db.add(consent)
     await db.commit()
     await db.refresh(consent)
@@ -242,29 +273,276 @@ async def record_consent(db: AsyncSession, subject: models.Subject, obj_in: sche
     return consent
 
 
-async def withdraw_subject(db: AsyncSession, subject: models.Subject, reason: str) -> models.Subject:
+async def withdraw_subject(
+    db: AsyncSession,
+    subject: models.Subject,
+    reason: str,
+    withdrawal_scope: str = "full",
+) -> models.Subject:
+    """Withdraw consent and PROPAGATE the withdrawal.
+
+    REQ-CTS-NAT-004. A withdrawal that does not reach the downstream
+    surfaces is a defect, not a documentation gap, so this function is the
+    single place that (a) sets the consent state every guard reads,
+    (b) cancels future visits, and (c) queues the hub notification that tells
+    citizen-portal and pharmacy-system to stop.
+    """
+
+    now = dt.datetime.utcnow()
     subject.enrolment_status = models.EnrolmentStatus.withdrawn.value
+    subject.consent_state = models.ConsentState.withdrawn.value
+    subject.consent_withdrawn_at = now
     consent_result = await db.execute(
         select(models.InformedConsent).where(models.InformedConsent.subject_id == subject.id).order_by(models.InformedConsent.id.desc()).limit(1)
     )
     consent = consent_result.scalar_one_or_none()
     if consent:
-        consent.withdrawn_at = dt.datetime.utcnow()
+        consent.withdrawn_at = now
         consent.withdrawal_reason = reason
+        consent.withdrawal_scope = withdrawal_scope
+    cancelled = 0
     for visit in subject.visits:
         if visit.status == models.VisitStatus.scheduled.value:
             visit.status = models.VisitStatus.missed.value
+            cancelled += 1
     await db.commit()
     await db.refresh(subject)
+    try:
+        await integration_engine.notify_consent_withdrawn(
+            db,
+            subject_id=subject.id,
+            study_id=subject.study_id,
+            subject_number=subject.subject_number,
+            withdrawal_scope=withdrawal_scope,
+            withdrawn_at=now.isoformat(),
+            cancelled_visits=cancelled,
+        )
+    except integration_engine.IntegrationError:  # pragma: no cover - policy guard
+        pass
     return subject
 
 
-async def randomise_subject(db: AsyncSession, subject: models.Subject, arm: str, factors: dict[str, Any] | None) -> models.Subject:
-    subject.randomisation_arm = arm
+async def flag_reconsent_required(
+    db: AsyncSession, study_id: int, protocol_version: str
+) -> list[models.Subject]:
+    """Flag enrolled subjects for re-consent against an amended protocol.
+
+    FR-C-33 / REQ-CTS-NAT-004. Flagged subjects are suspended from further IP
+    dispensing until a re-consent is recorded. Deliberately explicit rather
+    than automatic on every protocol version: FR-C-13 says subjects are
+    flagged "if required", and not every amendment requires re-consent.
+    """
+
+    result = await db.execute(
+        select(models.Subject)
+        .where(models.Subject.study_id == study_id)
+        .where(models.Subject.enrolment_status == models.EnrolmentStatus.enrolled.value)
+        .where(models.Subject.consent_state != models.ConsentState.withdrawn.value)
+    )
+    flagged = list(result.scalars().all())
+    for subject in flagged:
+        subject.consent_state = models.ConsentState.re_consent_required.value
+    await db.commit()
+    for subject in flagged:
+        await create_audit_entry(
+            db,
+            schemas.AuditEntryCreate(
+                study_id=study_id,
+                actor_id="system",
+                purpose_of_use="consent_management",
+                action=f"flag_reconsent:{protocol_version}",
+                resource_type="Subject",
+                resource_id=subject.id,
+            ),
+        )
+    return flagged
+
+
+def stratum_key(factors: dict[str, Any] | None) -> str:
+    """Deterministic stratum label from the stratification factors."""
+
+    if not factors:
+        return "default"
+    return "|".join(f"{k}={factors[k]}" for k in sorted(factors))
+
+
+def _build_allocation_block(
+    seed: str, arms: list[str], block_size: int, block_index: int
+) -> list[str]:
+    """One permuted block, deterministic in ``seed`` and ``block_index``.
+
+    Permuted-block randomisation keeps the arms balanced within every block
+    while remaining unpredictable to the site. Determinism is what makes the
+    allocation list reproducible for audit -- a per-request ``random.choice``
+    (the previous implementation) can never be reconstructed.
+    """
+
+    digest = hashlib.sha256(f"{seed}:{block_index}".encode()).digest()
+    slots = [arms[i % len(arms)] for i in range(block_size)]
+    # Fisher-Yates driven by the digest so the permutation is reproducible.
+    for i in range(len(slots) - 1, 0, -1):
+        j = digest[i % len(digest)] % (i + 1)
+        slots[i], slots[j] = slots[j], slots[i]
+    return slots
+
+
+async def ensure_allocation_list(
+    db: AsyncSession,
+    study: models.Study,
+    stratum: str,
+    arms: list[str] | None = None,
+    block_size: int = 4,
+    blocks: int = 8,
+) -> list[models.RandomisationAllocation]:
+    """Generate the allocation list for a stratum if it does not exist yet.
+
+    REQ-CTS-NAT-005. The arm is fixed when the LIST is generated, not when a
+    subject arrives, which is what makes the allocation auditable.
+    """
+
+    existing = await db.execute(
+        select(models.RandomisationAllocation)
+        .where(models.RandomisationAllocation.study_id == study.id)
+        .where(models.RandomisationAllocation.stratum_key == stratum)
+        .order_by(models.RandomisationAllocation.sequence_number)
+    )
+    rows = list(existing.scalars().all())
+    if rows:
+        return rows
+    arms = arms or ["arm_a", "arm_b"]
+    seed = f"{study.protocol_number}:{stratum}"
+    # The kit code must be unique across the WHOLE table, not just within a
+    # stratum: two strata of the same study would otherwise both mint
+    # KIT-<study>-0001 and collide on the unique index.
+    stratum_token = hashlib.sha256(stratum.encode()).hexdigest()[:6].upper()
+    created: list[models.RandomisationAllocation] = []
+    sequence = 0
+    for block_index in range(blocks):
+        block_id = f"B{block_index + 1:02d}"
+        for arm in _build_allocation_block(seed, arms, block_size, block_index):
+            sequence += 1
+            created.append(
+                models.RandomisationAllocation(
+                    study_id=study.id,
+                    stratum_key=stratum,
+                    sequence_number=sequence,
+                    arm_code=arm,
+                    kit_code=f"KIT-{study.id:03d}-{stratum_token}-{sequence:04d}",
+                    block_id=block_id,
+                )
+            )
+    db.add_all(created)
+    await db.commit()
+    return created
+
+
+async def randomise_subject(
+    db: AsyncSession,
+    subject: models.Subject,
+    factors: dict[str, Any] | None,
+    randomised_by: str | None = None,
+) -> tuple[models.Subject, models.RandomisationAllocation]:
+    """Allocate the next free slot of the subject's stratum.
+
+    REQ-CTS-NAT-005. Replaces ``random.choice(["arm_a", "arm_b"])`` in the
+    route handler, which produced an unreproducible, unstratified allocation
+    with no allocation record and no audit entry -- FR-C-35 declared
+    "stratified" and "double-blind" and neither existed.
+    """
+
+    study = await get_study(db, subject.study_id)
+    if study is None:  # pragma: no cover - subject rows always carry a study
+        raise HTTPException(status_code=404, detail="Study not found")
+    stratum = stratum_key(factors)
+    await ensure_allocation_list(db, study, stratum)
+    free = await db.execute(
+        select(models.RandomisationAllocation)
+        .where(models.RandomisationAllocation.study_id == study.id)
+        .where(models.RandomisationAllocation.stratum_key == stratum)
+        .where(models.RandomisationAllocation.allocated_subject_id.is_(None))
+        .order_by(models.RandomisationAllocation.sequence_number)
+        .limit(1)
+    )
+    allocation = free.scalar_one_or_none()
+    if allocation is None:
+        raise HTTPException(
+            status_code=409,
+            detail=f"allocation list exhausted for stratum {stratum!r}",
+        )
+    allocation.allocated_subject_id = subject.id
+    allocation.allocated_at = dt.datetime.utcnow()
+    allocation.allocated_by = randomised_by or "system"
+    subject.randomisation_arm = allocation.arm_code
+    subject.kit_code = allocation.kit_code
     subject.stratification_factors = factors or {}
     await db.commit()
     await db.refresh(subject)
-    return subject
+    await db.refresh(allocation)
+    await create_audit_entry(
+        db,
+        schemas.AuditEntryCreate(
+            study_id=study.id,
+            actor_id=randomised_by or "system",
+            purpose_of_use="randomisation",
+            action=f"randomise:{stratum}:{allocation.kit_code}",
+            resource_type="Subject",
+            resource_id=subject.id,
+        ),
+    )
+    return subject, allocation
+
+
+async def unblind_subject(
+    db: AsyncSession, subject: models.Subject, request: schemas.UnblindingRequest
+) -> models.UnblindingEvent:
+    """Emergency unblinding, recorded with its named authoriser.
+
+    REQ-CTS-NAT-005. Research governance is a human-authority domain: the
+    requester and the authoriser are stored separately so a self-authorised
+    unblinding is visible rather than indistinguishable.
+    """
+
+    if not subject.randomisation_arm:
+        raise HTTPException(status_code=409, detail="Subject is not randomised")
+    result = await db.execute(
+        select(models.RandomisationAllocation).where(
+            models.RandomisationAllocation.allocated_subject_id == subject.id
+        )
+    )
+    allocation = result.scalars().first()
+    if allocation is None:
+        # An arm with no allocation record is an arm nothing ever assigned:
+        # revealing it would break the blind against a value that cannot be
+        # reconciled to the allocation list. Refused rather than reported.
+        raise HTTPException(
+            status_code=409,
+            detail="Subject's arm is not traceable to a randomisation allocation",
+        )
+    event = models.UnblindingEvent(
+        subject_id=subject.id,
+        allocation_id=allocation.id,
+        requested_by=request.requested_by,
+        authorised_by=request.authorised_by,
+        reason=request.reason,
+        urgency=request.urgency,
+        arm_revealed=subject.randomisation_arm,
+        self_authorised=request.requested_by == request.authorised_by,
+    )
+    db.add(event)
+    await db.commit()
+    await db.refresh(event)
+    await create_audit_entry(
+        db,
+        schemas.AuditEntryCreate(
+            study_id=subject.study_id,
+            actor_id=request.authorised_by,
+            purpose_of_use="emergency_unblinding",
+            action=f"unblind:{request.urgency}",
+            resource_type="Subject",
+            resource_id=subject.id,
+        ),
+    )
+    return event
 
 
 # Visits
@@ -347,12 +625,27 @@ async def flag_missed_visits(db: AsyncSession, as_of: dt.date | None = None) -> 
 # Adverse events
 async def create_adverse_event(db: AsyncSession, obj_in: schemas.AdverseEventCreate) -> models.AdverseEvent:
     data = obj_in.model_dump()
-    computed_susar = obj_in.seriousness == "life_threatening" and obj_in.causality in {"related", "possibly_related"}
+    study = await get_study(db, obj_in.study_id)
+    jurisdiction = study.jurisdiction if study else None
+    # REQ-CTS-NAT-006: all THREE ICH E2A limbs. The previous rule was
+    # ``seriousness == "life_threatening" and causality in {...}``, which
+    # (a) omitted expectedness entirely and (b) silently excluded ``fatal``
+    # and ``serious`` -- so a fatal, related, unexpected reaction was never
+    # auto-flagged as a SUSAR.
+    computed_susar = is_susar(obj_in.seriousness, obj_in.expectedness, obj_in.causality)
     data["susar_flag"] = obj_in.susar_flag or computed_susar
-    deadline = _compute_susar_deadline(obj_in.seriousness, obj_in.onset_date)
+    deadline, basis = _compute_susar_deadline(
+        obj_in.seriousness,
+        obj_in.onset_date,
+        obj_in.expectedness,
+        obj_in.causality,
+        jurisdiction,
+    )
     ae = models.AdverseEvent(
         **data,
         regulatory_report_deadline=deadline,
+        deadline_basis=basis,
+        jurisdiction=jurisdiction or "IE",
     )
     db.add(ae)
     await db.commit()
@@ -442,14 +735,67 @@ async def create_ip_shipment(db: AsyncSession, obj_in: schemas.IpShipmentCreate)
     return shipment
 
 
+BLOCKING_CONSENT_STATES = {
+    models.ConsentState.withdrawn.value,
+    models.ConsentState.re_consent_required.value,
+}
+
+
 async def create_ip_dispense(db: AsyncSession, obj_in: schemas.IpDispenseCreate) -> models.IpDispense:
+    """Dispense investigational product to a subject.
+
+    Two guards that did not previously exist:
+
+    * REQ-CTS-NAT-004 -- a subject whose consent is withdrawn, or who is
+      pending re-consent against an amended protocol, is suspended from
+      further dispensing (FR-C-33 / FR-C-34). A withdrawal that does not
+      reach this surface is a real defect, not a documentation gap.
+    * REQ-CTS-NAT-007 / defect CTMS-IP-001 -- dispensing more units than are
+      on hand drove ``quantity_on_hand`` negative, which makes the
+      shipped - dispensed - returned - destroyed = on-hand reconciliation
+      (FR-C-74) arithmetically impossible to satisfy.
+    """
+
+    subject = await db.get(models.Subject, obj_in.subject_id)
+    if subject is None:
+        raise HTTPException(status_code=404, detail="Subject not found")
+    if subject.consent_state in BLOCKING_CONSENT_STATES:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                "IP dispensing suspended: subject consent state is "
+                f"{subject.consent_state!r}"
+            ),
+        )
+    product = await get_investigational_product(db, obj_in.product_id)
+    if product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    if obj_in.quantity_dispensed > product.quantity_on_hand:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                f"quantity_dispensed {obj_in.quantity_dispensed} exceeds "
+                f"quantity_on_hand {product.quantity_on_hand}"
+            ),
+        )
     dispense = models.IpDispense(**obj_in.model_dump())
     db.add(dispense)
-    product = await get_investigational_product(db, obj_in.product_id)
-    if product:
-        product.quantity_on_hand -= obj_in.quantity_dispensed
+    product.quantity_on_hand -= obj_in.quantity_dispensed
     await db.commit()
     await db.refresh(dispense)
+    # FR-C-72: a CTMS-initiated dispense must notify pharmacy-system / eps.
+    # Previously only the INBOUND pharmacy webhook path dispatched this event,
+    # so a dispense recorded in CTMS itself never reached the hub at all.
+    try:
+        await integration_engine.notify_ip_dispensed(
+            db,
+            dispense_id=dispense.id,
+            subject_id=dispense.subject_id,
+            product_sku=product.sku,
+            quantity_dispensed=dispense.quantity_dispensed,
+        )
+    except integration_engine.IntegrationError:  # pragma: no cover - policy guard
+        pass
     return dispense
 
 

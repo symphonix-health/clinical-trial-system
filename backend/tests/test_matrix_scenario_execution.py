@@ -124,6 +124,62 @@ class _Resolver:
                 where=lambda s: s.get("enrolment_status") == "enrolled"
                 and (token == "subject" or s["id"] not in used),
             )
+        elif token in ("nat_subject", "nat_withdraw_subject"):
+            # National-capability rows need enrolled subjects that no earlier
+            # row has already put into a terminal state. Kept in a separate
+            # branch (rather than widened into the one above) so the existing
+            # rows keep resolving to exactly the ids they resolved to before.
+            used = {
+                self.cache.get(k)
+                for k in (
+                    "subject",
+                    "new_subject",
+                    "withdraw_subject",
+                    "rand_subject",
+                    "nat_subject",
+                    "nat_withdraw_subject",
+                )
+            }
+            study = await self.get("study")
+            value = await self._first(
+                f"/api/v1/subjects?study_id={study}",
+                where=lambda s: s.get("enrolment_status") == "enrolled"
+                and s["id"] not in used,
+            )
+        elif token == "unrandomised_subject":
+            value = await self._first(
+                "/api/v1/subjects",
+                where=lambda s: s.get("randomisation_arm") is None
+                and s.get("enrolment_status") == "screening",
+            )
+        elif token == "ie_study":
+            value = await self._first(
+                "/api/v1/studies", where=lambda s: s.get("jurisdiction") == "IE"
+            )
+        elif token == "ie_site":
+            ie_study = await self.get("ie_study")
+            value = await self._first(f"/api/v1/sites?study_id={ie_study}")
+        elif token == "new_registration":
+            study = await self.get("study")
+            value = await self._latest(f"/api/v1/trial-registrations?study_id={study}")
+        elif token == "new_approval":
+            study = await self.get("study")
+            value = await self._latest(f"/api/v1/regulatory-approvals?study_id={study}")
+        elif token == "new_screening":
+            study = await self.get("study")
+            value = await self._latest(f"/api/v1/eligibility-screenings?study_id={study}")
+        elif token == "nat_ae":
+            value = await self._latest("/api/v1/adverse-events")
+        elif token == "new_submission":
+            ae = await self.get("nat_ae")
+            value = await self._latest(f"/api/v1/adverse-events/{ae}/safety-submissions")
+        elif token == "new_reimbursement":
+            subject = await self.get("subject")
+            r = await self.c.get(f"/api/v1/participants/{subject}/summary")
+            assert r.status_code == 200, f"resolver: participant summary -> {r.status_code}"
+            rows = r.json()["reimbursements"]
+            assert rows, "resolver: subject has no reimbursement"
+            value = max(x["id"] for x in rows)
         elif token in ("visit", "new_visit"):
             value = await self._first_visit()
         elif token == "query":
@@ -155,6 +211,15 @@ class _Resolver:
             pytest.fail(f"resolver: no rule for token {token!r}")
         self.cache[token] = value
         return value
+
+    async def _latest(self, path: str) -> Any:
+        """Highest id in a collection -- the row an earlier scenario just made."""
+
+        r = await self.c.get(path)
+        assert r.status_code == 200, f"resolver: GET {path} -> {r.status_code}"
+        rows = r.json()
+        assert rows, f"resolver: GET {path} returned no rows"
+        return max(x["id"] for x in rows)
 
     async def _first_visit(self) -> int:
         for probe in range(1, 80):
@@ -255,17 +320,68 @@ async def test_matrix_rows_execute_against_the_real_app(
     )
 
 
+def _registered_operations() -> set[tuple[str, str]]:
+    """Every (METHOD, path-template) the app actually serves.
+
+    Enumerated from the OpenAPI document, NOT from ``app.routes``. FastAPI
+    0.139 changed ``include_router`` to append a lazy ``_IncludedRouter``
+    wrapper instead of flattening the sub-router's routes into the parent's
+    ``routes`` list, so ``app.routes`` now yields only the 6 top-level routes
+    (``/``, ``/docs``, ``/redoc``, ``/openapi.json``, ...) and none of the 70+
+    API operations. Walking ``app.routes`` therefore reported EVERY matrix row
+    as targeting a non-existent route -- 100 false positives on a clean tree.
+    The OpenAPI document is the public, version-stable projection of the same
+    routing table.
+    """
+
+    spec = _app().openapi()
+    return {
+        (method.upper(), path)
+        for path, operations in spec["paths"].items()
+        for method in operations
+    }
+
+
+def _app() -> Any:
+    from app.main import app
+
+    return app
+
+
+def test_route_enumeration_sees_the_real_routing_table() -> None:
+    """Known-true control for :func:`_registered_operations`.
+
+    Without this, a future framework change that empties the enumeration
+    would turn every row into a false offender again (or, with the assertion
+    inverted, would let a phantom path through unnoticed). Anchoring on
+    operations that are unambiguously registered makes the instrument itself
+    testable.
+    """
+
+    registered = _registered_operations()
+    for anchor in (
+        ("POST", "/api/v1/studies"),
+        ("GET", "/api/v1/subjects/{subject_id}"),
+        ("POST", "/api/v1/adverse-events"),
+    ):
+        assert anchor in registered, (
+            f"route enumeration lost {anchor}; it reports only "
+            f"{len(registered)} operation(s) -- the enumeration is broken, "
+            "not the matrix"
+        )
+    assert len(registered) > 50, (
+        f"route enumeration returned only {len(registered)} operations; "
+        "this application serves far more"
+    )
+
+
 def test_no_row_targets_a_route_that_does_not_exist() -> None:
     """Every declared path must map to a registered route.
 
     This is the check whose absence let 100 rows point at ``POST /api/ctms``.
     """
-    from app.main import app
 
-    registered: set[tuple[str, str]] = set()
-    for route in app.routes:
-        for verb in getattr(route, "methods", set()) or set():
-            registered.add((verb.upper(), getattr(route, "path", "")))
+    registered = _registered_operations()
 
     offenders: list[str] = []
     for entry in EXECUTABLE + UNEXECUTED:

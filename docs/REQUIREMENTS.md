@@ -24,6 +24,14 @@ CTMS is designed as a standalone sibling in the Symphonix-Health ecosystem. It i
 - J33 — Human-AI mixed cohort visit → accountability separation → combined data capture
 - J34 — Agent model version drift → bias report → amendment → re-approval
 - J35 — Agent subject withdrawal → token revocation → run cancellation → tombstone audit
+- J36 — Study jurisdiction → public trial-registry submission → registry acknowledgement
+- J37 — Ethics/competent-authority submission → named decision → conditions → renewal clock
+- J38 — Hub eligibility pre-screen → criterion verdicts → derived outcome → enrolment
+- J39 — Protocol amendment → re-consent flag → IP dispensing suspended → re-consent recorded
+- J40 — Consent withdrawal → visits cancelled → dispensing blocked → citizen-portal and pharmacy notified
+- J41 — Stratified allocation list → blinded kit issue → emergency unblinding with named authoriser
+- J42 — SUSAR determination → country-pack deadline → authority submission → acknowledgement
+- J43 — Participant summary → reimbursement request → named approval → portal notification
 
 ## 2. Functional requirements
 
@@ -159,6 +167,82 @@ CTMS is designed as a standalone sibling in the Symphonix-Health ecosystem. It i
 | FR-C-104 | `tests/harness/json_matrices/ctms_scenarios.json` and a pytest harness run each scenario against the live app. |
 | FR-C-105 | The sibling registers as `clinical_trial_system` in BulletTrain's connector manifest and uses `bullettrain.connectors.symphonix_sibling` for egress. |
 | FR-C-106 | CTMS queries `global-agent-registry` to resolve principal IDs, superpersona contracts, and trust bundles, and publishes agent trial outcomes back. |
+
+### 2.15 National study and site registry [national capability]
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-111 | A `Study` declares the `jurisdiction` whose country pack governs its registry format, approval authorities, statutory deadlines, consent rules and reimbursement rules. Domain code resolves policy from the pack and never branches on the jurisdiction. |
+| FR-C-112 | A study can be submitted to its jurisdiction's public trial registry through the BulletTrain hub. The registration reaches `registered` only on an acknowledgement carrying a registry identifier that matches the pack's identifier pattern; a mismatched identifier is refused and a rejection is recorded with its reason. |
+| FR-C-113 | A site keeps an investigator delegation log: each entry names the delegating principal investigator, the delegated person, the delegated tasks, the professional registration and the GCP training date, with the expiry derived from the jurisdiction's GCP validity period. |
+| FR-C-114 | Site readiness for activation returns every blocking reason it finds - incomplete activation checklist, no active delegation, expired GCP training, no current ethics approval - rather than a single boolean. |
+
+### 2.16 Ethics and regulatory approval pack [national capability]
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-121 | A regulatory submission is recorded against the jurisdiction's ethics authority or competent authority with a submission type of `initial`, `amendment`, `renewal`, `annual_report`, `end_of_trial` or `urgent_safety_measure`, and its authority code comes from the country pack. |
+| FR-C-122 | A decision on a submission requires a NAMED decider; `approved_with_conditions` requires at least one explicit condition; an unknown decision value is refused; and a decision that is already terminal cannot be overwritten. Nothing auto-approves. |
+| FR-C-123 | An approved submission records its approval expiry and the next statutory report due date, computed from the country pack's annual safety-report interval. |
+| FR-C-124 | The approvals report lists approvals expiring, and statutory reports falling due, within a configurable window. |
+
+### 2.17 Hub-mediated eligibility pre-screening [national capability]
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-131 | A pre-screen request carries only a pseudonymous candidate reference, the criterion list and the consent basis, and is dispatched through the BulletTrain hub. A request with no criteria is refused. CTMS never requests a full care record. |
+| FR-C-132 | The eligibility outcome is DERIVED from the returned criterion verdicts - any failed criterion is `ineligible`, any unevaluable criterion is `pending_review`, only an all-pass result is `eligible` - and an evaluation that omits a requested criterion is refused. |
+| FR-C-133 | Every pre-screen outcome is audit-logged with the reviewing human or the source system that produced it. |
+
+### 2.18 Consent lifecycle and withdrawal propagation [national capability]
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-141 | Consent is recorded as a lifecycle event carrying its type (`initial`, `re_consent`, `assent`, `proxy`), the protocol version consented to, who gave it, any witness, and whether future use was opted into. Recording any consent moves the subject's `consent_state` to `active`. |
+| FR-C-142 | Enrolled subjects can be explicitly flagged for re-consent against an amended protocol version. Flagged subjects move to `re_consent_required` and the flagging is audit-logged per subject. |
+| FR-C-143 | Withdrawal of consent sets `consent_state` to `withdrawn`, stamps the withdrawal time and scope on the consent record, and cancels every scheduled visit. |
+| FR-C-144 | Investigational product may not be dispensed to a subject whose consent is withdrawn or who is pending re-consent; the dispense is refused as unprocessable. |
+| FR-C-145 | A withdrawal is propagated through the hub to the participant surface (citizen-portal) and the dispensing surface (pharmacy-system), and the participant summary stops showing upcoming visits. A withdrawal that reaches only some downstream surfaces is a defect. |
+
+### 2.19 Randomisation, blinding and emergency unblinding [national capability]
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-151 | A stratified, permuted-block allocation list is generated per study and stratum, deterministically from the protocol number and stratum key, so the allocation can be reconstructed for audit. |
+| FR-C-152 | Randomisation consumes the next free slot of the subject's stratum, records the allocating actor and writes an audit entry. An exhausted allocation list is refused rather than silently reusing a slot. |
+| FR-C-153 | The blinded allocation read returns the kit code and stratum only, never the treatment arm. |
+| FR-C-154 | Emergency unblinding records the requester, the NAMED authoriser, the reason and the urgency, reveals the arm, and flags the case where requester and authoriser are the same person. |
+
+### 2.20 Expedited safety reporting closed loop [national capability]
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-161 | A SUSAR is determined from all three ICH E2A limbs - serious, unexpected, and suspected to be related to the investigational product. An explicitly asserted SUSAR flag is honoured. |
+| FR-C-162 | The statutory reporting deadline is taken from the study's country pack (7 days for a fatal or life-threatening SUSAR, 15 days for any other SUSAR or serious event) and the basis used - pack code, pack version, classification and day count - is recorded on the event. |
+| FR-C-163 | A safety report is submitted to a recipient that the jurisdiction's pack recognises; any other recipient is refused. Submission records the submitting human and a submission reference and dispatches through the hub. |
+| FR-C-164 | The safety loop closes only when an acknowledgement carrying a receipt reference is recorded; a rejection is recorded with its reason. Submissions past their statutory deadline without an acknowledgement are reported as overdue. |
+
+### 2.21 Investigational product national accountability [national capability]
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-171 | A dispense that exceeds the product's on-hand quantity is refused, so the FR-C-74 close-out identity (shipped - dispensed - returned - destroyed = on-hand) can balance. |
+| FR-C-172 | A dispense initiated in CTMS notifies `pharmacy-system` / `eps` through the BulletTrain hub, not only a dispense that arrived from an inbound pharmacy webhook. |
+
+### 2.22 Participant surface and reimbursement [national capability]
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-181 | CTMS exposes the participant summary contract - study, consent state, re-consent requirement, upcoming visits, reimbursements and results availability - that `citizen-portal` renders. CTMS remains the canonical owner; the portal is a surface, not a second source of truth. |
+| FR-C-182 | A participant reimbursement takes its currency and per-visit guidance cap from the study's country pack, is flagged when it exceeds the cap, refuses a non-positive amount, and refuses an inconvenience payment in a jurisdiction that does not permit one. |
+| FR-C-183 | A reimbursement is approved by a NAMED approver, cannot be approved twice, and every state change is notified to `citizen-portal` through the hub. |
+
+### 2.23 Country policy packs (cross-cutting)
+
+| ID | Requirement |
+|----|-------------|
+| FR-C-191 | Country policy is versioned data: each pack declares a schema version, a pack version, an effective-from date and official sources, and is validated on load so a pack that omits a statutory section fails rather than silently removing a deadline. |
+| FR-C-192 | The packs are exposed read-only through the API, individually and as a set; an unknown jurisdiction is refused. |
 
 ## 3. Non-functional requirements
 

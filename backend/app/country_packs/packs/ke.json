@@ -1,0 +1,95 @@
+{
+  "schema_version": "CTMS_COUNTRY_PACK_V1",
+  "code": "KE",
+  "name": "Kenya",
+  "pack_version": "1.0.0",
+  "effective_from": "2026-01-31",
+  "review_due": "2027-01-31",
+  "is_default": false,
+  "competent_authority": {
+    "code": "PPB",
+    "name": "Pharmacy and Poisons Board",
+    "role": "clinical_trial_authorisation",
+    "submission_channel": "PPB-PV-PORTAL"
+  },
+  "ethics_authority": {
+    "code": "NACOSTI-ERC",
+    "name": "NACOSTI-accredited Institutional Ethics Review Committee",
+    "role": "ethics_opinion",
+    "decision_authority": "named_committee_chair",
+    "auto_approval_permitted": false,
+    "additional_licence": {
+      "code": "NACOSTI",
+      "name": "National Commission for Science, Technology and Innovation research licence",
+      "required": true
+    }
+  },
+  "trial_registry": {
+    "code": "PACTR",
+    "name": "Pan African Clinical Trial Registry",
+    "identifier_label": "PACTR number",
+    "identifier_pattern": "^PACTR\\d{15}$",
+    "identifier_example": "PACTR202601123456789",
+    "public_disclosure_required": true,
+    "registration_before_first_enrolment": true
+  },
+  "safety_reporting": {
+    "susar_fatal_or_life_threatening_days": 7,
+    "susar_other_days": 15,
+    "non_susar_serious_days": 15,
+    "annual_safety_report_interval_days": 365,
+    "recipients": ["PPB", "NACOSTI-ERC"],
+    "acknowledgement_expected": true,
+    "acknowledgement_sla_days": 10
+  },
+  "consent": {
+    "age_of_majority": 18,
+    "assent_required_below_age": 18,
+    "proxy_consent_permitted": true,
+    "proxy_roles": ["parent", "legal_guardian"],
+    "witness_required_when_unable_to_read": true,
+    "future_use_requires_explicit_opt_in": true,
+    "withdrawal_effective_immediately": true,
+    "data_retained_after_withdrawal": "data_collected_before_withdrawal_retained",
+    "translation_languages": ["en", "sw"]
+  },
+  "site_credentialing": {
+    "investigator_delegation_log_required": true,
+    "gcp_training_validity_days": 1095,
+    "insurance_evidence_required": true,
+    "practitioner_council_registration_required": true
+  },
+  "participant_reimbursement": {
+    "currency": "KES",
+    "expense_reimbursement_permitted": true,
+    "inconvenience_payment_permitted": true,
+    "per_visit_guidance_cap": 3000.0,
+    "ethics_approval_required_for_payments": true
+  },
+  "sources": [
+    {
+      "title": "Pharmacy and Poisons Board",
+      "publisher": "Pharmacy and Poisons Board, Kenya",
+      "url": "https://web.pharmacyboardkenya.org/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "National Commission for Science, Technology and Innovation",
+      "publisher": "NACOSTI",
+      "url": "https://www.nacosti.go.ke/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "Pan African Clinical Trial Registry",
+      "publisher": "South African Medical Research Council",
+      "url": "https://pactr.samrc.ac.za/",
+      "accessed": "2026-08-05"
+    },
+    {
+      "title": "Kenya Ministry of Health national health portal",
+      "publisher": "Ministry of Health, Kenya",
+      "url": "https://health.go.ke/",
+      "accessed": "2026-08-05"
+    }
+  ]
+}
