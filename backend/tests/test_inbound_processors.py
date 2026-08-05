@@ -134,7 +134,9 @@ async def test_process_agent_task_completed_existing_run(db_session: AsyncSessio
 
 
 async def test_process_agent_task_completed_run_not_found(db_session: AsyncSession) -> None:
-    result = await inbound_processors.process_agent_task_completed(db_session, {"run_id": 99999, "metrics": {}})
+    result = await inbound_processors.process_agent_task_completed(
+        db_session, {"run_id": 99999, "metrics": {}}
+    )
     assert result["status"] == "ignored"
     assert result["reason"] == "run not found"
 
