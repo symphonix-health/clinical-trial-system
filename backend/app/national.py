@@ -148,12 +148,8 @@ async def record_registration_receipt(
     return registration
 
 
-async def list_trial_registrations(
-    db: AsyncSession, study_id: int
-) -> list[models.TrialRegistration]:
-    result = await db.execute(
-        select(models.TrialRegistration).where(models.TrialRegistration.study_id == study_id)
-    )
+async def list_trial_registrations(db: AsyncSession, study_id: int) -> list[models.TrialRegistration]:
+    result = await db.execute(select(models.TrialRegistration).where(models.TrialRegistration.study_id == study_id))
     return list(result.scalars().all())
 
 
@@ -173,9 +169,7 @@ async def create_investigator_delegation(
         **obj_in.model_dump(),
         gcp_training_expiry=expiry,
         status=(
-            models.DelegationStatus.active.value
-            if expiry >= dt.date.today()
-            else models.DelegationStatus.expired.value
+            models.DelegationStatus.active.value if expiry >= dt.date.today() else models.DelegationStatus.expired.value
         ),
     )
     db.add(delegation)
@@ -195,22 +189,15 @@ async def create_investigator_delegation(
     return delegation
 
 
-async def list_investigator_delegations(
-    db: AsyncSession, site_id: int
-) -> list[models.InvestigatorDelegation]:
+async def list_investigator_delegations(db: AsyncSession, site_id: int) -> list[models.InvestigatorDelegation]:
     result = await db.execute(
-        select(models.InvestigatorDelegation).where(
-            models.InvestigatorDelegation.site_id == site_id
-        )
+        select(models.InvestigatorDelegation).where(models.InvestigatorDelegation.site_id == site_id)
     )
     delegations = list(result.scalars().all())
     today = dt.date.today()
     changed = False
     for delegation in delegations:
-        if (
-            delegation.status == models.DelegationStatus.active.value
-            and delegation.gcp_training_expiry < today
-        ):
+        if delegation.status == models.DelegationStatus.active.value and delegation.gcp_training_expiry < today:
             delegation.status = models.DelegationStatus.expired.value
             changed = True
     if changed:
@@ -293,9 +280,7 @@ async def create_regulatory_approval(
             status_code=422,
             detail=f"unknown submission_type {obj_in.submission_type!r}",
         )
-    authority = (
-        pack["ethics_authority"] if obj_in.authority_kind == "ethics" else pack["competent_authority"]
-    )
+    authority = pack["ethics_authority"] if obj_in.authority_kind == "ethics" else pack["competent_authority"]
     approval = models.RegulatoryApproval(
         **obj_in.model_dump(),
         jurisdiction=study.jurisdiction,
@@ -333,15 +318,10 @@ async def record_approval_decision(
             detail=f"decision already recorded as {approval.decision!r}",
         )
     if decision.decision not in _TERMINAL_DECISIONS:
-        raise HTTPException(
-            status_code=422, detail=f"unknown decision {decision.decision!r}"
-        )
+        raise HTTPException(status_code=422, detail=f"unknown decision {decision.decision!r}")
     if not decision.decided_by.strip():
         raise HTTPException(status_code=422, detail="decided_by is required")
-    if (
-        decision.decision == models.ApprovalDecision.approved_with_conditions.value
-        and not decision.conditions
-    ):
+    if decision.decision == models.ApprovalDecision.approved_with_conditions.value and not decision.conditions:
         raise HTTPException(
             status_code=422,
             detail="approved_with_conditions requires at least one condition",
@@ -374,12 +354,8 @@ async def record_approval_decision(
     return approval
 
 
-async def list_regulatory_approvals(
-    db: AsyncSession, study_id: int
-) -> list[models.RegulatoryApproval]:
-    result = await db.execute(
-        select(models.RegulatoryApproval).where(models.RegulatoryApproval.study_id == study_id)
-    )
+async def list_regulatory_approvals(db: AsyncSession, study_id: int) -> list[models.RegulatoryApproval]:
+    result = await db.execute(select(models.RegulatoryApproval).where(models.RegulatoryApproval.study_id == study_id))
     return list(result.scalars().all())
 
 
@@ -388,12 +364,8 @@ async def approvals_due(db: AsyncSession, study_id: int, within_days: int = 60) 
 
     horizon = dt.date.today() + dt.timedelta(days=within_days)
     approvals = await list_regulatory_approvals(db, study_id)
-    expiring = [
-        a for a in approvals if a.approval_expiry is not None and a.approval_expiry <= horizon
-    ]
-    reports = [
-        a for a in approvals if a.next_report_due is not None and a.next_report_due <= horizon
-    ]
+    expiring = [a for a in approvals if a.approval_expiry is not None and a.approval_expiry <= horizon]
+    reports = [a for a in approvals if a.next_report_due is not None and a.next_report_due <= horizon]
     return {
         "study_id": study_id,
         "within_days": within_days,
@@ -427,9 +399,7 @@ async def request_eligibility_screening(
 
     await _require_study(db, obj_in.study_id)
     if not obj_in.criteria_requested:
-        raise HTTPException(
-            status_code=422, detail="criteria_requested must not be empty"
-        )
+        raise HTTPException(status_code=422, detail="criteria_requested must not be empty")
     screening = models.EligibilityScreening(**obj_in.model_dump())
     db.add(screening)
     await db.commit()
@@ -497,13 +467,9 @@ async def record_eligibility_outcome(
     return screening
 
 
-async def list_eligibility_screenings(
-    db: AsyncSession, study_id: int
-) -> list[models.EligibilityScreening]:
+async def list_eligibility_screenings(db: AsyncSession, study_id: int) -> list[models.EligibilityScreening]:
     result = await db.execute(
-        select(models.EligibilityScreening).where(
-            models.EligibilityScreening.study_id == study_id
-        )
+        select(models.EligibilityScreening).where(models.EligibilityScreening.study_id == study_id)
     )
     return list(result.scalars().all())
 
@@ -637,13 +603,9 @@ async def overdue_safety_submissions(
     return overdue
 
 
-async def list_safety_submissions(
-    db: AsyncSession, adverse_event_id: int
-) -> list[models.SafetySubmission]:
+async def list_safety_submissions(db: AsyncSession, adverse_event_id: int) -> list[models.SafetySubmission]:
     result = await db.execute(
-        select(models.SafetySubmission).where(
-            models.SafetySubmission.adverse_event_id == adverse_event_id
-        )
+        select(models.SafetySubmission).where(models.SafetySubmission.adverse_event_id == adverse_event_id)
     )
     return list(result.scalars().all())
 
@@ -663,10 +625,7 @@ async def create_reimbursement(
     policy = _pack_or_422(study.jurisdiction)["participant_reimbursement"]
     if obj_in.amount <= 0:
         raise HTTPException(status_code=422, detail="amount must be positive")
-    if (
-        obj_in.category == "inconvenience"
-        and not policy["inconvenience_payment_permitted"]
-    ):
+    if obj_in.category == "inconvenience" and not policy["inconvenience_payment_permitted"]:
         raise HTTPException(
             status_code=422,
             detail=f"inconvenience payments are not permitted in {study.jurisdiction}",
@@ -699,9 +658,7 @@ async def approve_reimbursement(
     """Approve a payment. A payment over the pack's cap needs a named approver."""
 
     if reimbursement.status != models.ReimbursementStatus.requested.value:
-        raise HTTPException(
-            status_code=409, detail=f"reimbursement is {reimbursement.status!r}"
-        )
+        raise HTTPException(status_code=409, detail=f"reimbursement is {reimbursement.status!r}")
     if not approved_by.strip():
         raise HTTPException(status_code=422, detail="approved_by is required")
     reimbursement.status = models.ReimbursementStatus.approved.value
@@ -711,9 +668,7 @@ async def approve_reimbursement(
     return reimbursement
 
 
-async def participant_summary(
-    db: AsyncSession, subject_id: int
-) -> schemas.ParticipantSummaryOut:
+async def participant_summary(db: AsyncSession, subject_id: int) -> schemas.ParticipantSummaryOut:
     """The participant-facing projection that citizen-portal renders.
 
     REQ-CTS-NAT-008 (MIGRATE-SURFACE). CTMS stays the canonical owner of
@@ -727,9 +682,7 @@ async def participant_summary(
     study = await _require_study(db, subject.study_id)
     pack = _pack_or_422(study.jurisdiction)
     payments = await db.execute(
-        select(models.ParticipantReimbursement).where(
-            models.ParticipantReimbursement.subject_id == subject_id
-        )
+        select(models.ParticipantReimbursement).where(models.ParticipantReimbursement.subject_id == subject_id)
     )
     withdrawn = subject.consent_state == models.ConsentState.withdrawn.value
     upcoming = [
@@ -749,12 +702,8 @@ async def participant_summary(
         jurisdiction=study.jurisdiction,
         consent_state=subject.consent_state,
         consent_version=subject.consent_version,
-        re_consent_required=(
-            subject.consent_state == models.ConsentState.re_consent_required.value
-        ),
-        withdrawal_effective_immediately=bool(
-            pack["consent"]["withdrawal_effective_immediately"]
-        ),
+        re_consent_required=(subject.consent_state == models.ConsentState.re_consent_required.value),
+        withdrawal_effective_immediately=bool(pack["consent"]["withdrawal_effective_immediately"]),
         # A withdrawn participant sees no upcoming visits: the withdrawal has
         # to reach this surface too, not just the visit table.
         upcoming_visits=[] if withdrawn else upcoming,
@@ -769,6 +718,5 @@ async def participant_summary(
             for p in payments.scalars().all()
         ],
         reimbursement_currency=pack["participant_reimbursement"]["currency"],
-        results_available=study.status
-        in {models.StudyStatus.completed.value, models.StudyStatus.closed.value},
+        results_available=study.status in {models.StudyStatus.completed.value, models.StudyStatus.closed.value},
     )

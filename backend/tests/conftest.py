@@ -1,11 +1,9 @@
 """Pytest fixtures."""
 
-import asyncio
 import os
 import uuid
 from collections.abc import AsyncGenerator
 
-import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -39,8 +37,8 @@ async def db_engine():
 
 @pytest_asyncio.fixture
 async def db_session(db_engine) -> AsyncGenerator[AsyncSession, None]:
-    TestingSessionLocal = async_sessionmaker(db_engine, expire_on_commit=False, class_=AsyncSession)
-    async with TestingSessionLocal() as session:
+    session_factory = async_sessionmaker(db_engine, expire_on_commit=False, class_=AsyncSession)
+    async with session_factory() as session:
         yield session
 
 
@@ -57,8 +55,8 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
 
 @pytest_asyncio.fixture
 async def seeded_client(client: AsyncClient, db_engine) -> AsyncClient:
-    TestingSessionLocal = async_sessionmaker(db_engine, expire_on_commit=False, class_=AsyncSession)
-    async with TestingSessionLocal() as db:
+    session_factory = async_sessionmaker(db_engine, expire_on_commit=False, class_=AsyncSession)
+    async with session_factory() as db:
         await _seed(db)
         await db.commit()
     return client

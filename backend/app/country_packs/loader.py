@@ -49,31 +49,23 @@ class CountryPackError(RuntimeError):
 
 def _validate(code: str, payload: dict[str, Any]) -> dict[str, Any]:
     if payload.get("schema_version") != SCHEMA_VERSION:
-        raise CountryPackError(
-            f"country pack {code}: schema_version must be {SCHEMA_VERSION}"
-        )
+        raise CountryPackError(f"country pack {code}: schema_version must be {SCHEMA_VERSION}")
     for field in ("code", "name", "pack_version", "effective_from", "sources"):
         if not payload.get(field):
             raise CountryPackError(f"country pack {code}: missing {field}")
     if payload["code"] != code:
-        raise CountryPackError(
-            f"country pack {code}: declares code {payload['code']!r}"
-        )
+        raise CountryPackError(f"country pack {code}: declares code {payload['code']!r}")
     dt.date.fromisoformat(payload["effective_from"])
     for section in REQUIRED_SECTIONS:
         if not isinstance(payload.get(section), dict):
             raise CountryPackError(f"country pack {code}: missing section {section}")
     for key in REQUIRED_SAFETY_KEYS:
         if not isinstance(payload["safety_reporting"].get(key), int):
-            raise CountryPackError(
-                f"country pack {code}: safety_reporting.{key} must be an integer"
-            )
+            raise CountryPackError(f"country pack {code}: safety_reporting.{key} must be an integer")
     for source in payload["sources"]:
         for field in ("title", "publisher", "url", "accessed"):
             if not source.get(field):
-                raise CountryPackError(
-                    f"country pack {code}: source missing {field}"
-                )
+                raise CountryPackError(f"country pack {code}: source missing {field}")
     return payload
 
 
@@ -100,9 +92,7 @@ def get_pack(code: str | None = None) -> dict[str, Any]:
     resolved = (code or DEFAULT_JURISDICTION).upper()
     packs = _load_all()
     if resolved not in packs:
-        raise CountryPackError(
-            f"unknown jurisdiction {resolved!r}; known: {sorted(packs)}"
-        )
+        raise CountryPackError(f"unknown jurisdiction {resolved!r}; known: {sorted(packs)}")
     return packs[resolved]
 
 
@@ -143,9 +133,7 @@ def is_susar(seriousness: str, expectedness: str, causality: str) -> bool:
     )
 
 
-def validate_registry_identifier(
-    identifier: str, jurisdiction: str | None = None
-) -> bool:
+def validate_registry_identifier(identifier: str, jurisdiction: str | None = None) -> bool:
     """True when ``identifier`` matches the jurisdiction's registry format."""
 
     registry = get_pack(jurisdiction)["trial_registry"]

@@ -209,7 +209,8 @@ async def test_create_protocol_version(client: AsyncClient) -> None:
 
 
 async def test_webhook_imaging_result_valid(client: AsyncClient) -> None:
-    import hashlib, hmac
+    import hashlib
+    import hmac
 
     from app.config import get_settings
 
@@ -234,7 +235,8 @@ async def test_webhook_dispense_event_invalid(client: AsyncClient) -> None:
 
 
 async def test_webhook_agent_task_completed(client: AsyncClient) -> None:
-    import hashlib, hmac
+    import hashlib
+    import hmac
 
     from app.config import get_settings
 
@@ -250,7 +252,8 @@ async def test_webhook_agent_task_completed(client: AsyncClient) -> None:
 
 
 async def test_webhook_agent_escalation(client: AsyncClient) -> None:
-    import hashlib, hmac
+    import hashlib
+    import hmac
 
     from app.config import get_settings
 
@@ -266,7 +269,8 @@ async def test_webhook_agent_escalation(client: AsyncClient) -> None:
 
 
 async def test_webhook_council_synthesis(client: AsyncClient) -> None:
-    import hashlib, hmac
+    import hashlib
+    import hmac
 
     from app.config import get_settings
 

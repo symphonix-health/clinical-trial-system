@@ -1,5 +1,6 @@
 """FastAPI application entrypoint."""
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -13,7 +14,7 @@ from app.seeding.loader import seed_database
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # pragma: no cover
-    settings = get_settings()
+    get_settings()
     await init_db()
     await seed_database()
     yield
@@ -26,8 +27,6 @@ app = FastAPI(
     docs_url="/docs",
     lifespan=lifespan,
 )
-
-import os
 
 _frontend_port = os.getenv("CTMS_FRONTEND_PORT", "5281")
 _frontend_origin = f"http://localhost:{_frontend_port}"

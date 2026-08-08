@@ -5,7 +5,7 @@ from __future__ import annotations
 import datetime as dt
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class BaseSchema(BaseModel):
@@ -688,7 +688,7 @@ class SafetyReport(BaseSchema):
     days_to_report: list[int]
 
 
-class eTMFReport(BaseSchema):
+class ETMFReport(BaseSchema):
     study_id: int
     folders: list[dict[str, Any]]
     expired_count: int

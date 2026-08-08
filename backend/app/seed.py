@@ -153,11 +153,7 @@ async def seed_all(db: AsyncSession) -> None:
                         if tmpl["status"] == models.EnrolmentStatus.withdrawn.value
                         else None
                     ),
-                    withdrawal_scope=(
-                        "full"
-                        if tmpl["status"] == models.EnrolmentStatus.withdrawn.value
-                        else None
-                    ),
+                    withdrawal_scope=("full" if tmpl["status"] == models.EnrolmentStatus.withdrawn.value else None),
                 )
             )
         subject_records.append(subject)
@@ -219,8 +215,7 @@ async def seed_all(db: AsyncSession) -> None:
             (
                 s
                 for s in site_records
-                if s.site_code == p["site_code"]
-                and s.study_id == study_records[p["site_study"]].id
+                if s.site_code == p["site_code"] and s.study_id == study_records[p["site_study"]].id
             ),
             None,
         )
@@ -280,9 +275,7 @@ async def seed_all(db: AsyncSession) -> None:
             ),
         )
         budget = (
-            await db.execute(
-                select(models.StudyBudget).order_by(models.StudyBudget.id.desc()).limit(1)
-            )
+            await db.execute(select(models.StudyBudget).order_by(models.StudyBudget.id.desc()).limit(1))
         ).scalar_one()
         budget.actual_amount = b["actual"]
     await db.commit()
