@@ -1,6 +1,5 @@
 """Remaining coverage tests to reach 100% backend coverage."""
 
-import datetime as dt
 import hashlib
 import hmac
 
@@ -8,7 +7,7 @@ import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import crud, models, schemas
+from app import crud, schemas
 from app.config import get_settings
 
 

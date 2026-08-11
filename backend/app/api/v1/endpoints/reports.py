@@ -19,14 +19,16 @@ async def safety_report(study_id: int, db: AsyncSession = Depends(get_db)) -> sc
     return await crud.safety_report(db, study_id)
 
 
-@router.get("/etmf/{study_id}", response_model=schemas.eTMFReport)
-async def etmf_report(study_id: int, db: AsyncSession = Depends(get_db)) -> schemas.eTMFReport:
+@router.get("/etmf/{study_id}", response_model=schemas.ETMFReport)
+async def etmf_report(study_id: int, db: AsyncSession = Depends(get_db)) -> schemas.ETMFReport:
     return await crud.etmf_report(db, study_id)
 
 
 @router.get("/ip-accountability/{study_id}/{site_id}", response_model=schemas.AccountabilityReport)
-async def ip_accountability_report(study_id: int, site_id: int, db: AsyncSession = Depends(get_db)) -> schemas.AccountabilityReport:
+async def ip_accountability_report(
+    study_id: int, site_id: int, db: AsyncSession = Depends(get_db)
+) -> schemas.AccountabilityReport:
     try:
         return await crud.ip_accountability_report(db, study_id, site_id)
     except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc))
+        raise HTTPException(status_code=400, detail=str(exc)) from exc

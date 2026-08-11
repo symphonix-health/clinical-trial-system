@@ -24,23 +24,17 @@ async def _get_subject_by_external_id(
     if subject_id is not None:
         return await crud.get_subject(db, subject_id)
     if screening_id:
-        result = await db.execute(
-            select(models.Subject).where(models.Subject.screening_id == screening_id)
-        )
+        result = await db.execute(select(models.Subject).where(models.Subject.screening_id == screening_id))
         return result.scalar_one_or_none()
     return None
 
 
 async def _get_product_by_sku(db: AsyncSession, sku: str) -> models.InvestigationalProduct | None:
-    result = await db.execute(
-        select(models.InvestigationalProduct).where(models.InvestigationalProduct.sku == sku)
-    )
+    result = await db.execute(select(models.InvestigationalProduct).where(models.InvestigationalProduct.sku == sku))
     return result.scalar_one_or_none()
 
 
-async def process_appointment_confirmed(
-    db: AsyncSession, payload: dict[str, Any]
-) -> dict[str, Any]:
+async def process_appointment_confirmed(db: AsyncSession, payload: dict[str, Any]) -> dict[str, Any]:
     """Create or confirm a subject visit from an appointment-system event."""
 
     subject = await _get_subject_by_external_id(
@@ -154,9 +148,7 @@ async def process_dispense_event(db: AsyncSession, payload: dict[str, Any]) -> d
     return {"status": "processed", "dispense_id": dispense.id}
 
 
-async def process_agent_task_completed(
-    db: AsyncSession, payload: dict[str, Any]
-) -> dict[str, Any]:
+async def process_agent_task_completed(db: AsyncSession, payload: dict[str, Any]) -> dict[str, Any]:
     """Record an agent arena run completion from nexus-a2a-protocol."""
 
     run_id = payload.get("run_id")
@@ -193,16 +185,12 @@ async def process_agent_task_completed(
     return {"status": "processed", "run_id": completed.id}
 
 
-async def process_agent_escalation(
-    db: AsyncSession, payload: dict[str, Any]
-) -> dict[str, Any]:
+async def process_agent_escalation(db: AsyncSession, payload: dict[str, Any]) -> dict[str, Any]:
     """Record an agent safety escalation from nexus-a2a-protocol / signalbox-mcp."""
 
     event_id = payload.get("event_id")
     if event_id:
-        existing = await db.execute(
-            select(models.AgentEscalation).where(models.AgentEscalation.event_id == event_id)
-        )
+        existing = await db.execute(select(models.AgentEscalation).where(models.AgentEscalation.event_id == event_id))
         if existing.scalar_one_or_none():
             return {"status": "ignored", "reason": "duplicate event_id"}
 
@@ -218,16 +206,12 @@ async def process_agent_escalation(
     return {"status": "processed", "escalation_id": escalation.id}
 
 
-async def process_council_synthesis(
-    db: AsyncSession, payload: dict[str, Any]
-) -> dict[str, Any]:
+async def process_council_synthesis(db: AsyncSession, payload: dict[str, Any]) -> dict[str, Any]:
     """Record a council deliberation outcome from nexus-a2a-protocol."""
 
     event_id = payload.get("event_id")
     if event_id:
-        existing = await db.execute(
-            select(models.CouncilTrial).where(models.CouncilTrial.event_id == event_id)
-        )
+        existing = await db.execute(select(models.CouncilTrial).where(models.CouncilTrial.event_id == event_id))
         if existing.scalar_one_or_none():
             return {"status": "ignored", "reason": "duplicate event_id"}
 

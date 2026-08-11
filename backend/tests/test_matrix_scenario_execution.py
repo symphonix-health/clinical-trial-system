@@ -419,7 +419,7 @@ def _same_shape(matrix_path: str, route_path: str) -> bool:
         return False
     return all(
         (seg_r.startswith("{") and seg_r.endswith("}")) or seg_r == seg_m
-        for seg_m, seg_r in zip(m, r)
+        for seg_m, seg_r in zip(m, r, strict=False)
     )
 
 

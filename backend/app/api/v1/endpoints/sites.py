@@ -39,7 +39,9 @@ async def update_site(site_id: int, data: schemas.SiteUpdate, db: AsyncSession =
 
 
 @router.get("/{site_id}/checklist", response_model=list[schemas.SiteActivationChecklistOut])
-async def get_site_checklist(site_id: int, db: AsyncSession = Depends(get_db)) -> list[schemas.SiteActivationChecklistOut]:
+async def get_site_checklist(
+    site_id: int, db: AsyncSession = Depends(get_db)
+) -> list[schemas.SiteActivationChecklistOut]:
     tasks = await crud.get_site_checklist(db, site_id)
     return [schemas.SiteActivationChecklistOut.model_validate(t) for t in tasks]
 

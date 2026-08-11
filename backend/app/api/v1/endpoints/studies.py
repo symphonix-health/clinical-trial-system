@@ -31,7 +31,9 @@ async def get_study(study_id: int, db: AsyncSession = Depends(get_db)) -> schema
 
 
 @router.patch("/{study_id}", response_model=schemas.StudyOut)
-async def update_study(study_id: int, data: schemas.StudyUpdate, db: AsyncSession = Depends(get_db)) -> schemas.StudyOut:
+async def update_study(
+    study_id: int, data: schemas.StudyUpdate, db: AsyncSession = Depends(get_db)
+) -> schemas.StudyOut:
     study = await crud.get_study(db, study_id)
     if not study:
         raise HTTPException(status_code=404, detail="Study not found")
@@ -49,7 +51,9 @@ async def approve_study(study_id: int, version_number: str, db: AsyncSession = D
 
 
 @router.post("/{study_id}/protocol-versions", response_model=schemas.ProtocolVersionOut)
-async def create_protocol_version(study_id: int, data: schemas.ProtocolVersionCreate, db: AsyncSession = Depends(get_db)) -> schemas.ProtocolVersionOut:
+async def create_protocol_version(
+    study_id: int, data: schemas.ProtocolVersionCreate, db: AsyncSession = Depends(get_db)
+) -> schemas.ProtocolVersionOut:
     data.study_id = study_id
     pv = await crud.create_protocol_version(db, data)
     return schemas.ProtocolVersionOut.model_validate(pv)
