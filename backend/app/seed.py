@@ -211,7 +211,7 @@ async def seed_all(db: AsyncSession) -> None:
     # IP products
     product_records: list[models.InvestigationalProduct] = []
     for p in PRODUCTS:
-        site = next(
+        matched_site = next(
             (
                 s
                 for s in site_records
@@ -230,7 +230,7 @@ async def seed_all(db: AsyncSession) -> None:
                 storage_conditions="2-8C",
                 accountability_unit="capsule",
                 quantity_on_hand=p["qty"],
-                site_id=site.id if site else None,
+                site_id=matched_site.id if matched_site else None,
             ),
         )
         product_records.append(product)
@@ -433,7 +433,7 @@ async def seed_agentic_records(db: AsyncSession, study_records: list[models.Stud
     agent_records: list[models.AgentSubject] = []
     for agent in AGENT_SUBJECTS:
         # CAID-SEED-REQ: FR-C-A11, FR-C-A12
-        rec = await crud.create_agent_subject(
+        agent_record = await crud.create_agent_subject(
             db,
             schemas.AgentSubjectCreate(
                 principal_id=agent["principal"],
@@ -446,12 +446,12 @@ async def seed_agentic_records(db: AsyncSession, study_records: list[models.Stud
                 registration_source=agent["source"],
             ),
         )
-        agent_records.append(rec)
+        agent_records.append(agent_record)
 
     cohort_records: list[models.AgentCohort] = []
     for cohort in AGENT_COHORTS:
         # CAID-SEED-REQ: FR-C-A13
-        rec = await crud.create_agent_cohort(
+        cohort_record = await crud.create_agent_cohort(
             db,
             schemas.AgentCohortCreate(
                 name=cohort["name"],
@@ -461,16 +461,16 @@ async def seed_agentic_records(db: AsyncSession, study_records: list[models.Stud
                 evaluation_objective=cohort["objective"],
             ),
         )
-        cohort_records.append(rec)
+        cohort_records.append(cohort_record)
 
-    for idx, agent in enumerate(agent_records):
+    for idx, agent_record in enumerate(agent_records):
         cohort_idx = idx % 3
-        await crud.add_agent_to_cohort(db, cohort_records[cohort_idx].id, agent.id)
+        await crud.add_agent_to_cohort(db, cohort_records[cohort_idx].id, agent_record.id)
 
     env_records: list[models.SyntheticEnvironment] = []
     for env in SYNTHETIC_ENVIRONMENTS:
         # CAID-SEED-REQ: FR-C-A21
-        rec = await crud.create_synthetic_environment(
+        env_record = await crud.create_synthetic_environment(
             db,
             schemas.SyntheticEnvironmentCreate(
                 name=env["name"],
@@ -480,13 +480,13 @@ async def seed_agentic_records(db: AsyncSession, study_records: list[models.Stud
                 perturbation_set=env["perturbations"],
             ),
         )
-        env_records.append(rec)
+        env_records.append(env_record)
 
-    for idx, agent in enumerate(agent_records[:5]):
-        env = env_records[idx % 3]
+    for idx, agent_record in enumerate(agent_records[:5]):
+        env_record = env_records[idx % 3]
         # CAID-SEED-REQ: FR-C-A22, FR-C-A23
         run = await crud.create_agent_run(
-            db, schemas.AgentRunCreate(environment_id=env.id, agent_subject_ids=[agent.id])
+            db, schemas.AgentRunCreate(environment_id=env_record.id, agent_subject_ids=[agent_record.id])
         )
         metrics = {
             "task_success": 0.9 - (idx * 0.05),
@@ -499,12 +499,12 @@ async def seed_agentic_records(db: AsyncSession, study_records: list[models.Stud
         }
         await crud.complete_agent_run(db, run, metrics, trace_url=f"https://traces.ctms/run/{run.id}")
 
-    for agent in agent_records[:3]:
+    for agent_record in agent_records[:3]:
         # CAID-SEED-REQ: FR-C-A12, FR-C-A15
         await crud.create_agent_consent_contract(
             db,
             schemas.AgentConsentContractCreate(
-                agent_subject_id=agent.id,
+                agent_subject_id=agent_record.id,
                 allowed_systems=["ctms", "global-agent-registry"],
                 model_owner_consent=True,
                 withdrawal_mechanism="Revoke via registry portal",

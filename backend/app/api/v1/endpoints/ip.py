@@ -46,7 +46,7 @@ async def receive_shipment(
 @router.post("/dispenses", response_model=schemas.IpDispenseOut)
 async def create_dispense(
     data: schemas.IpDispenseCreate,
-    _auth: dict = Depends(require_auth),
+    _auth: "dict[str, object]" = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.IpDispenseOut:
     dispense = await crud.create_ip_dispense(db, data)
@@ -57,7 +57,7 @@ async def create_dispense(
 async def destroy_dispense(
     dispense_id: int,
     data: schemas.IpDestroy,
-    _auth: dict = Depends(require_auth),
+    _auth: "dict[str, object]" = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.IpDispenseOut:
     dispense = await db.get(models.IpDispense, dispense_id)

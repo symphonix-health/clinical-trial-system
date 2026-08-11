@@ -19,7 +19,7 @@ async def create_visit(data: schemas.SubjectVisitCreate, db: AsyncSession = Depe
 @router.get("/{visit_id}", response_model=schemas.SubjectVisitOut)
 async def get_visit(
     visit_id: int,
-    _auth: dict = Depends(require_auth),
+    _auth: "dict[str, object]" = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.SubjectVisitOut:
     visit = await crud.get_visit(db, visit_id)
@@ -32,7 +32,7 @@ async def get_visit(
 async def update_visit(
     visit_id: int,
     data: schemas.SubjectVisitUpdate,
-    _auth: dict = Depends(require_auth),
+    _auth: "dict[str, object]" = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.SubjectVisitOut:
     visit = await crud.get_visit(db, visit_id)

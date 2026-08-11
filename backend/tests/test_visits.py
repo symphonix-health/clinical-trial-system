@@ -1,6 +1,9 @@
 """Visit scheduling tests."""
 
+import pytest
 from httpx import AsyncClient
+
+from app.connectors import integration_engine
 
 
 async def _create_subject(client: AsyncClient):
@@ -35,6 +38,28 @@ async def _create_subject(client: AsyncClient):
 
 
 async def test_create_visit(client: AsyncClient) -> None:
+    subject_id = await _create_subject(client)
+    resp = await client.post(
+        "/api/v1/visits",
+        json={
+            "subject_id": subject_id,
+            "visit_definition_id": "V1",
+            "scheduled_date": "2026-05-01",
+            "window_min_date": "2026-04-29",
+            "window_max_date": "2026-05-03",
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "scheduled"
+
+
+async def test_create_visit_ignores_dispatch_failures(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async def fail_notify(*args: object, **kwargs: object) -> None:
+        raise integration_engine.IntegrationError("boom")
+
+    monkeypatch.setattr(integration_engine, "notify_visit_scheduled", fail_notify)
     subject_id = await _create_subject(client)
     resp = await client.post(
         "/api/v1/visits",

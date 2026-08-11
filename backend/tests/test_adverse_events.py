@@ -1,6 +1,9 @@
 """Adverse event and SUSAR tests."""
 
+import pytest
 from httpx import AsyncClient
+
+from app.connectors import integration_engine
 
 
 async def _create_study(client: AsyncClient):
@@ -38,6 +41,30 @@ async def _create_subject(client: AsyncClient, study_id: int):
 
 
 async def test_create_adverse_event(client: AsyncClient) -> None:
+    study_id = await _create_study(client)
+    subject_id = await _create_subject(client, study_id)
+    resp = await client.post(
+        "/api/v1/adverse-events",
+        json={
+            "study_id": study_id,
+            "subject_id": subject_id,
+            "onset_date": "2026-04-01",
+            "severity": "moderate",
+            "seriousness": "non_serious",
+            "causality": "unrelated",
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "reported"
+
+
+async def test_create_adverse_event_ignores_dispatch_failures(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async def fail_notify(*args: object, **kwargs: object) -> None:
+        raise integration_engine.IntegrationError("boom")
+
+    monkeypatch.setattr(integration_engine, "notify_adverse_event", fail_notify)
     study_id = await _create_study(client)
     subject_id = await _create_subject(client, study_id)
     resp = await client.post(

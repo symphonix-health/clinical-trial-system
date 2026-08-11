@@ -58,7 +58,7 @@ async def create_attestation(
 async def create_consent_contract(
     agent_id: int,
     data: schemas.AgentConsentContractCreate,
-    _auth: dict = Depends(require_auth),
+    _auth: "dict[str, object]" = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.AgentConsentContractOut:
     data.agent_subject_id = agent_id
@@ -94,7 +94,7 @@ async def create_run(data: schemas.AgentRunCreate, db: AsyncSession = Depends(ge
 
 @router.post("/runs/{run_id}/complete", response_model=schemas.AgentRunOut)
 async def complete_run(
-    run_id: int, metrics: dict, trace_url: str | None = None, db: AsyncSession = Depends(get_db)
+    run_id: int, metrics: "dict[str, float]", trace_url: str | None = None, db: AsyncSession = Depends(get_db)
 ) -> schemas.AgentRunOut:
     run = await crud.get_agent_run(db, run_id)
     if not run:

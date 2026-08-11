@@ -374,7 +374,7 @@ async def approvals_due(db: AsyncSession, study_id: int, within_days: int = 60) 
                 "id": a.id,
                 "authority_code": a.authority_code,
                 "submission_type": a.submission_type,
-                "approval_expiry": a.approval_expiry.isoformat(),
+                "approval_expiry": (a.approval_expiry or horizon).isoformat(),
             }
             for a in expiring
         ],
@@ -382,7 +382,7 @@ async def approvals_due(db: AsyncSession, study_id: int, within_days: int = 60) 
             {
                 "id": a.id,
                 "authority_code": a.authority_code,
-                "next_report_due": a.next_report_due.isoformat(),
+                "next_report_due": (a.next_report_due or horizon).isoformat(),
             }
             for a in reports
         ],

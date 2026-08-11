@@ -1,6 +1,9 @@
 """Subject enrolment tests."""
 
+import pytest
 from httpx import AsyncClient
+
+from app.connectors import integration_engine
 
 
 async def _create_study_and_site(client: AsyncClient):
@@ -57,6 +60,28 @@ async def test_record_consent(client: AsyncClient) -> None:
     assert resp.json()["consent_version"] == "v1.0"
     subject = await client.get(f"/api/v1/subjects/{subject_id}")
     assert subject.json()["enrolment_status"] == "enrolled"
+
+
+async def test_record_consent_ignores_dispatch_failures(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async def fail_notify(*args: object, **kwargs: object) -> None:
+        raise integration_engine.IntegrationError("boom")
+
+    monkeypatch.setattr(integration_engine, "notify_subject_enrolled", fail_notify)
+    study_id, site_id = await _create_study_and_site(client)
+    subject_id = (
+        await client.post(
+            "/api/v1/subjects",
+            json={"study_id": study_id, "site_id": site_id, "screening_id": "SCR-002B"},
+        )
+    ).json()["id"]
+    resp = await client.post(
+        f"/api/v1/subjects/{subject_id}/consent",
+        json={"subject_id": subject_id, "consent_version": "v1.0", "consent_date": "2026-01-20T09:00:00"},
+    )
+    assert resp.status_code == 200
+    assert resp.json()["consent_version"] == "v1.0"
 
 
 async def test_withdraw_subject(client: AsyncClient) -> None:
