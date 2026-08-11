@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, schemas
+from app.auth import require_auth
 from app.database import get_db
 
 router = APIRouter(prefix="/agents", tags=["agents"])
@@ -46,7 +47,12 @@ async def create_attestation(agent_id: int, data: schemas.AgentAttestationCreate
 
 
 @router.post("/subjects/{agent_id}/consent-contracts", response_model=schemas.AgentConsentContractOut)
-async def create_consent_contract(agent_id: int, data: schemas.AgentConsentContractCreate, db: AsyncSession = Depends(get_db)) -> schemas.AgentConsentContractOut:
+async def create_consent_contract(
+    agent_id: int,
+    data: schemas.AgentConsentContractCreate,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
+) -> schemas.AgentConsentContractOut:
     data.agent_subject_id = agent_id
     contract = await crud.create_agent_consent_contract(db, data)
     return schemas.AgentConsentContractOut.model_validate(contract)

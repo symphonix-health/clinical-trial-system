@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, models, national, schemas
 from app.country_packs import CountryPackError, get_pack, list_packs
+from app.auth import require_auth
 from app.database import get_db
 
 router = APIRouter(tags=["national"])
@@ -136,7 +137,9 @@ async def approvals_due(
 
 @router.post("/eligibility-screenings", response_model=schemas.EligibilityScreeningOut)
 async def request_eligibility_screening(
-    data: schemas.EligibilityScreeningCreate, db: AsyncSession = Depends(get_db)
+    data: schemas.EligibilityScreeningCreate,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
 ) -> schemas.EligibilityScreeningOut:
     screening = await national.request_eligibility_screening(db, data)
     return schemas.EligibilityScreeningOut.model_validate(screening)
@@ -146,7 +149,9 @@ async def request_eligibility_screening(
     "/eligibility-screenings", response_model=list[schemas.EligibilityScreeningOut]
 )
 async def list_eligibility_screenings(
-    study_id: int, db: AsyncSession = Depends(get_db)
+    study_id: int,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
 ) -> list[schemas.EligibilityScreeningOut]:
     rows = await national.list_eligibility_screenings(db, study_id)
     return [schemas.EligibilityScreeningOut.model_validate(r) for r in rows]
@@ -159,6 +164,7 @@ async def list_eligibility_screenings(
 async def record_eligibility_outcome(
     screening_id: int,
     data: schemas.EligibilityOutcomeIn,
+    _auth: dict = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.EligibilityScreeningOut:
     screening = await db.get(models.EligibilityScreening, screening_id)

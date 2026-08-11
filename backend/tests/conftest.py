@@ -10,6 +10,7 @@ import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
+from app.auth import require_auth
 from app.config import get_settings
 from app.database import Base, get_db
 from app.main import app
@@ -50,6 +51,11 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
         yield db_session
 
     app.dependency_overrides[get_db] = override_get_db
+    # Route-auth remediation (2026-08-11): patient routes now require a bearer
+    # token via require_auth. Business-logic tests are not auth tests, so bypass
+    # the guard with a stub principal; real 401 behaviour is covered by
+    # tests/test_route_auth_guards.py (which does NOT use this fixture).
+    app.dependency_overrides[require_auth] = lambda: {"sub": "test-user", "roles": ["investigator"]}
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
     app.dependency_overrides.clear()

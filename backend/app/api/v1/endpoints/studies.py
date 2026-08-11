@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, schemas
+from app.auth import require_auth
 from app.database import get_db
 
 router = APIRouter(prefix="/studies", tags=["studies"])
@@ -56,7 +57,10 @@ async def create_protocol_version(study_id: int, data: schemas.ProtocolVersionCr
 
 @router.post("/{study_id}/flag-reconsent", response_model=list[schemas.SubjectOut])
 async def flag_reconsent(
-    study_id: int, protocol_version: str, db: AsyncSession = Depends(get_db)
+    study_id: int,
+    protocol_version: str,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
 ) -> list[schemas.SubjectOut]:
     """Flag enrolled subjects for re-consent against an amended protocol.
 

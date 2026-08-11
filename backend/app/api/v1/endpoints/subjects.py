@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, models, schemas
+from app.auth import require_auth
 from app.database import get_db
 
 router = APIRouter(prefix="/subjects", tags=["subjects"])
@@ -40,7 +41,12 @@ async def update_subject(subject_id: int, data: schemas.SubjectUpdate, db: Async
 
 
 @router.post("/{subject_id}/consent", response_model=schemas.InformedConsentOut)
-async def record_consent(subject_id: int, data: schemas.InformedConsentCreate, db: AsyncSession = Depends(get_db)) -> schemas.InformedConsentOut:
+async def record_consent(
+    subject_id: int,
+    data: schemas.InformedConsentCreate,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
+) -> schemas.InformedConsentOut:
     subject = await crud.get_subject(db, subject_id)
     if not subject:
         raise HTTPException(status_code=404, detail="Subject not found")
