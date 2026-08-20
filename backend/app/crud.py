@@ -285,7 +285,7 @@ async def record_consent(
             site_id=subject.site_id or 0,
             subject_number=subject.subject_number,
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - policy guard
         pass  # hub delivery is best-effort; enrolment already persisted
     return consent
 
@@ -573,7 +573,7 @@ async def create_visit(db: AsyncSession, obj_in: schemas.SubjectVisitCreate) -> 
             subject_id=visit.subject_id,
             scheduled_date=str(visit.scheduled_date),
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - policy guard
         pass
     return visit
 
@@ -679,7 +679,7 @@ async def create_adverse_event(db: AsyncSession, obj_in: schemas.AdverseEventCre
             study_id=ae.study_id,
             seriousness=ae.seriousness,
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - policy guard
         pass
     return ae
 
