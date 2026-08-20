@@ -18,7 +18,7 @@ vi.mock('axios', () => ({
 
 describe('App', () => {
   it('renders navigation and dashboard', async () => {
-    ;(axios.get as ReturnType<typeof vi.fn>).mockResolvedValue({
+    (axios.get as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: { status: 'ok', version: '0.1.0', timestamp: new Date().toISOString() },
     })
 
@@ -34,7 +34,7 @@ describe('App', () => {
   })
 
   it('opens command palette with Ctrl+K', async () => {
-    ;(axios.get as ReturnType<typeof vi.fn>).mockResolvedValue({
+    (axios.get as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: { status: 'ok', version: '0.1.0', timestamp: new Date().toISOString() },
     })
 
@@ -51,7 +51,7 @@ describe('App', () => {
   })
 
   it('shows keyboard shortcuts with ? key', async () => {
-    ;(axios.get as ReturnType<typeof vi.fn>).mockResolvedValue({
+    (axios.get as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: { status: 'ok', version: '0.1.0', timestamp: new Date().toISOString() },
     })
 
