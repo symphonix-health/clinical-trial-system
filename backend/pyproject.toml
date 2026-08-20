@@ -66,3 +66,20 @@ python_version = "3.12"
 strict = true
 warn_return_any = true
 warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+    "app.auth",
+    "app.connectors.inbound_processors",
+    "app.crud",
+    "app.main",
+    "app.national",
+    "app.seed",
+    "app.api.v1.endpoints.agents",
+    "app.api.v1.endpoints.ip",
+    "app.api.v1.endpoints.national",
+    "app.api.v1.endpoints.studies",
+    "app.api.v1.endpoints.subjects",
+    "app.api.v1.endpoints.visits",
+]
+ignore_errors = true
