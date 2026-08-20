@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, schemas
 from app.config import get_settings
+from app.connectors import integration_engine
 
 
 def _sign(payload: bytes) -> str:
@@ -378,3 +379,95 @@ async def test_update_query_not_found(client: AsyncClient) -> None:
         json={"status": "closed"},
     )
     assert resp.status_code == 404
+
+
+async def _make_subject(client: AsyncClient, protocol: str, site_code: str, screening_id: str) -> tuple[int, int]:
+    study = await client.post(
+        "/api/v1/studies",
+        json={
+            "protocol_number": protocol,
+            "title": "t",
+            "phase": "I",
+            "indication": "x",
+            "therapeutic_area": "o",
+            "sponsor": "S",
+        },
+    )
+    study_id = study.json()["id"]
+    site = await client.post(
+        "/api/v1/sites",
+        json={
+            "study_id": study_id,
+            "site_code": site_code,
+            "name": "n",
+            "organisation_id": "o",
+            "principal_investigator_id": "p",
+        },
+    )
+    site_id = site.json()["id"]
+    subject = await client.post(
+        "/api/v1/subjects",
+        json={"study_id": study_id, "site_id": site_id, "screening_id": screening_id},
+    )
+    return study_id, subject.json()["id"]
+
+
+async def _raise_integration_error(*args, **kwargs) -> None:
+    raise integration_engine.IntegrationError("hub down")
+
+
+async def test_complete_consent_integration_error_ignored(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """IntegrationError during notify_subject_enrolled is silently swallowed (best-effort)."""
+    monkeypatch.setattr(integration_engine, "notify_subject_enrolled", _raise_integration_error)
+    study_id, subject_id = await _make_subject(client, "COV-CONS-ERR-001", "COV-01", "SCR-COV-CONS-001")
+    resp = await client.post(
+        f"/api/v1/subjects/{subject_id}/consent",
+        json={"subject_id": subject_id, "consent_version": "v1.0", "consent_date": "2026-01-20T09:00:00"},
+    )
+    assert resp.status_code == 200
+    assert resp.json()["consent_version"] == "v1.0"
+
+
+async def test_create_visit_integration_error_ignored(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """IntegrationError during notify_visit_scheduled is silently swallowed (best-effort)."""
+    monkeypatch.setattr(integration_engine, "notify_visit_scheduled", _raise_integration_error)
+    _, subject_id = await _make_subject(client, "COV-VISIT-ERR-001", "COV-02", "SCR-COV-VISIT-001")
+    resp = await client.post(
+        "/api/v1/visits",
+        json={
+            "subject_id": subject_id,
+            "visit_definition_id": "V1",
+            "scheduled_date": "2026-06-01",
+            "window_min_date": "2026-05-29",
+            "window_max_date": "2026-06-03",
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.json()["subject_id"] == subject_id
+
+
+async def test_create_adverse_event_integration_error_ignored(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """IntegrationError during notify_adverse_event is silently swallowed (best-effort)."""
+    monkeypatch.setattr(integration_engine, "notify_adverse_event", _raise_integration_error)
+    study_id, subject_id = await _make_subject(client, "COV-AE-ERR-001", "COV-03", "SCR-COV-AE-001")
+    resp = await client.post(
+        "/api/v1/adverse-events",
+        json={
+            "study_id": study_id,
+            "subject_id": subject_id,
+            "onset_date": "2026-04-01",
+            "severity": "moderate",
+            "seriousness": "non_serious",
+            "description": "test ae",
+            "expectedness": "unexpected",
+            "causality": "unrelated",
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.json()["subject_id"] == subject_id
