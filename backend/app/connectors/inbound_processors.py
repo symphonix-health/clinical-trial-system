@@ -168,6 +168,8 @@ async def process_agent_task_completed(db: AsyncSession, payload: dict[str, Any]
         run = fetched
 
     metrics = payload.get("metrics", {})
+    if run is None:  # pragma: no cover
+        return {"status": "ignored", "reason": "run not found"}
     completed = await crud.complete_agent_run(
         db,
         run,
