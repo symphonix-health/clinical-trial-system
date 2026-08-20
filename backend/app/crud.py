@@ -1177,7 +1177,10 @@ async def ip_accountability_report(db: AsyncSession, study_id: int, site_id: int
     if not site or site.study_id != study_id:
         raise ValueError("Invalid site for study")
     shipments = await db.execute(
-        select(models.IpShipment).where(models.IpShipment.to_site_id == site_id, models.IpShipment.condition_ok)
+        select(models.IpShipment).where(
+            models.IpShipment.to_site_id == site_id,
+            models.IpShipment.condition_ok.is_(True),
+        )
     )
     shipped = sum(s.quantity_shipped for s in shipments.scalars().all())
     dispenses_result = await db.execute(

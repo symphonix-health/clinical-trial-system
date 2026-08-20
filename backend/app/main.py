@@ -1,6 +1,7 @@
 """FastAPI application entrypoint."""
 
 import os
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -13,7 +14,7 @@ from app.seeding.loader import seed_database
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):  # pragma: no cover
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:  # pragma: no cover
     get_settings()
     await init_db()
     await seed_database()
