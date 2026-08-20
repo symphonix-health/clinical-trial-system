@@ -10,11 +10,11 @@ Tokens are HS256-signed with the service's existing ``secret_key`` setting.
 """
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Any
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from jose import JWTError, jwt  # type: ignore[import-untyped]
+from jose import JWTError, jwt
 
 from app.config import get_settings
 
@@ -33,13 +33,10 @@ async def require_auth(
             headers={"WWW-Authenticate": "Bearer"},
         )
     try:
-        claims = cast(
-            dict[str, Any],
-            jwt.decode(
-                credentials.credentials,
-                get_settings().secret_key,
-                algorithms=[_ALGORITHM],
-            ),
+        claims = jwt.decode(
+            credentials.credentials,
+            get_settings().secret_key,
+            algorithms=[_ALGORITHM],
         )
     except JWTError as exc:
         raise HTTPException(

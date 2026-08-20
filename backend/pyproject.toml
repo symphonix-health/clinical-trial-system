@@ -38,6 +38,7 @@ dev = [
     "axe-playwright-python>=0.1.4",
     "ruff>=0.4",
     "mypy>=1.10",
+    "types-python-jose",
 ]
 
 [tool.pytest.ini_options]
@@ -68,6 +69,9 @@ warn_return_any = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
+# Temporary technical-debt baseline for legacy modules that are not yet fully
+# typed. Keep strict mypy globally and narrow suppressions to known existing
+# error codes here; remove entries incrementally as modules are remediated.
 module = [
     "app.auth",
     "app.connectors.inbound_processors",
@@ -82,4 +86,12 @@ module = [
     "app.api.v1.endpoints.subjects",
     "app.api.v1.endpoints.visits",
 ]
-ignore_errors = true
+disable_error_code = [
+    "arg-type",
+    "assignment",
+    "attr-defined",
+    "no-any-return",
+    "no-untyped-def",
+    "type-arg",
+    "union-attr",
+]
