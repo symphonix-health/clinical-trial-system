@@ -152,6 +152,7 @@ async def process_agent_task_completed(db: AsyncSession, payload: dict[str, Any]
     """Record an agent arena run completion from nexus-a2a-protocol."""
 
     run_id = payload.get("run_id")
+    run: models.AgentRun | None
     if run_id is None:
         run = await crud.create_agent_run(
             db,
@@ -167,6 +168,8 @@ async def process_agent_task_completed(db: AsyncSession, payload: dict[str, Any]
             return {"status": "ignored", "reason": "run not found"}
 
     metrics = payload.get("metrics", {})
+    if run is None:
+        return {"status": "ignored", "reason": "run not found"}
     completed = await crud.complete_agent_run(
         db,
         run,

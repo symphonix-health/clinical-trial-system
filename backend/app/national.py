@@ -16,7 +16,7 @@ capability benchmark:
 from __future__ import annotations
 
 import datetime as dt
-from typing import Any
+from typing import Any, cast
 
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -374,7 +374,7 @@ async def approvals_due(db: AsyncSession, study_id: int, within_days: int = 60) 
                 "id": a.id,
                 "authority_code": a.authority_code,
                 "submission_type": a.submission_type,
-                "approval_expiry": a.approval_expiry.isoformat(),
+                "approval_expiry": cast(dt.date, a.approval_expiry).isoformat(),
             }
             for a in expiring
         ],
@@ -382,7 +382,7 @@ async def approvals_due(db: AsyncSession, study_id: int, within_days: int = 60) 
             {
                 "id": a.id,
                 "authority_code": a.authority_code,
-                "next_report_due": a.next_report_due.isoformat(),
+                "next_report_due": cast(dt.date, a.next_report_due).isoformat(),
             }
             for a in reports
         ],

@@ -12,10 +12,10 @@ from __future__ import annotations
 
 from collections.abc import AsyncGenerator
 
-import jwt
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+from jose import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings

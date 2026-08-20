@@ -10,11 +10,11 @@ Tokens are HS256-signed with the service's existing ``secret_key`` setting.
 """
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
-import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt  # type: ignore[import-untyped]
 
 from app.config import get_settings
 
@@ -33,12 +33,15 @@ async def require_auth(
             headers={"WWW-Authenticate": "Bearer"},
         )
     try:
-        claims = jwt.decode(
-            credentials.credentials,
-            get_settings().secret_key,
-            algorithms=[_ALGORITHM],
+        claims = cast(
+            dict[str, Any],
+            jwt.decode(
+                credentials.credentials,
+                get_settings().secret_key,
+                algorithms=[_ALGORITHM],
+            ),
         )
-    except jwt.PyJWTError as exc:
+    except JWTError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token.",
