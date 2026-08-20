@@ -14,11 +14,11 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ['react-hooks'],
   extends: ['eslint:recommended'],
   overrides: [
     {
       files: ['**/*.ts', '**/*.tsx'],
+      plugins: ['react-hooks'],
       rules: {
         'no-extra-semi': 'error',
         'no-undef': 'off',
