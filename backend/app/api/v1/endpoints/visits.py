@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, schemas
+from app.auth import require_auth
 from app.database import get_db
 
 router = APIRouter(prefix="/visits", tags=["visits"])
@@ -16,7 +17,11 @@ async def create_visit(data: schemas.SubjectVisitCreate, db: AsyncSession = Depe
 
 
 @router.get("/{visit_id}", response_model=schemas.SubjectVisitOut)
-async def get_visit(visit_id: int, db: AsyncSession = Depends(get_db)) -> schemas.SubjectVisitOut:
+async def get_visit(
+    visit_id: int,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
+) -> schemas.SubjectVisitOut:
     visit = await crud.get_visit(db, visit_id)
     if not visit:
         raise HTTPException(status_code=404, detail="Visit not found")
@@ -24,7 +29,12 @@ async def get_visit(visit_id: int, db: AsyncSession = Depends(get_db)) -> schema
 
 
 @router.patch("/{visit_id}", response_model=schemas.SubjectVisitOut)
-async def update_visit(visit_id: int, data: schemas.SubjectVisitUpdate, db: AsyncSession = Depends(get_db)) -> schemas.SubjectVisitOut:
+async def update_visit(
+    visit_id: int,
+    data: schemas.SubjectVisitUpdate,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
+) -> schemas.SubjectVisitOut:
     visit = await crud.get_visit(db, visit_id)
     if not visit:
         raise HTTPException(status_code=404, detail="Visit not found")

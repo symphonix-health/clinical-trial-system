@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, schemas
+from app.auth import require_auth
 from app.database import get_db
 
 router = APIRouter(prefix="/studies", tags=["studies"])
@@ -30,7 +31,9 @@ async def get_study(study_id: int, db: AsyncSession = Depends(get_db)) -> schema
 
 
 @router.patch("/{study_id}", response_model=schemas.StudyOut)
-async def update_study(study_id: int, data: schemas.StudyUpdate, db: AsyncSession = Depends(get_db)) -> schemas.StudyOut:
+async def update_study(
+    study_id: int, data: schemas.StudyUpdate, db: AsyncSession = Depends(get_db)
+) -> schemas.StudyOut:
     study = await crud.get_study(db, study_id)
     if not study:
         raise HTTPException(status_code=404, detail="Study not found")
@@ -48,7 +51,9 @@ async def approve_study(study_id: int, version_number: str, db: AsyncSession = D
 
 
 @router.post("/{study_id}/protocol-versions", response_model=schemas.ProtocolVersionOut)
-async def create_protocol_version(study_id: int, data: schemas.ProtocolVersionCreate, db: AsyncSession = Depends(get_db)) -> schemas.ProtocolVersionOut:
+async def create_protocol_version(
+    study_id: int, data: schemas.ProtocolVersionCreate, db: AsyncSession = Depends(get_db)
+) -> schemas.ProtocolVersionOut:
     data.study_id = study_id
     pv = await crud.create_protocol_version(db, data)
     return schemas.ProtocolVersionOut.model_validate(pv)
@@ -56,7 +61,10 @@ async def create_protocol_version(study_id: int, data: schemas.ProtocolVersionCr
 
 @router.post("/{study_id}/flag-reconsent", response_model=list[schemas.SubjectOut])
 async def flag_reconsent(
-    study_id: int, protocol_version: str, db: AsyncSession = Depends(get_db)
+    study_id: int,
+    protocol_version: str,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
 ) -> list[schemas.SubjectOut]:
     """Flag enrolled subjects for re-consent against an amended protocol.
 

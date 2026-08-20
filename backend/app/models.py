@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
-from enum import Enum as PyEnum
+from enum import StrEnum
 from typing import Any
 
 from sqlalchemy import JSON, Date, DateTime, ForeignKey, Index, String, Text, func
@@ -12,7 +12,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 
 
-class StudyStatus(str, PyEnum):
+class StudyStatus(StrEnum):
     draft = "draft"
     approved = "approved"
     recruiting = "recruiting"
@@ -22,14 +22,14 @@ class StudyStatus(str, PyEnum):
     closed = "closed"
 
 
-class SiteActivationStatus(str, PyEnum):
+class SiteActivationStatus(StrEnum):
     pending = "pending"
     activated = "activated"
     suspended = "suspended"
     closed = "closed"
 
 
-class EnrolmentStatus(str, PyEnum):
+class EnrolmentStatus(StrEnum):
     screening = "screening"
     enrolled = "enrolled"
     completed = "completed"
@@ -37,28 +37,28 @@ class EnrolmentStatus(str, PyEnum):
     withdrawn = "withdrawn"
 
 
-class VisitStatus(str, PyEnum):
+class VisitStatus(StrEnum):
     scheduled = "scheduled"
     completed = "completed"
     missed = "missed"
     early_terminated = "early_terminated"
 
 
-class AESeriousness(str, PyEnum):
+class AESeriousness(StrEnum):
     non_serious = "non_serious"
     serious = "serious"
     life_threatening = "life_threatening"
     fatal = "fatal"
 
 
-class AEStatus(str, PyEnum):
+class AEStatus(StrEnum):
     reported = "reported"
     assessed = "assessed"
     submitted = "submitted"
     closed = "closed"
 
 
-class DocumentType(str, PyEnum):
+class DocumentType(StrEnum):
     protocol = "protocol"
     ibc = "ibc"
     ethics_approval = "ethics_approval"
@@ -67,33 +67,33 @@ class DocumentType(str, PyEnum):
     investigator_brochure = "investigator_brochure"
 
 
-class QueryStatus(str, PyEnum):
+class QueryStatus(StrEnum):
     open = "open"
     in_progress = "in_progress"
     resolved = "resolved"
     cancelled = "cancelled"
 
 
-class AgentAutonomy(str, PyEnum):
+class AgentAutonomy(StrEnum):
     shadow = "shadow"
     advisory = "advisory"
     auto_with_threshold_hitl = "auto_with_threshold_hitl"
 
 
-class AgentRegistrationSource(str, PyEnum):
+class AgentRegistrationSource(StrEnum):
     global_agent_registry = "global_agent_registry"
     nexus_a2a_protocol = "nexus_a2a_protocol"
     direct = "direct"
 
 
-class AgentAttestationType(str, PyEnum):
+class AgentAttestationType(StrEnum):
     clinical_safety = "clinical_safety"
     model_card = "model_card"
     bias_audit = "bias_audit"
     security_review = "security_review"
 
 
-class CohortType(str, PyEnum):
+class CohortType(StrEnum):
     single_agent = "single_agent"
     multi_agent = "multi_agent"
     human_ai_mixed = "human_ai_mixed"
@@ -102,7 +102,7 @@ class CohortType(str, PyEnum):
 # --- National capability vocabulary (REQ-CTS-NAT-001..008) -------------------
 
 
-class RegistrationStatus(str, PyEnum):
+class RegistrationStatus(StrEnum):
     """Public trial-registry lifecycle. ``registered`` requires a receipt."""
 
     draft = "draft"
@@ -112,7 +112,7 @@ class RegistrationStatus(str, PyEnum):
     withdrawn = "withdrawn"
 
 
-class SubmissionType(str, PyEnum):
+class SubmissionType(StrEnum):
     initial = "initial"
     amendment = "amendment"
     renewal = "renewal"
@@ -121,7 +121,7 @@ class SubmissionType(str, PyEnum):
     urgent_safety_measure = "urgent_safety_measure"
 
 
-class ApprovalDecision(str, PyEnum):
+class ApprovalDecision(StrEnum):
     """Ethics / competent-authority outcome. Nothing auto-approves."""
 
     pending = "pending"
@@ -131,26 +131,26 @@ class ApprovalDecision(str, PyEnum):
     withdrawn = "withdrawn"
 
 
-class DelegationStatus(str, PyEnum):
+class DelegationStatus(StrEnum):
     active = "active"
     expired = "expired"
     revoked = "revoked"
 
 
-class EligibilityOutcome(str, PyEnum):
+class EligibilityOutcome(StrEnum):
     eligible = "eligible"
     ineligible = "ineligible"
     pending_review = "pending_review"
 
 
-class ConsentType(str, PyEnum):
+class ConsentType(StrEnum):
     initial = "initial"
     re_consent = "re_consent"
     assent = "assent"
     proxy = "proxy"
 
 
-class ConsentState(str, PyEnum):
+class ConsentState(StrEnum):
     """Derived consent posture used by every downstream guard."""
 
     not_consented = "not_consented"
@@ -159,19 +159,19 @@ class ConsentState(str, PyEnum):
     withdrawn = "withdrawn"
 
 
-class AEExpectedness(str, PyEnum):
+class AEExpectedness(StrEnum):
     expected = "expected"
     unexpected = "unexpected"
 
 
-class SafetySubmissionStatus(str, PyEnum):
+class SafetySubmissionStatus(StrEnum):
     pending = "pending"
     submitted = "submitted"
     acknowledged = "acknowledged"
     rejected = "rejected"
 
 
-class ReimbursementStatus(str, PyEnum):
+class ReimbursementStatus(StrEnum):
     requested = "requested"
     approved = "approved"
     paid = "paid"
@@ -202,10 +202,10 @@ class Study(Base):
     created_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
-    protocol_versions: Mapped[list["ProtocolVersion"]] = relationship(back_populates="study", lazy="selectin")
-    sites: Mapped[list["Site"]] = relationship(back_populates="study", lazy="selectin")
-    subjects: Mapped[list["Subject"]] = relationship(back_populates="study", lazy="selectin")
-    adverse_events: Mapped[list["AdverseEvent"]] = relationship(back_populates="study", lazy="selectin")
+    protocol_versions: Mapped[list[ProtocolVersion]] = relationship(back_populates="study", lazy="selectin")
+    sites: Mapped[list[Site]] = relationship(back_populates="study", lazy="selectin")
+    subjects: Mapped[list[Subject]] = relationship(back_populates="study", lazy="selectin")
+    adverse_events: Mapped[list[AdverseEvent]] = relationship(back_populates="study", lazy="selectin")
 
 
 class ProtocolVersion(Base):
@@ -219,7 +219,7 @@ class ProtocolVersion(Base):
     amendment_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     pdf_document_reference: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    study: Mapped["Study"] = relationship(back_populates="protocol_versions")
+    study: Mapped[Study] = relationship(back_populates="protocol_versions")
 
 
 class Site(Base):
@@ -235,8 +235,8 @@ class Site(Base):
     address: Mapped[str | None] = mapped_column(Text, nullable=True)
     capacity: Mapped[int] = mapped_column(default=0)
 
-    study: Mapped["Study"] = relationship(back_populates="sites")
-    subjects: Mapped[list["Subject"]] = relationship(back_populates="site", lazy="selectin")
+    study: Mapped[Study] = relationship(back_populates="sites")
+    subjects: Mapped[list[Subject]] = relationship(back_populates="site", lazy="selectin")
 
     __table_args__ = (Index("ix_sites_study_code", "study_id", "site_code", unique=True),)
 
@@ -270,15 +270,13 @@ class Subject(Base):
     # (IP dispensing, visit scheduling, participant portal) consults. A
     # withdrawal that does not reach these surfaces is a defect, not a
     # documentation gap, so the state is stored rather than recomputed ad hoc.
-    consent_state: Mapped[str] = mapped_column(
-        String(24), default=ConsentState.not_consented.value
-    )
+    consent_state: Mapped[str] = mapped_column(String(24), default=ConsentState.not_consented.value)
     consent_withdrawn_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
     kit_code: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
-    study: Mapped["Study"] = relationship(back_populates="subjects")
-    site: Mapped["Site"] = relationship(back_populates="subjects")
-    visits: Mapped[list["SubjectVisit"]] = relationship(back_populates="subject", lazy="selectin")
+    study: Mapped[Study] = relationship(back_populates="subjects")
+    site: Mapped[Site] = relationship(back_populates="subjects")
+    visits: Mapped[list[SubjectVisit]] = relationship(back_populates="subject", lazy="selectin")
 
 
 class InformedConsent(Base):
@@ -319,7 +317,7 @@ class SubjectVisit(Base):
     assessments: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     monitoring_status: Mapped[str | None] = mapped_column(String(16), nullable=True)
 
-    subject: Mapped["Subject"] = relationship(back_populates="visits")
+    subject: Mapped[Subject] = relationship(back_populates="visits")
 
 
 class AdverseEvent(Base):
@@ -341,13 +339,11 @@ class AdverseEvent(Base):
     # REQ-CTS-NAT-006: the missing third limb of the SUSAR test. Without
     # expectedness a "SUSAR" flag is only Serious + Related, which is not what
     # ICH E2A defines and not what the statutory clock is keyed to.
-    expectedness: Mapped[str] = mapped_column(
-        String(16), default=AEExpectedness.expected.value
-    )
+    expectedness: Mapped[str] = mapped_column(String(16), default=AEExpectedness.expected.value)
     jurisdiction: Mapped[str] = mapped_column(String(2), default="IE")
     deadline_basis: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
-    study: Mapped["Study"] = relationship(back_populates="adverse_events")
+    study: Mapped[Study] = relationship(back_populates="adverse_events")
 
 
 class ProtocolDeviation(Base):
@@ -641,9 +637,7 @@ class TrialRegistration(Base):
     public_disclosure_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
     correlation_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
-    __table_args__ = (
-        Index("ix_trial_registrations_study_registry", "study_id", "registry_code", unique=True),
-    )
+    __table_args__ = (Index("ix_trial_registrations_study_registry", "study_id", "registry_code", unique=True),)
 
 
 class InvestigatorDelegation(Base):
@@ -719,9 +713,7 @@ class EligibilityScreening(Base):
     requested_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
     criteria_requested: Mapped[list[str]] = mapped_column(JSON)
     criteria_evaluated: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
-    outcome: Mapped[str] = mapped_column(
-        String(16), default=EligibilityOutcome.pending_review.value
-    )
+    outcome: Mapped[str] = mapped_column(String(16), default=EligibilityOutcome.pending_review.value)
     outcome_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
     reviewed_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
     source_system: Mapped[str | None] = mapped_column(String(64), nullable=True)
@@ -746,9 +738,7 @@ class RandomisationAllocation(Base):
     arm_code: Mapped[str] = mapped_column(String(32))
     kit_code: Mapped[str] = mapped_column(String(32), unique=True)
     block_id: Mapped[str] = mapped_column(String(32))
-    allocated_subject_id: Mapped[int | None] = mapped_column(
-        ForeignKey("subjects.id"), nullable=True
-    )
+    allocated_subject_id: Mapped[int | None] = mapped_column(ForeignKey("subjects.id"), nullable=True)
     allocated_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
     allocated_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
 
@@ -774,9 +764,7 @@ class UnblindingEvent(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     subject_id: Mapped[int] = mapped_column(ForeignKey("subjects.id"), index=True)
-    allocation_id: Mapped[int | None] = mapped_column(
-        ForeignKey("randomisation_allocations.id"), nullable=True
-    )
+    allocation_id: Mapped[int | None] = mapped_column(ForeignKey("randomisation_allocations.id"), nullable=True)
     requested_by: Mapped[str] = mapped_column(String(128))
     authorised_by: Mapped[str] = mapped_column(String(128))
     reason: Mapped[str] = mapped_column(Text)
@@ -807,9 +795,7 @@ class SafetySubmission(Base):
     acknowledged_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
     acknowledgement_reference: Mapped[str | None] = mapped_column(String(128), nullable=True)
     rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
-    status: Mapped[str] = mapped_column(
-        String(16), default=SafetySubmissionStatus.pending.value
-    )
+    status: Mapped[str] = mapped_column(String(16), default=SafetySubmissionStatus.pending.value)
     correlation_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
 
@@ -828,9 +814,7 @@ class ParticipantReimbursement(Base):
     category: Mapped[str] = mapped_column(String(32))
     amount: Mapped[float] = mapped_column(default=0.0)
     currency: Mapped[str] = mapped_column(String(3))
-    status: Mapped[str] = mapped_column(
-        String(16), default=ReimbursementStatus.requested.value
-    )
+    status: Mapped[str] = mapped_column(String(16), default=ReimbursementStatus.requested.value)
     requested_at: Mapped[dt.datetime] = mapped_column(DateTime, server_default=func.now())
     approved_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
     paid_at: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)

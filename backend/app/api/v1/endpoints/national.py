@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud, models, national, schemas
 from app.country_packs import CountryPackError, get_pack, list_packs
+from app.auth import require_auth
 from app.database import get_db
 
 router = APIRouter(tags=["national"])
@@ -75,17 +76,13 @@ async def create_delegation(
 
 
 @router.get("/delegations", response_model=list[schemas.InvestigatorDelegationOut])
-async def list_delegations(
-    site_id: int, db: AsyncSession = Depends(get_db)
-) -> list[schemas.InvestigatorDelegationOut]:
+async def list_delegations(site_id: int, db: AsyncSession = Depends(get_db)) -> list[schemas.InvestigatorDelegationOut]:
     rows = await national.list_investigator_delegations(db, site_id)
     return [schemas.InvestigatorDelegationOut.model_validate(r) for r in rows]
 
 
 @router.get("/sites/{site_id}/readiness", response_model=schemas.SiteReadinessOut)
-async def site_readiness(
-    site_id: int, db: AsyncSession = Depends(get_db)
-) -> schemas.SiteReadinessOut:
+async def site_readiness(site_id: int, db: AsyncSession = Depends(get_db)) -> schemas.SiteReadinessOut:
     return await national.site_readiness(db, site_id)
 
 
@@ -125,9 +122,7 @@ async def record_approval_decision(
 
 
 @router.get("/regulatory-approvals/due/{study_id}")
-async def approvals_due(
-    study_id: int, within_days: int = 60, db: AsyncSession = Depends(get_db)
-) -> dict[str, Any]:
+async def approvals_due(study_id: int, within_days: int = 60, db: AsyncSession = Depends(get_db)) -> dict[str, Any]:
     return await national.approvals_due(db, study_id, within_days)
 
 
@@ -136,17 +131,19 @@ async def approvals_due(
 
 @router.post("/eligibility-screenings", response_model=schemas.EligibilityScreeningOut)
 async def request_eligibility_screening(
-    data: schemas.EligibilityScreeningCreate, db: AsyncSession = Depends(get_db)
+    data: schemas.EligibilityScreeningCreate,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
 ) -> schemas.EligibilityScreeningOut:
     screening = await national.request_eligibility_screening(db, data)
     return schemas.EligibilityScreeningOut.model_validate(screening)
 
 
-@router.get(
-    "/eligibility-screenings", response_model=list[schemas.EligibilityScreeningOut]
-)
+@router.get("/eligibility-screenings", response_model=list[schemas.EligibilityScreeningOut])
 async def list_eligibility_screenings(
-    study_id: int, db: AsyncSession = Depends(get_db)
+    study_id: int,
+    _auth: dict = Depends(require_auth),
+    db: AsyncSession = Depends(get_db),
 ) -> list[schemas.EligibilityScreeningOut]:
     rows = await national.list_eligibility_screenings(db, study_id)
     return [schemas.EligibilityScreeningOut.model_validate(r) for r in rows]
@@ -159,6 +156,7 @@ async def list_eligibility_screenings(
 async def record_eligibility_outcome(
     screening_id: int,
     data: schemas.EligibilityOutcomeIn,
+    _auth: dict = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.EligibilityScreeningOut:
     screening = await db.get(models.EligibilityScreening, screening_id)
@@ -189,9 +187,7 @@ async def submit_safety_report(
     "/adverse-events/{ae_id}/safety-submissions",
     response_model=list[schemas.SafetySubmissionOut],
 )
-async def list_safety_submissions(
-    ae_id: int, db: AsyncSession = Depends(get_db)
-) -> list[schemas.SafetySubmissionOut]:
+async def list_safety_submissions(ae_id: int, db: AsyncSession = Depends(get_db)) -> list[schemas.SafetySubmissionOut]:
     rows = await national.list_safety_submissions(db, ae_id)
     return [schemas.SafetySubmissionOut.model_validate(r) for r in rows]
 
@@ -213,9 +209,7 @@ async def record_safety_acknowledgement(
 
 
 @router.get("/reports/safety-overdue/{study_id}")
-async def overdue_safety_submissions(
-    study_id: int, db: AsyncSession = Depends(get_db)
-) -> dict[str, Any]:
+async def overdue_safety_submissions(study_id: int, db: AsyncSession = Depends(get_db)) -> dict[str, Any]:
     rows = await national.overdue_safety_submissions(db, study_id)
     return {"study_id": study_id, "overdue": rows, "count": len(rows)}
 
@@ -223,12 +217,8 @@ async def overdue_safety_submissions(
 # --- REQ-CTS-NAT-008: participant surface ---------------------------------
 
 
-@router.get(
-    "/participants/{subject_id}/summary", response_model=schemas.ParticipantSummaryOut
-)
-async def participant_summary(
-    subject_id: int, db: AsyncSession = Depends(get_db)
-) -> schemas.ParticipantSummaryOut:
+@router.get("/participants/{subject_id}/summary", response_model=schemas.ParticipantSummaryOut)
+async def participant_summary(subject_id: int, db: AsyncSession = Depends(get_db)) -> schemas.ParticipantSummaryOut:
     return await national.participant_summary(db, subject_id)
 
 

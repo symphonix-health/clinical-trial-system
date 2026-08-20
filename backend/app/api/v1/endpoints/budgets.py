@@ -16,7 +16,9 @@ async def create_budget(data: schemas.StudyBudgetCreate, db: AsyncSession = Depe
 
 
 @router.patch("/{budget_id}", response_model=schemas.StudyBudgetOut)
-async def update_budget(budget_id: int, data: schemas.StudyBudgetUpdate, db: AsyncSession = Depends(get_db)) -> schemas.StudyBudgetOut:
+async def update_budget(
+    budget_id: int, data: schemas.StudyBudgetUpdate, db: AsyncSession = Depends(get_db)
+) -> schemas.StudyBudgetOut:
     budget = await crud.get_study_budget(db, budget_id)
     if not budget:
         raise HTTPException(status_code=404, detail="Budget not found")
