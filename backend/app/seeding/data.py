@@ -52,7 +52,6 @@ STUDIES: list[dict[str, Any]] = [
         "status": "recruiting",
     },
 ]
-
 SITES: list[dict[str, Any]] = [
     # Study 0 (ONCO-2026-001) — indices 0–4
     {"study_index": 0, "site_code": "ONC-01", "name": "Royal Infirmary London",
@@ -691,11 +690,3 @@ PROTOCOL_DEVIATIONS: list[dict[str, Any]] = [
     },
 ]
 
-QUERIES: list[dict[str, Any]] = [
-    {"study_index": 0, "subject_index": 0,
-     "raised_by": "crc_1", "assigned": "dr_sarah_chen", "due": dt.date(2026, 4, 15)},
-    {"study_index": 0, "subject_index": 2,
-     "raised_by": "data_manager_1", "assigned": "crc_1", "due": dt.date(2026, 4, 20)},
-    {"study_index": 1, "subject_index": 20,
-     "raised_by": "crc_3", "assigned": "dr_robert_brown", "due": dt.date(2026, 4, 25)},
-]

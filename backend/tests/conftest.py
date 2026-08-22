@@ -1,4 +1,3 @@
-```python
 """Pytest fixtures."""
 
 import os
@@ -18,7 +17,6 @@ from app.config import get_settings
 from app.database import Base, get_db
 from app.main import app
 from app.seeding.loader import _seed
-
 
 settings = get_settings()
 
@@ -102,4 +100,3 @@ async def seeded_client(
         await db.commit()
 
     return client
-```
