@@ -30,9 +30,14 @@ async def _create_subject(client: AsyncClient, study_id: int):
         },
     )
     site_id = site.json()["id"]
+
     subject = await client.post(
         "/api/v1/subjects",
-        json={"study_id": study_id, "site_id": site_id, "screening_id": "SCR-AE001"},
+        json={
+            "study_id": study_id,
+            "site_id": site_id,
+            "screening_id": "SCR-AE001",
+        },
     )
     return subject.json()["id"]
 
@@ -40,6 +45,7 @@ async def _create_subject(client: AsyncClient, study_id: int):
 async def test_create_adverse_event(client: AsyncClient) -> None:
     study_id = await _create_study(client)
     subject_id = await _create_subject(client, study_id)
+
     resp = await client.post(
         "/api/v1/adverse-events",
         json={
@@ -51,6 +57,7 @@ async def test_create_adverse_event(client: AsyncClient) -> None:
             "causality": "unrelated",
         },
     )
+
     assert resp.status_code == 200
     assert resp.json()["status"] == "reported"
 
@@ -58,6 +65,7 @@ async def test_create_adverse_event(client: AsyncClient) -> None:
 async def test_susar_deadline_computed(client: AsyncClient) -> None:
     study_id = await _create_study(client)
     subject_id = await _create_subject(client, study_id)
+
     resp = await client.post(
         "/api/v1/adverse-events",
         json={
@@ -70,6 +78,7 @@ async def test_susar_deadline_computed(client: AsyncClient) -> None:
             "susar_flag": True,
         },
     )
+
     assert resp.status_code == 200
     data = resp.json()
     assert data["susar_flag"] is True
@@ -79,6 +88,7 @@ async def test_susar_deadline_computed(client: AsyncClient) -> None:
 async def test_update_ae_status(client: AsyncClient) -> None:
     study_id = await _create_study(client)
     subject_id = await _create_subject(client, study_id)
+
     ae_id = (
         await client.post(
             "/api/v1/adverse-events",
@@ -92,8 +102,14 @@ async def test_update_ae_status(client: AsyncClient) -> None:
             },
         )
     ).json()["id"]
+
     resp = await client.patch(
-        f"/api/v1/adverse-events/{ae_id}", json={"status": "assessed", "narrative": "Narrative text"}
+        f"/api/v1/adverse-events/{ae_id}",
+        json={
+            "status": "assessed",
+            "narrative": "Narrative text",
+        },
     )
+
     assert resp.status_code == 200
     assert resp.json()["status"] == "assessed"

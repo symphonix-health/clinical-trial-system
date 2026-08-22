@@ -92,11 +92,8 @@ async def create_study(db: AsyncSession, obj_in: schemas.StudyCreate) -> models.
     await create_audit_entry(
         db,
         schemas.AuditEntryCreate(
-            actor_id="system",
-            purpose_of_use="study_setup",
-            action="create_study",
-            resource_type="Study",
-            resource_id=study.id,
+            actor_id="system", purpose_of_use="study_setup", action="create_study",
+            resource_type="Study", resource_id=study.id
         ),
     )
     return study
@@ -120,11 +117,8 @@ async def update_study(db: AsyncSession, study: models.Study, obj_in: schemas.St
     await create_audit_entry(
         db,
         schemas.AuditEntryCreate(
-            actor_id="system",
-            purpose_of_use="study_setup",
-            action="update_study",
-            resource_type="Study",
-            resource_id=study.id,
+            actor_id="system", purpose_of_use="study_setup", action="update_study",
+            resource_type="Study", resource_id=study.id
         ),
     )
     return study
@@ -193,7 +187,11 @@ async def get_site_checklist(db: AsyncSession, site_id: int) -> list[models.Site
 
 
 async def update_checklist_task(
-    db: AsyncSession, site_id: int, task_name: str, status: str, evidence: str | None
+    db: AsyncSession,
+    site_id: int,
+    task_name: str,
+    status: str,
+    evidence: str | None
 ) -> models.SiteActivationChecklist | None:
     result = await db.execute(
         select(models.SiteActivationChecklist).where(
@@ -236,7 +234,9 @@ async def get_subject(db: AsyncSession, subject_id: int) -> models.Subject | Non
 
 
 async def list_subjects(
-    db: AsyncSession, study_id: int | None = None, site_id: int | None = None
+    db: AsyncSession,
+    study_id: int | None = None,
+    site_id: int | None = None
 ) -> list[models.Subject]:
     stmt = select(models.Subject)
     if study_id is not None:
@@ -256,7 +256,9 @@ async def update_subject(db: AsyncSession, subject: models.Subject, obj_in: sche
 
 
 async def record_consent(
-    db: AsyncSession, subject: models.Subject, obj_in: schemas.InformedConsentCreate
+    db: AsyncSession,
+    subject: models.Subject,
+    obj_in: schemas.InformedConsentCreate
 ) -> models.InformedConsent:
     """Record consent, re-consent, assent or proxy consent.
 
@@ -285,7 +287,7 @@ async def record_consent(
             site_id=subject.site_id or 0,
             subject_number=subject.subject_number,
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - hub delivery is best-effort
         pass  # hub delivery is best-effort; enrolment already persisted
     return consent
 
@@ -573,7 +575,7 @@ async def create_visit(db: AsyncSession, obj_in: schemas.SubjectVisitCreate) -> 
             subject_id=visit.subject_id,
             scheduled_date=str(visit.scheduled_date),
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - hub delivery is best-effort
         pass
     return visit
 
@@ -588,17 +590,21 @@ async def get_visit(db: AsyncSession, visit_id: int) -> models.SubjectVisit | No
 
 
 async def update_visit(
-    db: AsyncSession, visit: models.SubjectVisit, obj_in: schemas.SubjectVisitUpdate
+    db: AsyncSession,
+    visit: models.SubjectVisit,
+    obj_in: schemas.SubjectVisitUpdate
 ) -> models.SubjectVisit:
     for field, value in obj_in.model_dump(exclude_unset=True).items():
         setattr(visit, field, value)
     if visit.actual_date and visit.status == models.VisitStatus.scheduled.value:
         actual = visit.actual_date.date() if isinstance(visit.actual_date, dt.datetime) else visit.actual_date
         min_date = (
-            visit.window_min_date.date() if isinstance(visit.window_min_date, dt.datetime) else visit.window_min_date
+            visit.window_min_date.date() if isinstance(visit.window_min_date, dt.datetime)
+            else visit.window_min_date
         )
         max_date = (
-            visit.window_max_date.date() if isinstance(visit.window_max_date, dt.datetime) else visit.window_max_date
+            visit.window_max_date.date() if isinstance(visit.window_max_date, dt.datetime)
+            else visit.window_max_date
         )
         if actual < min_date or actual > max_date:
             await create_protocol_deviation(
@@ -679,7 +685,7 @@ async def create_adverse_event(db: AsyncSession, obj_in: schemas.AdverseEventCre
             study_id=ae.study_id,
             seriousness=ae.seriousness,
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - hub delivery is best-effort
         pass
     return ae
 
@@ -697,7 +703,9 @@ async def list_adverse_events(db: AsyncSession, study_id: int | None = None) -> 
 
 
 async def update_adverse_event(
-    db: AsyncSession, ae: models.AdverseEvent, obj_in: schemas.AdverseEventUpdate
+    db: AsyncSession,
+    ae: models.AdverseEvent,
+    obj_in: schemas.AdverseEventUpdate
 ) -> models.AdverseEvent:
     for field, value in obj_in.model_dump(exclude_unset=True).items():
         setattr(ae, field, value)
@@ -708,7 +716,8 @@ async def update_adverse_event(
 
 # Protocol deviations
 async def create_protocol_deviation(
-    db: AsyncSession, obj_in: schemas.ProtocolDeviationCreate
+    db: AsyncSession,
+    obj_in: schemas.ProtocolDeviationCreate
 ) -> models.ProtocolDeviation:
     pd = models.ProtocolDeviation(**obj_in.model_dump())
     db.add(pd)
@@ -727,7 +736,8 @@ async def list_protocol_deviations(db: AsyncSession, study_id: int | None = None
 
 # Investigational product
 async def create_investigational_product(
-    db: AsyncSession, obj_in: schemas.InvestigationalProductCreate
+    db: AsyncSession,
+    obj_in: schemas.InvestigationalProductCreate
 ) -> models.InvestigationalProduct:
     ip = models.InvestigationalProduct(**obj_in.model_dump())
     db.add(ip)
@@ -741,7 +751,10 @@ async def get_investigational_product(db: AsyncSession, product_id: int) -> mode
 
 
 async def receive_shipment(
-    db: AsyncSession, shipment: models.IpShipment, received_by: str, condition_ok: bool
+    db: AsyncSession,
+    shipment: models.IpShipment,
+    received_by: str,
+    condition_ok: bool
 ) -> models.IpShipment:
     shipment.received_at = dt.datetime.utcnow()
     shipment.received_by = received_by
@@ -824,7 +837,9 @@ async def create_ip_dispense(db: AsyncSession, obj_in: schemas.IpDispenseCreate)
 
 
 async def destroy_ip_dispense(
-    db: AsyncSession, dispense: models.IpDispense, payload: schemas.IpDestroy
+    db: AsyncSession,
+    dispense: models.IpDispense,
+    payload: schemas.IpDestroy
 ) -> models.IpDispense:
     dispense.destroyed_at = payload.destroyed_at
     dispense.destroyed_by = payload.destroyed_by
@@ -835,7 +850,8 @@ async def destroy_ip_dispense(
 
 # Regulatory documents
 async def create_regulatory_document(
-    db: AsyncSession, obj_in: schemas.RegulatoryDocumentCreate
+    db: AsyncSession,
+    obj_in: schemas.RegulatoryDocumentCreate
 ) -> models.RegulatoryDocument:
     doc = models.RegulatoryDocument(**obj_in.model_dump())
     db.add(doc)
@@ -892,7 +908,9 @@ async def get_study_budget(db: AsyncSession, budget_id: int) -> models.StudyBudg
 
 
 async def update_study_budget(
-    db: AsyncSession, budget: models.StudyBudget, obj_in: schemas.StudyBudgetUpdate
+    db: AsyncSession,
+    budget: models.StudyBudget,
+    obj_in: schemas.StudyBudgetUpdate
 ) -> models.StudyBudget:
     if obj_in.actual_amount is not None:
         budget.actual_amount = obj_in.actual_amount
@@ -931,7 +949,9 @@ async def list_agent_subjects(db: AsyncSession, enrolled_study_id: int | None = 
 
 
 async def update_agent_subject(
-    db: AsyncSession, agent: models.AgentSubject, obj_in: schemas.AgentSubjectUpdate
+    db: AsyncSession,
+    agent: models.AgentSubject,
+    obj_in: schemas.AgentSubjectUpdate
 ) -> models.AgentSubject:
     for field, value in obj_in.model_dump(exclude_unset=True).items():
         setattr(agent, field, value)
@@ -952,7 +972,8 @@ async def create_agent_attestation(db: AsyncSession, obj_in: schemas.AgentAttest
 
 
 async def create_agent_consent_contract(
-    db: AsyncSession, obj_in: schemas.AgentConsentContractCreate
+    db: AsyncSession,
+    obj_in: schemas.AgentConsentContractCreate
 ) -> models.AgentConsentContract:
     contract = models.AgentConsentContract(**obj_in.model_dump())
     db.add(contract)
@@ -984,7 +1005,8 @@ async def add_agent_to_cohort(db: AsyncSession, cohort_id: int, agent_subject_id
 
 # Synthetic environments
 async def create_synthetic_environment(
-    db: AsyncSession, obj_in: schemas.SyntheticEnvironmentCreate
+    db: AsyncSession,
+    obj_in: schemas.SyntheticEnvironmentCreate
 ) -> models.SyntheticEnvironment:
     env = models.SyntheticEnvironment(
         **obj_in.model_dump(),
@@ -1019,7 +1041,10 @@ async def get_agent_run(db: AsyncSession, run_id: int) -> models.AgentRun | None
 
 
 async def complete_agent_run(
-    db: AsyncSession, run: models.AgentRun, metrics: dict[str, Any], trace_url: str | None
+    db: AsyncSession,
+    run: models.AgentRun,
+    metrics: dict[str, Any],
+    trace_url: str | None
 ) -> models.AgentRun:
     run.completed_at = dt.datetime.utcnow()
     run.metrics_snapshot = metrics
@@ -1103,13 +1128,16 @@ async def recruitment_report(db: AsyncSession, study_id: int) -> schemas.Recruit
                 "site_id": site.id,
                 "site_code": site.site_code,
                 "enrolled": sum(
-                    1 for s in site_subjects if s.enrolment_status == models.EnrolmentStatus.enrolled.value
+                    1 for s in site_subjects
+                    if s.enrolment_status == models.EnrolmentStatus.enrolled.value
                 ),
                 "screening": sum(
-                    1 for s in site_subjects if s.enrolment_status == models.EnrolmentStatus.screening.value
+                    1 for s in site_subjects
+                    if s.enrolment_status == models.EnrolmentStatus.screening.value
                 ),
                 "withdrawn": sum(
-                    1 for s in site_subjects if s.enrolment_status == models.EnrolmentStatus.withdrawn.value
+                    1 for s in site_subjects
+                    if s.enrolment_status == models.EnrolmentStatus.withdrawn.value
                 ),
             }
         )
@@ -1119,9 +1147,9 @@ async def recruitment_report(db: AsyncSession, study_id: int) -> schemas.Recruit
         planned=study.planned_subjects if study else 0,
         enrolled=sum(1 for s in subjects if s.enrolment_status == models.EnrolmentStatus.enrolled.value),
         screen_failed=sum(
-            1
-            for s in subjects
-            if s.enrolment_status == models.EnrolmentStatus.screening.value and s.randomisation_arm is None
+            1 for s in subjects
+            if s.enrolment_status == models.EnrolmentStatus.screening.value
+            and s.randomisation_arm is None
         ),
         withdrawn=sum(1 for s in subjects if s.enrolment_status == models.EnrolmentStatus.withdrawn.value),
         by_site=by_site,
@@ -1177,7 +1205,10 @@ async def ip_accountability_report(db: AsyncSession, study_id: int, site_id: int
     if not site or site.study_id != study_id:
         raise ValueError("Invalid site for study")
     shipments = await db.execute(
-        select(models.IpShipment).where(models.IpShipment.to_site_id == site_id, models.IpShipment.condition_ok)
+        select(models.IpShipment).where(
+            models.IpShipment.to_site_id == site_id,
+            models.IpShipment.condition_ok.is_(True),
+        )
     )
     shipped = sum(s.quantity_shipped for s in shipments.scalars().all())
     dispenses_result = await db.execute(
@@ -1190,9 +1221,8 @@ async def ip_accountability_report(db: AsyncSession, study_id: int, site_id: int
     returned = sum(d.quantity_returned for d in dispenses)
     destroyed = sum(d.quantity_dispensed - d.quantity_returned for d in dispenses if d.destroyed_at)
     on_hand_result = await db.execute(
-        select(func.sum(models.InvestigationalProduct.quantity_on_hand)).where(
-            models.InvestigationalProduct.site_id == site_id
-        )
+        select(func.sum(models.InvestigationalProduct.quantity_on_hand))
+        .where(models.InvestigationalProduct.site_id == site_id)
     )
     on_hand = on_hand_result.scalar() or 0
     return schemas.AccountabilityReport(

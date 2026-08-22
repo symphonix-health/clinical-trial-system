@@ -1,5 +1,7 @@
 """Visit endpoints."""
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,7 +13,10 @@ router = APIRouter(prefix="/visits", tags=["visits"])
 
 
 @router.post("", response_model=schemas.SubjectVisitOut)
-async def create_visit(data: schemas.SubjectVisitCreate, db: AsyncSession = Depends(get_db)) -> schemas.SubjectVisitOut:
+async def create_visit(
+    data: schemas.SubjectVisitCreate,
+    db: AsyncSession = Depends(get_db),
+) -> schemas.SubjectVisitOut:
     visit = await crud.create_visit(db, data)
     return schemas.SubjectVisitOut.model_validate(visit)
 
@@ -19,7 +24,7 @@ async def create_visit(data: schemas.SubjectVisitCreate, db: AsyncSession = Depe
 @router.get("/{visit_id}", response_model=schemas.SubjectVisitOut)
 async def get_visit(
     visit_id: int,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.SubjectVisitOut:
     visit = await crud.get_visit(db, visit_id)
@@ -32,7 +37,7 @@ async def get_visit(
 async def update_visit(
     visit_id: int,
     data: schemas.SubjectVisitUpdate,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.SubjectVisitOut:
     visit = await crud.get_visit(db, visit_id)
@@ -42,7 +47,12 @@ async def update_visit(
     return schemas.SubjectVisitOut.model_validate(updated)
 
 
-@router.post("/flag-missed", response_model=list[schemas.SubjectVisitOut])
-async def flag_missed_visits(db: AsyncSession = Depends(get_db)) -> list[schemas.SubjectVisitOut]:
+@router.post(
+    "/flag-missed",
+    response_model=list[schemas.SubjectVisitOut],
+)
+async def flag_missed_visits(
+    db: AsyncSession = Depends(get_db),
+) -> list[schemas.SubjectVisitOut]:
     visits = await crud.flag_missed_visits(db)
     return [schemas.SubjectVisitOut.model_validate(v) for v in visits]

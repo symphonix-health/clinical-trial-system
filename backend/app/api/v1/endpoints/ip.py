@@ -1,5 +1,7 @@
 """Investigational product endpoints."""
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,14 +14,21 @@ router = APIRouter(prefix="/ip", tags=["ip"])
 
 @router.post("/products", response_model=schemas.InvestigationalProductOut)
 async def create_product(
-    data: schemas.InvestigationalProductCreate, db: AsyncSession = Depends(get_db)
+    data: schemas.InvestigationalProductCreate,
+    db: AsyncSession = Depends(get_db),
 ) -> schemas.InvestigationalProductOut:
     product = await crud.create_investigational_product(db, data)
     return schemas.InvestigationalProductOut.model_validate(product)
 
 
-@router.get("/products/{product_id}", response_model=schemas.InvestigationalProductOut)
-async def get_product(product_id: int, db: AsyncSession = Depends(get_db)) -> schemas.InvestigationalProductOut:
+@router.get(
+    "/products/{product_id}",
+    response_model=schemas.InvestigationalProductOut,
+)
+async def get_product(
+    product_id: int,
+    db: AsyncSession = Depends(get_db),
+) -> schemas.InvestigationalProductOut:
     product = await crud.get_investigational_product(db, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -27,37 +36,54 @@ async def get_product(product_id: int, db: AsyncSession = Depends(get_db)) -> sc
 
 
 @router.post("/shipments", response_model=schemas.IpShipmentOut)
-async def create_shipment(data: schemas.IpShipmentCreate, db: AsyncSession = Depends(get_db)) -> schemas.IpShipmentOut:
+async def create_shipment(
+    data: schemas.IpShipmentCreate,
+    db: AsyncSession = Depends(get_db),
+) -> schemas.IpShipmentOut:
     shipment = await crud.create_ip_shipment(db, data)
     return schemas.IpShipmentOut.model_validate(shipment)
 
 
-@router.post("/shipments/{shipment_id}/receive", response_model=schemas.IpShipmentOut)
+@router.post(
+    "/shipments/{shipment_id}/receive",
+    response_model=schemas.IpShipmentOut,
+)
 async def receive_shipment(
-    shipment_id: int, received_by: str, condition_ok: bool, db: AsyncSession = Depends(get_db)
+    shipment_id: int,
+    received_by: str,
+    condition_ok: bool,
+    db: AsyncSession = Depends(get_db),
 ) -> schemas.IpShipmentOut:
     shipment = await db.get(models.IpShipment, shipment_id)
     if not shipment:
         raise HTTPException(status_code=404, detail="Shipment not found")
-    updated = await crud.receive_shipment(db, shipment, received_by, condition_ok)
+    updated = await crud.receive_shipment(
+        db,
+        shipment,
+        received_by,
+        condition_ok,
+    )
     return schemas.IpShipmentOut.model_validate(updated)
 
 
 @router.post("/dispenses", response_model=schemas.IpDispenseOut)
 async def create_dispense(
     data: schemas.IpDispenseCreate,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.IpDispenseOut:
     dispense = await crud.create_ip_dispense(db, data)
     return schemas.IpDispenseOut.model_validate(dispense)
 
 
-@router.post("/dispenses/{dispense_id}/destroy", response_model=schemas.IpDispenseOut)
+@router.post(
+    "/dispenses/{dispense_id}/destroy",
+    response_model=schemas.IpDispenseOut,
+)
 async def destroy_dispense(
     dispense_id: int,
     data: schemas.IpDestroy,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.IpDispenseOut:
     dispense = await db.get(models.IpDispense, dispense_id)

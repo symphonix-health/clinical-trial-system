@@ -33,7 +33,7 @@ async def require_auth(
             headers={"WWW-Authenticate": "Bearer"},
         )
     try:
-        claims = jwt.decode(
+        claims: dict[str, Any] = jwt.decode(
             credentials.credentials,
             get_settings().secret_key,
             algorithms=[_ALGORITHM],
