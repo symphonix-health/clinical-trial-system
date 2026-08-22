@@ -27,12 +27,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
 _frontend_port = os.getenv("CTMS_FRONTEND_PORT", "5281")
 _frontend_origin = f"http://localhost:{_frontend_port}"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[_frontend_origin, "http://localhost:3000"],
+    allow_origins=[
+        _frontend_origin,
+        "http://localhost:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

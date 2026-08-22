@@ -54,9 +54,7 @@ def _compute_susar_deadline(
 
 
 # Audit
-async def create_audit_entry(
-    db: AsyncSession, obj_in: schemas.AuditEntryCreate
-) -> models.AuditEntry:
+async def create_audit_entry(db: AsyncSession, obj_in: schemas.AuditEntryCreate) -> models.AuditEntry:
     last = await db.execute(
         select(models.AuditEntry)
         .where(models.AuditEntry.study_id == obj_in.study_id)
@@ -230,9 +228,7 @@ async def create_subject(db: AsyncSession, obj_in: schemas.SubjectCreate) -> mod
 
 async def get_subject(db: AsyncSession, subject_id: int) -> models.Subject | None:
     result = await db.execute(
-        select(models.Subject)
-        .where(models.Subject.id == subject_id)
-        .options(selectinload(models.Subject.visits))
+        select(models.Subject).where(models.Subject.id == subject_id).options(selectinload(models.Subject.visits))
     )
     return result.scalar_one_or_none()
 
@@ -348,9 +344,7 @@ async def withdraw_subject(
     return subject
 
 
-async def flag_reconsent_required(
-    db: AsyncSession, study_id: int, protocol_version: str
-) -> list[models.Subject]:
+async def flag_reconsent_required(db: AsyncSession, study_id: int, protocol_version: str) -> list[models.Subject]:
     """Flag enrolled subjects for re-consent against an amended protocol.
 
     FR-C-33 / REQ-CTS-NAT-004. Flagged subjects are suspended from further IP
@@ -392,9 +386,7 @@ def stratum_key(factors: dict[str, Any] | None) -> str:
     return "|".join(f"{k}={factors[k]}" for k in sorted(factors))
 
 
-def _build_allocation_block(
-    seed: str, arms: list[str], block_size: int, block_index: int
-) -> list[str]:
+def _build_allocation_block(seed: str, arms: list[str], block_size: int, block_index: int) -> list[str]:
     """One permuted block, deterministic in ``seed`` and ``block_index``.
 
     Permuted-block randomisation keeps the arms balanced within every block
@@ -531,9 +523,7 @@ async def unblind_subject(
     if not subject.randomisation_arm:
         raise HTTPException(status_code=409, detail="Subject is not randomised")
     result = await db.execute(
-        select(models.RandomisationAllocation).where(
-            models.RandomisationAllocation.allocated_subject_id == subject.id
-        )
+        select(models.RandomisationAllocation).where(models.RandomisationAllocation.allocated_subject_id == subject.id)
     )
     allocation = result.scalars().first()
     if allocation is None:
@@ -813,10 +803,7 @@ async def create_ip_dispense(db: AsyncSession, obj_in: schemas.IpDispenseCreate)
     if subject.consent_state in BLOCKING_CONSENT_STATES:
         raise HTTPException(
             status_code=422,
-            detail=(
-                "IP dispensing suspended: subject consent state is "
-                f"{subject.consent_state!r}"
-            ),
+            detail=(f"IP dispensing suspended: subject consent state is {subject.consent_state!r}"),
         )
     product = await get_investigational_product(db, obj_in.product_id)
     if product is None:
@@ -825,8 +812,7 @@ async def create_ip_dispense(db: AsyncSession, obj_in: schemas.IpDispenseCreate)
         raise HTTPException(
             status_code=422,
             detail=(
-                f"quantity_dispensed {obj_in.quantity_dispensed} exceeds "
-                f"quantity_on_hand {product.quantity_on_hand}"
+                f"quantity_dispensed {obj_in.quantity_dispensed} exceeds quantity_on_hand {product.quantity_on_hand}"
             ),
         )
     dispense = models.IpDispense(**obj_in.model_dump())
@@ -1107,11 +1093,17 @@ async def create_agent_bias_report(db: AsyncSession, obj_in: schemas.AgentBiasRe
 
 
 async def evaluate_release_gate(db: AsyncSession, cohort_id: int) -> schemas.ReleaseGateResult:
-    result = await db.execute(select(models.AgentMetric).where(models.AgentMetric.run_id.in_(
-        select(models.AgentRun.id).where(models.AgentRun.environment_id.in_(
-            select(models.SyntheticEnvironment.id)  # simplified; real impl uses cohort linkage
-        ))
-    )))
+    result = await db.execute(
+        select(models.AgentMetric).where(
+            models.AgentMetric.run_id.in_(
+                select(models.AgentRun.id).where(
+                    models.AgentRun.environment_id.in_(
+                        select(models.SyntheticEnvironment.id)  # simplified; real impl uses cohort linkage
+                    )
+                )
+            )
+        )
+    )
     metrics = list(result.scalars().all())
     passed: list[str] = []
     failed: list[dict[str, Any]] = []

@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "sync-design-system": "powershell -ExecutionPolicy Bypass -File scripts/sync-design-system.ps1",
+    "sync-design-system": "node -e \"const {execSync}=require('child_process'),p=process.platform;p==='win32'?execSync('powershell -ExecutionPolicy Bypass -File scripts/sync-design-system.ps1',{stdio:'inherit'}):execSync('sh scripts/sync-design-system.sh',{stdio:'inherit'})\"",
     "dev": "npm run sync-design-system && vite",
     "build": "npm run sync-design-system && tsc && vite build",
     "typecheck": "tsc --noEmit",

@@ -1,3 +1,4 @@
+```toml
 [build-system]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -45,7 +46,9 @@ asyncio_mode = "auto"
 testpaths = ["tests"]
 pythonpath = ["app"]
 addopts = "--cov=app --cov-report=term-missing"
+
 # Full-suite coverage target (100%) is enforced by CI (`pytest --cov-fail-under=100`).
+
 # The default coverage fail-under is left at 0 so that CAID's subset-driven
 # app-harness gate does not fail on partial coverage.
 
@@ -66,3 +69,4 @@ python_version = "3.12"
 strict = true
 warn_return_any = true
 warn_unused_ignores = true
+```
