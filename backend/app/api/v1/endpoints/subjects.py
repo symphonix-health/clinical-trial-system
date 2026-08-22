@@ -1,5 +1,7 @@
 """Subject endpoints."""
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -65,7 +67,7 @@ async def update_subject(
 async def record_consent(
     subject_id: int,
     data: schemas.InformedConsentCreate,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.InformedConsentOut:
     subject = await crud.get_subject(db, subject_id)

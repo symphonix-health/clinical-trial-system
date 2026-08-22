@@ -1,5 +1,7 @@
 """Study endpoints."""
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -87,7 +89,7 @@ async def create_protocol_version(
 async def flag_reconsent(
     study_id: int,
     protocol_version: str,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> list[schemas.SubjectOut]:
     """Flag enrolled subjects for re-consent against an amended protocol.

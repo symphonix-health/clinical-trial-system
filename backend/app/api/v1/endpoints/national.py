@@ -132,7 +132,7 @@ async def approvals_due(study_id: int, within_days: int = 60, db: AsyncSession =
 @router.post("/eligibility-screenings", response_model=schemas.EligibilityScreeningOut)
 async def request_eligibility_screening(
     data: schemas.EligibilityScreeningCreate,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.EligibilityScreeningOut:
     screening = await national.request_eligibility_screening(db, data)
@@ -142,7 +142,7 @@ async def request_eligibility_screening(
 @router.get("/eligibility-screenings", response_model=list[schemas.EligibilityScreeningOut])
 async def list_eligibility_screenings(
     study_id: int,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> list[schemas.EligibilityScreeningOut]:
     rows = await national.list_eligibility_screenings(db, study_id)
@@ -156,7 +156,7 @@ async def list_eligibility_screenings(
 async def record_eligibility_outcome(
     screening_id: int,
     data: schemas.EligibilityOutcomeIn,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.EligibilityScreeningOut:
     screening = await db.get(models.EligibilityScreening, screening_id)

@@ -54,10 +54,136 @@ STUDIES: list[dict[str, Any]] = [
 ]
 
 SITES: list[dict[str, Any]] = [
-    },
+    # Study 0 (ONCO-2026-001) — indices 0–4
+    {"study_index": 0, "site_code": "ONC-01", "name": "Royal Infirmary London",
+     "pi": "dr_sarah_chen", "capacity": 6, "status": "activated"},
+    {"study_index": 0, "site_code": "ONC-02", "name": "Manchester University Hospital",
+     "pi": "dr_james_oliver", "capacity": 4, "status": "activated"},
+    {"study_index": 0, "site_code": "ONC-03", "name": "Birmingham Clinical Research Centre",
+     "pi": "dr_priya_patel", "capacity": 4, "status": "activated"},
+    {"study_index": 0, "site_code": "ONC-04", "name": "Leeds Teaching Hospitals",
+     "pi": "dr_mark_taylor", "capacity": 4, "status": "activated"},
+    {"study_index": 0, "site_code": "ONC-05", "name": "Glasgow Royal Infirmary",
+     "pi": "dr_fiona_campbell", "capacity": 2, "status": "activated"},
+    # Study 1 (CARD-2026-002) — indices 5–7
+    {"study_index": 1, "site_code": "CAR-01", "name": "St Bartholomew's Hospital",
+     "pi": "dr_robert_brown", "capacity": 6, "status": "activated"},
+    {"study_index": 1, "site_code": "CAR-02", "name": "King's College Hospital",
+     "pi": "dr_alice_morgan", "capacity": 5, "status": "activated"},
+    {"study_index": 1, "site_code": "CAR-03", "name": "Hammersmith Hospital",
+     "pi": "dr_david_nguyen", "capacity": 4, "status": "activated"},
+    # Study 2 (VACC-2026-003) — indices 8–9
+    {"study_index": 2, "site_code": "VAC-01", "name": "Our Lady's Children's Hospital Dublin",
+     "pi": "dr_maria_garcia", "capacity": 3, "status": "activated"},
+    {"study_index": 2, "site_code": "VAC-02", "name": "Children's Health Ireland Crumlin",
+     "pi": "dr_sean_burke", "capacity": 2, "status": "activated"},
+]
+
+SUBJECT_TEMPLATES: list[dict[str, Any]] = [
+    # Study 0 (ONCO) — indices 0–19, sites 0–4
+    {"study_index": 0, "site_index": 0, "screening_id": "ONCO-001",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 0, "screening_id": "ONCO-002",
+     "status": "enrolled", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 0, "screening_id": "ONCO-003",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 0, "screening_id": "ONCO-004",
+     "status": "enrolled", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 1, "screening_id": "ONCO-005",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 1, "screening_id": "ONCO-006",
+     "status": "enrolled", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 1, "screening_id": "ONCO-007",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 1, "screening_id": "ONCO-008",
+     "status": "enrolled", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 2, "screening_id": "ONCO-009",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 2, "screening_id": "ONCO-010",
+     "status": "enrolled", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 2, "screening_id": "ONCO-011",
+     "status": "completed", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 2, "screening_id": "ONCO-012",
+     "status": "completed", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 3, "screening_id": "ONCO-013",
+     "status": "completed", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 3, "screening_id": "ONCO-014",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 0, "site_index": 3, "screening_id": "ONCO-015",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 0, "site_index": 3, "screening_id": "ONCO-016",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 0, "site_index": 4, "screening_id": "ONCO-017",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 0, "site_index": 4, "screening_id": "ONCO-018",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 0, "site_index": 4, "screening_id": "ONCO-019",
+     "status": "early_terminated", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 0, "site_index": 4, "screening_id": "ONCO-020",
+     "status": "withdrawn", "arm": "arm_b", "consent": "v1.0"},
+    # Study 1 (CARD) — indices 20–34, sites 5–7
+    {"study_index": 1, "site_index": 5, "screening_id": "CARD-001",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 5, "screening_id": "CARD-002",
+     "status": "enrolled", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 5, "screening_id": "CARD-003",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 5, "screening_id": "CARD-004",
+     "status": "enrolled", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 6, "screening_id": "CARD-005",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 6, "screening_id": "CARD-006",
+     "status": "enrolled", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 6, "screening_id": "CARD-007",
+     "status": "enrolled", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 7, "screening_id": "CARD-008",
+     "status": "completed", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 7, "screening_id": "CARD-009",
+     "status": "completed", "arm": "arm_a", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 7, "screening_id": "CARD-010",
+     "status": "completed", "arm": "arm_b", "consent": "v1.0"},
+    {"study_index": 1, "site_index": 5, "screening_id": "CARD-011",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 1, "site_index": 5, "screening_id": "CARD-012",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 1, "site_index": 6, "screening_id": "CARD-013",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 1, "site_index": 6, "screening_id": "CARD-014",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 1, "site_index": 7, "screening_id": "CARD-015",
+     "status": "screening", "arm": None, "consent": None},
+    # Study 2 (VACC) — indices 35–39, sites 8–9
+    {"study_index": 2, "site_index": 8, "screening_id": "VACC-001",
+     "status": "enrolled", "arm": None, "consent": "v1.0"},
+    {"study_index": 2, "site_index": 8, "screening_id": "VACC-002",
+     "status": "enrolled", "arm": None, "consent": "v1.0"},
+    {"study_index": 2, "site_index": 8, "screening_id": "VACC-003",
+     "status": "enrolled", "arm": None, "consent": "v1.0"},
+    {"study_index": 2, "site_index": 9, "screening_id": "VACC-004",
+     "status": "screening", "arm": None, "consent": None},
+    {"study_index": 2, "site_index": 9, "screening_id": "VACC-005",
+     "status": "screening", "arm": None, "consent": None},
 ]
 
 ADVERSE_EVENTS: list[dict[str, Any]] = [
+    {"study_index": 0, "subject_index": 0, "onset_date": dt.date(2026, 3, 5),
+     "severity": "mild", "seriousness": "non_serious", "causality": "possibly_related",
+     "susar": False, "expectedness": "expected"},
+    {"study_index": 0, "subject_index": 1, "onset_date": dt.date(2026, 3, 10),
+     "severity": "moderate", "seriousness": "serious", "causality": "probably_related",
+     "susar": True, "expectedness": "unexpected"},
+    {"study_index": 0, "subject_index": 2, "onset_date": dt.date(2026, 3, 15),
+     "severity": "mild", "seriousness": "non_serious", "causality": "unlikely_related",
+     "susar": False, "expectedness": "expected"},
+    {"study_index": 0, "subject_index": 4, "onset_date": dt.date(2026, 4, 2),
+     "severity": "severe", "seriousness": "life_threatening", "causality": "definitely_related",
+     "susar": True, "expectedness": "unexpected"},
+    {"study_index": 1, "subject_index": 20, "onset_date": dt.date(2026, 4, 8),
+     "severity": "mild", "seriousness": "non_serious", "causality": "possibly_related",
+     "susar": False, "expectedness": "expected"},
+    {"study_index": 1, "subject_index": 21, "onset_date": dt.date(2026, 4, 14),
+     "severity": "moderate", "seriousness": "non_serious", "causality": "unlikely_related",
+     "susar": False, "expectedness": "expected"},
 ]
 
 REGULATORY_DOCUMENTS: list[dict[str, Any]] = [
@@ -75,17 +201,82 @@ BUDGETS: list[dict[str, Any]] = [
 
 AGENT_SUBJECTS: list[dict[str, Any]] = [
     {
+        "principal": "agent-onco-triage-01", "persona": "clinical_triage_v2",
+        "contract": "contract-ct-001", "model": "gpt-4o-2024-11-20",
+        "owner": "symphonix_oncology", "autonomy": "advisory",
+        "safety": "samd_class_iia", "source": "global_agent_registry",
+    },
+    {
+        "principal": "agent-onco-triage-02", "persona": "clinical_triage_v2",
+        "contract": "contract-ct-001", "model": "gpt-4o-2024-11-20",
+        "owner": "symphonix_oncology", "autonomy": "shadow",
+        "safety": "samd_class_iia", "source": "global_agent_registry",
+    },
+    {
+        "principal": "agent-onco-triage-03", "persona": "clinical_triage_v2",
+        "contract": "contract-ct-001", "model": "gpt-4o-2024-11-20",
+        "owner": "symphonix_oncology", "autonomy": "shadow",
+        "safety": "samd_class_iia", "source": "global_agent_registry",
+    },
+    {
+        "principal": "agent-card-review-01", "persona": "cardiology_review_v1",
+        "contract": "contract-cr-001", "model": "claude-3-5-sonnet-20241022",
+        "owner": "symphonix_cardiology", "autonomy": "shadow",
+        "safety": "samd_class_iib", "source": "nexus_a2a_protocol",
+    },
+    {
+        "principal": "agent-card-review-02", "persona": "cardiology_review_v1",
+        "contract": "contract-cr-001", "model": "claude-3-5-sonnet-20241022",
+        "owner": "symphonix_cardiology", "autonomy": "auto_with_threshold_hitl",
+        "safety": "samd_class_iib", "source": "nexus_a2a_protocol",
+    },
+    {
+        "principal": "agent-council-01", "persona": "multi_agent_council_v1",
+        "contract": "contract-mac-001", "model": "gpt-4o-2024-11-20",
+        "owner": "symphonix_clinical_ops", "autonomy": "advisory",
+        "safety": "samd_class_iia", "source": "direct",
+    },
+    {
+        "principal": "agent-council-02", "persona": "multi_agent_council_v1",
+        "contract": "contract-mac-001", "model": "gpt-4o-2024-11-20",
+        "owner": "symphonix_clinical_ops", "autonomy": "advisory",
+        "safety": "samd_class_iia", "source": "direct",
+    },
+    {
+        "principal": "agent-council-03", "persona": "multi_agent_council_v1",
+        "contract": "contract-mac-001", "model": "claude-3-5-sonnet-20241022",
+        "owner": "symphonix_clinical_ops", "autonomy": "shadow",
+        "safety": "samd_class_iia", "source": "direct",
+    },
+    {
+        "principal": "agent-vacc-screen-01", "persona": "paediatric_screen_v1",
+        "contract": "contract-ps-001", "model": "claude-3-5-sonnet-20241022",
+        "owner": "symphonix_vaccines", "autonomy": "shadow",
+        "safety": "samd_class_i", "source": "global_agent_registry",
     },
 ]
 
 AGENT_COHORTS: list[dict[str, Any]] = [
     {
+        "name": "Clinical Triage Cohort",
+        "type": "single_agent",
+        "profile": '{"domain": "oncology", "capability": "triage"}',
         "family": "clinical_triage",
         "objective": "Evaluate safety of autonomous chest-pain triage",
     },
     {
+        "name": "Multi-Agent Council",
+        "type": "multi_agent",
+        "profile": '{"domain": "general", "capability": "deliberation"}',
         "family": "multi_agent_council",
         "objective": "Deliberate on complex treatment plans",
+    },
+    {
+        "name": "Human-AI Mixed Cohort",
+        "type": "human_ai_mixed",
+        "profile": '{"domain": "cardiology", "capability": "review"}',
+        "family": "human_ai_mixed",
+        "objective": "Assess human-AI collaboration in cardiology review",
     },
 ]
 
@@ -385,4 +576,46 @@ REIMBURSEMENTS: list[dict[str, Any]] = [
         "exceeds_guidance_cap": True,
         "notes": "Overnight accommodation, cross-region site transfer",
     },
+]
+
+PRODUCTS: list[dict[str, Any]] = [
+    {"sku": "ONCO-IP-001", "name": "Kinase Inhibitor 50mg Capsules",
+     "lot": "LOT-KI-2026-001", "qty": 240, "site_code": "ONC-01", "site_study": 0},
+    {"sku": "ONCO-IP-002", "name": "Kinase Inhibitor 50mg Capsules",
+     "lot": "LOT-KI-2026-002", "qty": 160, "site_code": "ONC-02", "site_study": 0},
+    {"sku": "ONCO-IP-PBO-001", "name": "Placebo Capsules",
+     "lot": "LOT-PBO-2026-001", "qty": 240, "site_code": "ONC-01", "site_study": 0},
+    {"sku": "CARD-IP-001", "name": "Cardioprotective Agent 25mg Tablets",
+     "lot": "LOT-CA-2026-001", "qty": 300, "site_code": "CAR-01", "site_study": 1},
+    {"sku": "CARD-IP-PBO-001", "name": "Placebo Tablets",
+     "lot": "LOT-CPBO-2026-001", "qty": 200, "site_code": "CAR-01", "site_study": 1},
+    {"sku": "VACC-IP-001", "name": "Paediatric Vaccine 0.5ml Vials",
+     "lot": "LOT-PV-2026-001", "qty": 50, "site_code": "VAC-01", "site_study": 2},
+]
+
+PROTOCOL_DEVIATIONS: list[dict[str, Any]] = [
+    {
+        "study_index": 0, "subject_index": 0, "category": "eligibility",
+        "description": "Screening ECG performed outside the protocol-specified 7-day window.",
+        "severity": "minor",
+    },
+    {
+        "study_index": 0, "subject_index": 3, "category": "dosing",
+        "description": "Study drug taken with food contrary to fasting requirement.",
+        "severity": "minor",
+    },
+    {
+        "study_index": 1, "subject_index": 20, "category": "visit_window",
+        "description": "Week 4 visit conducted 3 days outside the +/- 2-day window.",
+        "severity": "minor",
+    },
+]
+
+QUERIES: list[dict[str, Any]] = [
+    {"study_index": 0, "subject_index": 0,
+     "raised_by": "crc_1", "assigned": "dr_sarah_chen", "due": dt.date(2026, 4, 15)},
+    {"study_index": 0, "subject_index": 2,
+     "raised_by": "data_manager_1", "assigned": "crc_1", "due": dt.date(2026, 4, 20)},
+    {"study_index": 1, "subject_index": 20,
+     "raised_by": "crc_3", "assigned": "dr_robert_brown", "due": dt.date(2026, 4, 25)},
 ]

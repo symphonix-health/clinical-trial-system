@@ -1,5 +1,7 @@
 """Agentic subject endpoints."""
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -76,7 +78,7 @@ async def create_attestation(
 async def create_consent_contract(
     agent_id: int,
     data: schemas.AgentConsentContractCreate,
-    _auth: dict = Depends(require_auth),
+    _auth: dict[str, Any] = Depends(require_auth),
     db: AsyncSession = Depends(get_db),
 ) -> schemas.AgentConsentContractOut:
     data.agent_subject_id = agent_id
@@ -128,7 +130,7 @@ async def create_run(
 @router.post("/runs/{run_id}/complete", response_model=schemas.AgentRunOut)
 async def complete_run(
     run_id: int,
-    metrics: dict,
+    metrics: dict[str, Any],
     trace_url: str | None = None,
     db: AsyncSession = Depends(get_db),
 ) -> schemas.AgentRunOut:
