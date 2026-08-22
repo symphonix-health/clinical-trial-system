@@ -1,4 +1,3 @@
-```python
 """Direct tests for inbound webhook processors."""
 
 from __future__ import annotations
@@ -248,4 +247,3 @@ async def test_models_persisted_after_processing(
         select(func.count(models.AgentEscalation.id))
     )
     assert result.scalar() >= 1
-```

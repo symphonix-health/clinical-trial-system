@@ -12,12 +12,14 @@ from __future__ import annotations
 
 from collections.abc import AsyncGenerator
 
-import jwt
 import pytest
 import pytest_asyncio
+from fastapi.security import HTTPAuthorizationCredentials
 from httpx import ASGITransport, AsyncClient
+from jose import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.auth import require_auth
 from app.config import get_settings
 from app.database import get_db
 from app.main import app
@@ -77,3 +79,14 @@ async def test_valid_token_passes_guard(noauth_client) -> None:
     )
     # Not 401 (may be 404 for the missing visit) => the guard passed.
     assert resp.status_code != 401, resp.text
+
+
+@pytest.mark.asyncio
+async def test_valid_token_returns_claims() -> None:
+    token = jwt.encode(
+        {"sub": "direct-user", "roles": ["investigator"]},
+        get_settings().secret_key,
+        algorithm="HS256",
+    )
+    claims = await require_auth(HTTPAuthorizationCredentials(scheme="Bearer", credentials=token))
+    assert claims["sub"] == "direct-user"

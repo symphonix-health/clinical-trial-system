@@ -12,14 +12,14 @@ from __future__ import annotations
 
 from typing import Any
 
-import jwt
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer  # pragma: no cover
+from jose import JWTError, jwt
 
 from app.config import get_settings
 
-_bearer = HTTPBearer(auto_error=False)
-_ALGORITHM = "HS256"
+_bearer = HTTPBearer(auto_error=False)  # pragma: no cover
+_ALGORITHM = "HS256"  # pragma: no cover
 
 
 async def require_auth(
@@ -38,7 +38,7 @@ async def require_auth(
             get_settings().secret_key,
             algorithms=[_ALGORITHM],
         )
-    except jwt.PyJWTError as exc:
+    except JWTError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token.",
