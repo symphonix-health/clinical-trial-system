@@ -1,4 +1,3 @@
-```python
 """Budget and invoice endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -40,4 +39,3 @@ async def create_invoice(
 ) -> schemas.InvoiceOut:
     invoice = await crud.create_invoice(db, data)
     return schemas.InvoiceOut.model_validate(invoice)
-```

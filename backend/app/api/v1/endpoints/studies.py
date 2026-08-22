@@ -1,4 +1,3 @@
-```python
 """Study endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -106,4 +105,3 @@ async def flag_reconsent(
         protocol_version,
     )
     return [schemas.SubjectOut.model_validate(s) for s in flagged]
-```

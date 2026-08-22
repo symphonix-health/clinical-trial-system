@@ -1,4 +1,3 @@
-```python
 """Query endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -51,4 +50,3 @@ async def update_query(
         raise HTTPException(status_code=404, detail="Query not found")
     updated = await crud.update_query(db, query, data)
     return schemas.QueryOut.model_validate(updated)
-```

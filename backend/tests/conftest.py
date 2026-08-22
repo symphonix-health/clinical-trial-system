@@ -1,4 +1,3 @@
-```python
 """Pytest fixtures."""
 
 import os
@@ -100,4 +99,3 @@ async def seeded_client(
         await db.commit()
 
     return client
-```

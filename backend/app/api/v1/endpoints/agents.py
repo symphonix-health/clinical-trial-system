@@ -1,4 +1,3 @@
-```python
 """Agentic subject endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -180,4 +179,3 @@ async def release_gate(
     db: AsyncSession = Depends(get_db),
 ) -> schemas.ReleaseGateResult:
     return await crud.evaluate_release_gate(db, cohort_id)
-```

@@ -1,4 +1,3 @@
-```python
 """Site endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -89,4 +88,3 @@ async def update_checklist_task(
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return schemas.SiteActivationChecklistOut.model_validate(task)
-```

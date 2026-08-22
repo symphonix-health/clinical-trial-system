@@ -1,4 +1,3 @@
-```python
 """Regulatory document endpoints."""
 
 from fastapi import APIRouter, Depends
@@ -27,4 +26,3 @@ async def list_documents(
 ) -> list[schemas.RegulatoryDocumentOut]:
     docs = await crud.list_regulatory_documents(db, study_id)
     return [schemas.RegulatoryDocumentOut.model_validate(d) for d in docs]
-```

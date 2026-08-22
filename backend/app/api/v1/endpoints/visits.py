@@ -1,4 +1,3 @@
-```python
 """Visit endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -56,4 +55,3 @@ async def flag_missed_visits(
 ) -> list[schemas.SubjectVisitOut]:
     visits = await crud.flag_missed_visits(db)
     return [schemas.SubjectVisitOut.model_validate(v) for v in visits]
-```

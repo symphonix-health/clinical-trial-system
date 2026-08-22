@@ -1,4 +1,3 @@
-```python
 """Investigational product endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -91,4 +90,3 @@ async def destroy_dispense(
         raise HTTPException(status_code=404, detail="Dispense not found")
     updated = await crud.destroy_ip_dispense(db, dispense, data)
     return schemas.IpDispenseOut.model_validate(updated)
-```

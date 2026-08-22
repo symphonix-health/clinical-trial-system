@@ -1,4 +1,3 @@
-```python
 """Report endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -57,4 +56,3 @@ async def ip_accountability_report(
         return await crud.ip_accountability_report(db, study_id, site_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-```

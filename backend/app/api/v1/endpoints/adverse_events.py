@@ -1,4 +1,3 @@
-```python
 """Adverse event endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -51,4 +50,3 @@ async def update_adverse_event(
         raise HTTPException(status_code=404, detail="Adverse event not found")
     updated = await crud.update_adverse_event(db, ae, data)
     return schemas.AdverseEventOut.model_validate(updated)
-```

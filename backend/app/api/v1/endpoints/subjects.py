@@ -1,4 +1,3 @@
-```python
 """Subject endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -169,4 +168,3 @@ async def unblind_subject(
         raise HTTPException(status_code=404, detail="Subject not found")
     event = await crud.unblind_subject(db, subject, data)
     return schemas.UnblindingEventOut.model_validate(event)
-```
