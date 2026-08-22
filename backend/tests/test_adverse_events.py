@@ -1,3 +1,4 @@
+```python
 """Adverse event and SUSAR tests."""
 
 from httpx import AsyncClient
@@ -113,3 +114,4 @@ async def test_update_ae_status(client: AsyncClient) -> None:
 
     assert resp.status_code == 200
     assert resp.json()["status"] == "assessed"
+```

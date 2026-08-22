@@ -188,6 +188,86 @@ ADVERSE_EVENTS: list[dict[str, Any]] = [
 
 REGULATORY_DOCUMENTS: list[dict[str, Any]] = [
     {"study_index": 0, "type": "protocol", "reference": "ONCO-PROTO-v1.0.pdf", "version": "v1.0", "expiry": None},
+    {
+        "study_index": 0,
+        "type": "ethics_approval",
+        "reference": "ONCO-ETHICS-001.pdf",
+        "version": "1",
+        "expiry": dt.date(2026, 12, 31),
+    },
+    {
+        "study_index": 0,
+        "type": "insurance",
+        "reference": "ONCO-INS-001.pdf",
+        "version": "1",
+        "expiry": dt.date(2027, 1, 1),
+    },
+    {"study_index": 1, "type": "protocol", "reference": "CARD-PROTO-v1.0.pdf", "version": "v1.0", "expiry": None},
+    {
+        "study_index": 1,
+        "type": "ethics_approval",
+        "reference": "CARD-ETHICS-001.pdf",
+        "version": "1",
+        "expiry": dt.date(2026, 11, 30),
+    },
+    {
+        "study_index": 1,
+        "type": "insurance",
+        "reference": "CARD-INS-001.pdf",
+        "version": "1",
+        "expiry": dt.date(2027, 2, 1),
+    },
+    {"study_index": 2, "type": "protocol", "reference": "VACC-PROTO-v1.0.pdf", "version": "v1.0", "expiry": None},
+    {
+        "study_index": 2,
+        "type": "ethics_approval",
+        "reference": "VACC-ETHICS-001.pdf",
+        "version": "1",
+        "expiry": dt.date(2026, 10, 15),
+    },
+]
+
+QUERIES: list[dict[str, Any]] = [
+    {
+        "study_index": 0,
+        "subject_index": 0,
+        "raised_by": "cra_1",
+        "assigned": "crc_1",
+        "status": "open",
+        "due": dt.date(2026, 5, 1),
+    },
+    {
+        "study_index": 0,
+        "subject_index": 1,
+        "raised_by": "cra_1",
+        "assigned": "crc_2",
+        "status": "resolved",
+        "due": dt.date(2026, 4, 20),
+    },
+    {
+        "study_index": 1,
+        "subject_index": 20,
+        "raised_by": "cra_2",
+        "assigned": "crc_3",
+        "status": "open",
+        "due": dt.date(2026, 6, 1),
+    },
+    {
+        "study_index": 1,
+        "subject_index": 22,
+        "raised_by": "cra_2",
+        "assigned": "crc_4",
+        "status": "in_progress",
+        "due": dt.date(2026, 5, 25),
+    },
+    {
+        "study_index": 0,
+        "subject_index": 2,
+        "raised_by": "cra_1",
+        "assigned": "crc_1",
+        "status": "open",
+        "due": dt.date(2026, 4, 15),
+    },
 ]
 
 BUDGETS: list[dict[str, Any]] = [

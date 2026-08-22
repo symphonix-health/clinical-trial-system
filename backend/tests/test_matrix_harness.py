@@ -971,7 +971,6 @@ async def test_matrix_scenario(client: AsyncClient, use_case_id: str) -> None:
         if not _validate_rule(rule, response, case.get("test_data", {})):
             failures.append(rule)
     assert not failures, (
-        f"{use_case_id} failed rules: {failures}; response was {response.status_code} {response.text[:200]}"
     )
 
 
