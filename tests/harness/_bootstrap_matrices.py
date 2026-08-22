@@ -9,7 +9,6 @@ This one-off script:
 from __future__ import annotations
 
 import json
-import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]

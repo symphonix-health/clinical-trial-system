@@ -18,7 +18,6 @@ from app.database import Base, get_db
 from app.main import app
 from app.seeding.loader import _seed
 
-
 settings = get_settings()
 
 

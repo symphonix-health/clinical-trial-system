@@ -7,7 +7,6 @@ from app import crud, models, schemas
 from app.auth import require_auth
 from app.database import get_db
 
-
 router = APIRouter(prefix="/ip", tags=["ip"])
 
 

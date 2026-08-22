@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app import crud, schemas
 from app.database import get_db
 
-
 router = APIRouter(prefix="/budgets", tags=["budgets"])
 
 
