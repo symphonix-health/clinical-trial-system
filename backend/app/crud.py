@@ -54,11 +54,12 @@ def _compute_susar_deadline(
 
 
 # Audit
-async def create_audit_entry(
-    db: AsyncSession, obj_in: schemas.AuditEntryCreate
-) -> models.AuditEntry:
+async def create_audit_entry(db: AsyncSession, obj_in: schemas.AuditEntryCreate) -> models.AuditEntry:
     last = await db.execute(
-        select(models.AuditEntry).where(models.AuditEntry.study_id == obj_in.study_id).order_by(models.AuditEntry.id.desc()).limit(1)
+        select(models.AuditEntry)
+        .where(models.AuditEntry.study_id == obj_in.study_id)
+        .order_by(models.AuditEntry.id.desc())
+        .limit(1)
     )
     previous = last.scalar_one_or_none()
     payload = f"{obj_in.actor_id}:{obj_in.action}:{obj_in.resource_type}:{obj_in.resource_id}"
@@ -91,7 +92,8 @@ async def create_study(db: AsyncSession, obj_in: schemas.StudyCreate) -> models.
     await create_audit_entry(
         db,
         schemas.AuditEntryCreate(
-            actor_id="system", purpose_of_use="study_setup", action="create_study", resource_type="Study", resource_id=study.id
+            actor_id="system", purpose_of_use="study_setup", action="create_study",
+            resource_type="Study", resource_id=study.id
         ),
     )
     return study
@@ -115,7 +117,8 @@ async def update_study(db: AsyncSession, study: models.Study, obj_in: schemas.St
     await create_audit_entry(
         db,
         schemas.AuditEntryCreate(
-            actor_id="system", purpose_of_use="study_setup", action="update_study", resource_type="Study", resource_id=study.id
+            actor_id="system", purpose_of_use="study_setup", action="update_study",
+            resource_type="Study", resource_id=study.id
         ),
     )
     return study
@@ -177,11 +180,19 @@ async def update_site(db: AsyncSession, site: models.Site, obj_in: schemas.SiteU
 
 
 async def get_site_checklist(db: AsyncSession, site_id: int) -> list[models.SiteActivationChecklist]:
-    result = await db.execute(select(models.SiteActivationChecklist).where(models.SiteActivationChecklist.site_id == site_id))
+    result = await db.execute(
+        select(models.SiteActivationChecklist).where(models.SiteActivationChecklist.site_id == site_id)
+    )
     return list(result.scalars().all())
 
 
-async def update_checklist_task(db: AsyncSession, site_id: int, task_name: str, status: str, evidence: str | None) -> models.SiteActivationChecklist | None:
+async def update_checklist_task(
+    db: AsyncSession,
+    site_id: int,
+    task_name: str,
+    status: str,
+    evidence: str | None
+) -> models.SiteActivationChecklist | None:
     result = await db.execute(
         select(models.SiteActivationChecklist).where(
             models.SiteActivationChecklist.site_id == site_id,
@@ -200,7 +211,9 @@ async def update_checklist_task(db: AsyncSession, site_id: int, task_name: str, 
 
 # Subjects
 async def create_subject(db: AsyncSession, obj_in: schemas.SubjectCreate) -> models.Subject:
-    count_result = await db.execute(select(func.count(models.Subject.id)).where(models.Subject.study_id == obj_in.study_id))
+    count_result = await db.execute(
+        select(func.count(models.Subject.id)).where(models.Subject.study_id == obj_in.study_id)
+    )
     count = count_result.scalar() or 0
     subject = models.Subject(
         **obj_in.model_dump(exclude={"screening_id"}),
@@ -215,14 +228,16 @@ async def create_subject(db: AsyncSession, obj_in: schemas.SubjectCreate) -> mod
 
 async def get_subject(db: AsyncSession, subject_id: int) -> models.Subject | None:
     result = await db.execute(
-        select(models.Subject)
-        .where(models.Subject.id == subject_id)
-        .options(selectinload(models.Subject.visits))
+        select(models.Subject).where(models.Subject.id == subject_id).options(selectinload(models.Subject.visits))
     )
     return result.scalar_one_or_none()
 
 
-async def list_subjects(db: AsyncSession, study_id: int | None = None, site_id: int | None = None) -> list[models.Subject]:
+async def list_subjects(
+    db: AsyncSession,
+    study_id: int | None = None,
+    site_id: int | None = None
+) -> list[models.Subject]:
     stmt = select(models.Subject)
     if study_id is not None:
         stmt = stmt.where(models.Subject.study_id == study_id)
@@ -240,7 +255,11 @@ async def update_subject(db: AsyncSession, subject: models.Subject, obj_in: sche
     return subject
 
 
-async def record_consent(db: AsyncSession, subject: models.Subject, obj_in: schemas.InformedConsentCreate) -> models.InformedConsent:
+async def record_consent(
+    db: AsyncSession,
+    subject: models.Subject,
+    obj_in: schemas.InformedConsentCreate
+) -> models.InformedConsent:
     """Record consent, re-consent, assent or proxy consent.
 
     REQ-CTS-NAT-004. Recording any consent moves the subject's
@@ -268,7 +287,7 @@ async def record_consent(db: AsyncSession, subject: models.Subject, obj_in: sche
             site_id=subject.site_id or 0,
             subject_number=subject.subject_number,
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - hub delivery is best-effort
         pass  # hub delivery is best-effort; enrolment already persisted
     return consent
 
@@ -293,7 +312,10 @@ async def withdraw_subject(
     subject.consent_state = models.ConsentState.withdrawn.value
     subject.consent_withdrawn_at = now
     consent_result = await db.execute(
-        select(models.InformedConsent).where(models.InformedConsent.subject_id == subject.id).order_by(models.InformedConsent.id.desc()).limit(1)
+        select(models.InformedConsent)
+        .where(models.InformedConsent.subject_id == subject.id)
+        .order_by(models.InformedConsent.id.desc())
+        .limit(1)
     )
     consent = consent_result.scalar_one_or_none()
     if consent:
@@ -322,9 +344,7 @@ async def withdraw_subject(
     return subject
 
 
-async def flag_reconsent_required(
-    db: AsyncSession, study_id: int, protocol_version: str
-) -> list[models.Subject]:
+async def flag_reconsent_required(db: AsyncSession, study_id: int, protocol_version: str) -> list[models.Subject]:
     """Flag enrolled subjects for re-consent against an amended protocol.
 
     FR-C-33 / REQ-CTS-NAT-004. Flagged subjects are suspended from further IP
@@ -366,9 +386,7 @@ def stratum_key(factors: dict[str, Any] | None) -> str:
     return "|".join(f"{k}={factors[k]}" for k in sorted(factors))
 
 
-def _build_allocation_block(
-    seed: str, arms: list[str], block_size: int, block_index: int
-) -> list[str]:
+def _build_allocation_block(seed: str, arms: list[str], block_size: int, block_index: int) -> list[str]:
     """One permuted block, deterministic in ``seed`` and ``block_index``.
 
     Permuted-block randomisation keeps the arms balanced within every block
@@ -505,9 +523,7 @@ async def unblind_subject(
     if not subject.randomisation_arm:
         raise HTTPException(status_code=409, detail="Subject is not randomised")
     result = await db.execute(
-        select(models.RandomisationAllocation).where(
-            models.RandomisationAllocation.allocated_subject_id == subject.id
-        )
+        select(models.RandomisationAllocation).where(models.RandomisationAllocation.allocated_subject_id == subject.id)
     )
     allocation = result.scalars().first()
     if allocation is None:
@@ -559,7 +575,7 @@ async def create_visit(db: AsyncSession, obj_in: schemas.SubjectVisitCreate) -> 
             subject_id=visit.subject_id,
             scheduled_date=str(visit.scheduled_date),
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - hub delivery is best-effort
         pass
     return visit
 
@@ -573,13 +589,23 @@ async def get_visit(db: AsyncSession, visit_id: int) -> models.SubjectVisit | No
     return result.scalar_one_or_none()
 
 
-async def update_visit(db: AsyncSession, visit: models.SubjectVisit, obj_in: schemas.SubjectVisitUpdate) -> models.SubjectVisit:
+async def update_visit(
+    db: AsyncSession,
+    visit: models.SubjectVisit,
+    obj_in: schemas.SubjectVisitUpdate
+) -> models.SubjectVisit:
     for field, value in obj_in.model_dump(exclude_unset=True).items():
         setattr(visit, field, value)
     if visit.actual_date and visit.status == models.VisitStatus.scheduled.value:
         actual = visit.actual_date.date() if isinstance(visit.actual_date, dt.datetime) else visit.actual_date
-        min_date = visit.window_min_date.date() if isinstance(visit.window_min_date, dt.datetime) else visit.window_min_date
-        max_date = visit.window_max_date.date() if isinstance(visit.window_max_date, dt.datetime) else visit.window_max_date
+        min_date = (
+            visit.window_min_date.date() if isinstance(visit.window_min_date, dt.datetime)
+            else visit.window_min_date
+        )
+        max_date = (
+            visit.window_max_date.date() if isinstance(visit.window_max_date, dt.datetime)
+            else visit.window_max_date
+        )
         if actual < min_date or actual > max_date:
             await create_protocol_deviation(
                 db,
@@ -659,7 +685,7 @@ async def create_adverse_event(db: AsyncSession, obj_in: schemas.AdverseEventCre
             study_id=ae.study_id,
             seriousness=ae.seriousness,
         )
-    except integration_engine.IntegrationError:
+    except integration_engine.IntegrationError:  # pragma: no cover - hub delivery is best-effort
         pass
     return ae
 
@@ -676,7 +702,11 @@ async def list_adverse_events(db: AsyncSession, study_id: int | None = None) -> 
     return list(result.scalars().all())
 
 
-async def update_adverse_event(db: AsyncSession, ae: models.AdverseEvent, obj_in: schemas.AdverseEventUpdate) -> models.AdverseEvent:
+async def update_adverse_event(
+    db: AsyncSession,
+    ae: models.AdverseEvent,
+    obj_in: schemas.AdverseEventUpdate
+) -> models.AdverseEvent:
     for field, value in obj_in.model_dump(exclude_unset=True).items():
         setattr(ae, field, value)
     await db.commit()
@@ -685,7 +715,10 @@ async def update_adverse_event(db: AsyncSession, ae: models.AdverseEvent, obj_in
 
 
 # Protocol deviations
-async def create_protocol_deviation(db: AsyncSession, obj_in: schemas.ProtocolDeviationCreate) -> models.ProtocolDeviation:
+async def create_protocol_deviation(
+    db: AsyncSession,
+    obj_in: schemas.ProtocolDeviationCreate
+) -> models.ProtocolDeviation:
     pd = models.ProtocolDeviation(**obj_in.model_dump())
     db.add(pd)
     await db.commit()
@@ -702,7 +735,10 @@ async def list_protocol_deviations(db: AsyncSession, study_id: int | None = None
 
 
 # Investigational product
-async def create_investigational_product(db: AsyncSession, obj_in: schemas.InvestigationalProductCreate) -> models.InvestigationalProduct:
+async def create_investigational_product(
+    db: AsyncSession,
+    obj_in: schemas.InvestigationalProductCreate
+) -> models.InvestigationalProduct:
     ip = models.InvestigationalProduct(**obj_in.model_dump())
     db.add(ip)
     await db.commit()
@@ -714,7 +750,12 @@ async def get_investigational_product(db: AsyncSession, product_id: int) -> mode
     return await db.get(models.InvestigationalProduct, product_id)
 
 
-async def receive_shipment(db: AsyncSession, shipment: models.IpShipment, received_by: str, condition_ok: bool) -> models.IpShipment:
+async def receive_shipment(
+    db: AsyncSession,
+    shipment: models.IpShipment,
+    received_by: str,
+    condition_ok: bool
+) -> models.IpShipment:
     shipment.received_at = dt.datetime.utcnow()
     shipment.received_by = received_by
     shipment.condition_ok = condition_ok
@@ -762,10 +803,7 @@ async def create_ip_dispense(db: AsyncSession, obj_in: schemas.IpDispenseCreate)
     if subject.consent_state in BLOCKING_CONSENT_STATES:
         raise HTTPException(
             status_code=422,
-            detail=(
-                "IP dispensing suspended: subject consent state is "
-                f"{subject.consent_state!r}"
-            ),
+            detail=(f"IP dispensing suspended: subject consent state is {subject.consent_state!r}"),
         )
     product = await get_investigational_product(db, obj_in.product_id)
     if product is None:
@@ -774,8 +812,7 @@ async def create_ip_dispense(db: AsyncSession, obj_in: schemas.IpDispenseCreate)
         raise HTTPException(
             status_code=422,
             detail=(
-                f"quantity_dispensed {obj_in.quantity_dispensed} exceeds "
-                f"quantity_on_hand {product.quantity_on_hand}"
+                f"quantity_dispensed {obj_in.quantity_dispensed} exceeds quantity_on_hand {product.quantity_on_hand}"
             ),
         )
     dispense = models.IpDispense(**obj_in.model_dump())
@@ -799,7 +836,11 @@ async def create_ip_dispense(db: AsyncSession, obj_in: schemas.IpDispenseCreate)
     return dispense
 
 
-async def destroy_ip_dispense(db: AsyncSession, dispense: models.IpDispense, payload: schemas.IpDestroy) -> models.IpDispense:
+async def destroy_ip_dispense(
+    db: AsyncSession,
+    dispense: models.IpDispense,
+    payload: schemas.IpDestroy
+) -> models.IpDispense:
     dispense.destroyed_at = payload.destroyed_at
     dispense.destroyed_by = payload.destroyed_by
     await db.commit()
@@ -808,7 +849,10 @@ async def destroy_ip_dispense(db: AsyncSession, dispense: models.IpDispense, pay
 
 
 # Regulatory documents
-async def create_regulatory_document(db: AsyncSession, obj_in: schemas.RegulatoryDocumentCreate) -> models.RegulatoryDocument:
+async def create_regulatory_document(
+    db: AsyncSession,
+    obj_in: schemas.RegulatoryDocumentCreate
+) -> models.RegulatoryDocument:
     doc = models.RegulatoryDocument(**obj_in.model_dump())
     db.add(doc)
     await db.commit()
@@ -863,7 +907,11 @@ async def get_study_budget(db: AsyncSession, budget_id: int) -> models.StudyBudg
     return await db.get(models.StudyBudget, budget_id)
 
 
-async def update_study_budget(db: AsyncSession, budget: models.StudyBudget, obj_in: schemas.StudyBudgetUpdate) -> models.StudyBudget:
+async def update_study_budget(
+    db: AsyncSession,
+    budget: models.StudyBudget,
+    obj_in: schemas.StudyBudgetUpdate
+) -> models.StudyBudget:
     if obj_in.actual_amount is not None:
         budget.actual_amount = obj_in.actual_amount
     await db.commit()
@@ -900,7 +948,11 @@ async def list_agent_subjects(db: AsyncSession, enrolled_study_id: int | None = 
     return list(result.scalars().all())
 
 
-async def update_agent_subject(db: AsyncSession, agent: models.AgentSubject, obj_in: schemas.AgentSubjectUpdate) -> models.AgentSubject:
+async def update_agent_subject(
+    db: AsyncSession,
+    agent: models.AgentSubject,
+    obj_in: schemas.AgentSubjectUpdate
+) -> models.AgentSubject:
     for field, value in obj_in.model_dump(exclude_unset=True).items():
         setattr(agent, field, value)
     await db.commit()
@@ -919,7 +971,10 @@ async def create_agent_attestation(db: AsyncSession, obj_in: schemas.AgentAttest
     return att
 
 
-async def create_agent_consent_contract(db: AsyncSession, obj_in: schemas.AgentConsentContractCreate) -> models.AgentConsentContract:
+async def create_agent_consent_contract(
+    db: AsyncSession,
+    obj_in: schemas.AgentConsentContractCreate
+) -> models.AgentConsentContract:
     contract = models.AgentConsentContract(**obj_in.model_dump())
     db.add(contract)
     await db.commit()
@@ -949,7 +1004,10 @@ async def add_agent_to_cohort(db: AsyncSession, cohort_id: int, agent_subject_id
 
 
 # Synthetic environments
-async def create_synthetic_environment(db: AsyncSession, obj_in: schemas.SyntheticEnvironmentCreate) -> models.SyntheticEnvironment:
+async def create_synthetic_environment(
+    db: AsyncSession,
+    obj_in: schemas.SyntheticEnvironmentCreate
+) -> models.SyntheticEnvironment:
     env = models.SyntheticEnvironment(
         **obj_in.model_dump(),
         reset_token=secrets.token_urlsafe(16),
@@ -982,7 +1040,12 @@ async def get_agent_run(db: AsyncSession, run_id: int) -> models.AgentRun | None
     return await db.get(models.AgentRun, run_id)
 
 
-async def complete_agent_run(db: AsyncSession, run: models.AgentRun, metrics: dict[str, Any], trace_url: str | None) -> models.AgentRun:
+async def complete_agent_run(
+    db: AsyncSession,
+    run: models.AgentRun,
+    metrics: dict[str, Any],
+    trace_url: str | None
+) -> models.AgentRun:
     run.completed_at = dt.datetime.utcnow()
     run.metrics_snapshot = metrics
     run.trace_artifact_url = trace_url
@@ -1030,11 +1093,17 @@ async def create_agent_bias_report(db: AsyncSession, obj_in: schemas.AgentBiasRe
 
 
 async def evaluate_release_gate(db: AsyncSession, cohort_id: int) -> schemas.ReleaseGateResult:
-    result = await db.execute(select(models.AgentMetric).where(models.AgentMetric.run_id.in_(
-        select(models.AgentRun.id).where(models.AgentRun.environment_id.in_(
-            select(models.SyntheticEnvironment.id)  # simplified; real impl uses cohort linkage
-        ))
-    )))
+    result = await db.execute(
+        select(models.AgentMetric).where(
+            models.AgentMetric.run_id.in_(
+                select(models.AgentRun.id).where(
+                    models.AgentRun.environment_id.in_(
+                        select(models.SyntheticEnvironment.id)  # simplified; real impl uses cohort linkage
+                    )
+                )
+            )
+        )
+    )
     metrics = list(result.scalars().all())
     passed: list[str] = []
     failed: list[dict[str, Any]] = []
@@ -1058,9 +1127,18 @@ async def recruitment_report(db: AsyncSession, study_id: int) -> schemas.Recruit
             {
                 "site_id": site.id,
                 "site_code": site.site_code,
-                "enrolled": sum(1 for s in site_subjects if s.enrolment_status == models.EnrolmentStatus.enrolled.value),
-                "screening": sum(1 for s in site_subjects if s.enrolment_status == models.EnrolmentStatus.screening.value),
-                "withdrawn": sum(1 for s in site_subjects if s.enrolment_status == models.EnrolmentStatus.withdrawn.value),
+                "enrolled": sum(
+                    1 for s in site_subjects
+                    if s.enrolment_status == models.EnrolmentStatus.enrolled.value
+                ),
+                "screening": sum(
+                    1 for s in site_subjects
+                    if s.enrolment_status == models.EnrolmentStatus.screening.value
+                ),
+                "withdrawn": sum(
+                    1 for s in site_subjects
+                    if s.enrolment_status == models.EnrolmentStatus.withdrawn.value
+                ),
             }
         )
     study = await get_study(db, study_id)
@@ -1068,7 +1146,11 @@ async def recruitment_report(db: AsyncSession, study_id: int) -> schemas.Recruit
         study_id=study_id,
         planned=study.planned_subjects if study else 0,
         enrolled=sum(1 for s in subjects if s.enrolment_status == models.EnrolmentStatus.enrolled.value),
-        screen_failed=sum(1 for s in subjects if s.enrolment_status == models.EnrolmentStatus.screening.value and s.randomisation_arm is None),
+        screen_failed=sum(
+            1 for s in subjects
+            if s.enrolment_status == models.EnrolmentStatus.screening.value
+            and s.randomisation_arm is None
+        ),
         withdrawn=sum(1 for s in subjects if s.enrolment_status == models.EnrolmentStatus.withdrawn.value),
         by_site=by_site,
     )
@@ -1099,7 +1181,7 @@ async def safety_report(db: AsyncSession, study_id: int) -> schemas.SafetyReport
     )
 
 
-async def etmf_report(db: AsyncSession, study_id: int) -> schemas.eTMFReport:
+async def etmf_report(db: AsyncSession, study_id: int) -> schemas.ETMFReport:
     docs = await list_regulatory_documents(db, study_id)
     folders: dict[str, dict[str, Any]] = {}
     expired = 0
@@ -1111,7 +1193,7 @@ async def etmf_report(db: AsyncSession, study_id: int) -> schemas.eTMFReport:
         if doc.expiry_date and doc.expiry_date < today:
             folders[folder]["expired"] += 1
             expired += 1
-    return schemas.eTMFReport(
+    return schemas.ETMFReport(
         study_id=study_id,
         folders=[{"name": k, **v} for k, v in folders.items()],
         expired_count=expired,
@@ -1123,18 +1205,24 @@ async def ip_accountability_report(db: AsyncSession, study_id: int, site_id: int
     if not site or site.study_id != study_id:
         raise ValueError("Invalid site for study")
     shipments = await db.execute(
-        select(models.IpShipment).where(models.IpShipment.to_site_id == site_id, models.IpShipment.condition_ok == True)
+        select(models.IpShipment).where(
+            models.IpShipment.to_site_id == site_id,
+            models.IpShipment.condition_ok.is_(True),
+        )
     )
     shipped = sum(s.quantity_shipped for s in shipments.scalars().all())
     dispenses_result = await db.execute(
-        select(models.IpDispense).join(models.InvestigationalProduct).where(models.InvestigationalProduct.site_id == site_id)
+        select(models.IpDispense)
+        .join(models.InvestigationalProduct)
+        .where(models.InvestigationalProduct.site_id == site_id)
     )
     dispenses = list(dispenses_result.scalars().all())
     dispensed = sum(d.quantity_dispensed for d in dispenses)
     returned = sum(d.quantity_returned for d in dispenses)
     destroyed = sum(d.quantity_dispensed - d.quantity_returned for d in dispenses if d.destroyed_at)
     on_hand_result = await db.execute(
-        select(func.sum(models.InvestigationalProduct.quantity_on_hand)).where(models.InvestigationalProduct.site_id == site_id)
+        select(func.sum(models.InvestigationalProduct.quantity_on_hand))
+        .where(models.InvestigationalProduct.site_id == site_id)
     )
     on_hand = on_hand_result.scalar() or 0
     return schemas.AccountabilityReport(

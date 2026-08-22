@@ -153,11 +153,7 @@ async def seed_all(db: AsyncSession) -> None:
                         if tmpl["status"] == models.EnrolmentStatus.withdrawn.value
                         else None
                     ),
-                    withdrawal_scope=(
-                        "full"
-                        if tmpl["status"] == models.EnrolmentStatus.withdrawn.value
-                        else None
-                    ),
+                    withdrawal_scope=("full" if tmpl["status"] == models.EnrolmentStatus.withdrawn.value else None),
                 )
             )
         subject_records.append(subject)
@@ -215,12 +211,11 @@ async def seed_all(db: AsyncSession) -> None:
     # IP products
     product_records: list[models.InvestigationalProduct] = []
     for p in PRODUCTS:
-        site = next(
+        ip_site: models.Site | None = next(
             (
                 s
                 for s in site_records
-                if s.site_code == p["site_code"]
-                and s.study_id == study_records[p["site_study"]].id
+                if s.site_code == p["site_code"] and s.study_id == study_records[p["site_study"]].id
             ),
             None,
         )
@@ -235,7 +230,7 @@ async def seed_all(db: AsyncSession) -> None:
                 storage_conditions="2-8C",
                 accountability_unit="capsule",
                 quantity_on_hand=p["qty"],
-                site_id=site.id if site else None,
+                site_id=ip_site.id if ip_site else None,
             ),
         )
         product_records.append(product)
@@ -280,9 +275,7 @@ async def seed_all(db: AsyncSession) -> None:
             ),
         )
         budget = (
-            await db.execute(
-                select(models.StudyBudget).order_by(models.StudyBudget.id.desc()).limit(1)
-            )
+            await db.execute(select(models.StudyBudget).order_by(models.StudyBudget.id.desc()).limit(1))
         ).scalar_one()
         budget.actual_amount = b["actual"]
     await db.commit()
@@ -438,56 +431,56 @@ async def seed_agentic_records(db: AsyncSession, study_records: list[models.Stud
     """Agentic-research records (FR-C-A11..A45)."""
 
     agent_records: list[models.AgentSubject] = []
-    for agent in AGENT_SUBJECTS:
+    for agent_data in AGENT_SUBJECTS:
         # CAID-SEED-REQ: FR-C-A11, FR-C-A12
-        rec = await crud.create_agent_subject(
+        agent_rec = await crud.create_agent_subject(
             db,
             schemas.AgentSubjectCreate(
-                principal_id=agent["principal"],
-                persona_key=agent["persona"],
-                superpersona_contract_id=agent["contract"],
-                model_version=agent["model"],
-                agent_owner_id=agent["owner"],
-                autonomy_level=agent["autonomy"],
-                safety_class=agent["safety"],
-                registration_source=agent["source"],
+                principal_id=agent_data["principal"],
+                persona_key=agent_data["persona"],
+                superpersona_contract_id=agent_data["contract"],
+                model_version=agent_data["model"],
+                agent_owner_id=agent_data["owner"],
+                autonomy_level=agent_data["autonomy"],
+                safety_class=agent_data["safety"],
+                registration_source=agent_data["source"],
             ),
         )
-        agent_records.append(rec)
+        agent_records.append(agent_rec)
 
     cohort_records: list[models.AgentCohort] = []
-    for cohort in AGENT_COHORTS:
+    for cohort_data in AGENT_COHORTS:
         # CAID-SEED-REQ: FR-C-A13
-        rec = await crud.create_agent_cohort(
+        cohort_rec = await crud.create_agent_cohort(
             db,
             schemas.AgentCohortCreate(
-                name=cohort["name"],
-                cohort_type=cohort["type"],
-                capability_profile=cohort["profile"],
-                model_family=cohort["family"],
-                evaluation_objective=cohort["objective"],
+                name=cohort_data["name"],
+                cohort_type=cohort_data["type"],
+                capability_profile=cohort_data["profile"],
+                model_family=cohort_data["family"],
+                evaluation_objective=cohort_data["objective"],
             ),
         )
-        cohort_records.append(rec)
+        cohort_records.append(cohort_rec)
 
     for idx, agent in enumerate(agent_records):
         cohort_idx = idx % 3
         await crud.add_agent_to_cohort(db, cohort_records[cohort_idx].id, agent.id)
 
     env_records: list[models.SyntheticEnvironment] = []
-    for env in SYNTHETIC_ENVIRONMENTS:
+    for env_data in SYNTHETIC_ENVIRONMENTS:
         # CAID-SEED-REQ: FR-C-A21
-        rec = await crud.create_synthetic_environment(
+        env_rec = await crud.create_synthetic_environment(
             db,
             schemas.SyntheticEnvironmentCreate(
-                name=env["name"],
-                task_script_json=env["task"],
-                synthetic_patient_cohort=env["patients"],
-                golden_path_steps=env["golden"],
-                perturbation_set=env["perturbations"],
+                name=env_data["name"],
+                task_script_json=env_data["task"],
+                synthetic_patient_cohort=env_data["patients"],
+                golden_path_steps=env_data["golden"],
+                perturbation_set=env_data["perturbations"],
             ),
         )
-        env_records.append(rec)
+        env_records.append(env_rec)
 
     for idx, agent in enumerate(agent_records[:5]):
         env = env_records[idx % 3]

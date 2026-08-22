@@ -1,5 +1,7 @@
 """FastAPI application entrypoint."""
 
+import os
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -12,8 +14,7 @@ from app.seeding.loader import seed_database
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):  # pragma: no cover
-    settings = get_settings()
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:  # pragma: no cover
     await init_db()
     await seed_database()
     yield
@@ -27,14 +28,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-import os
 
 _frontend_port = os.getenv("CTMS_FRONTEND_PORT", "5281")
 _frontend_origin = f"http://localhost:{_frontend_port}"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[_frontend_origin, "http://localhost:3000"],
+    allow_origins=[
+        _frontend_origin,
+        "http://localhost:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

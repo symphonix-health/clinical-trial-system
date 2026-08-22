@@ -1,7 +1,7 @@
 """Shim — delegates to caid.matrices. Config: matrix_config.toml."""
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # Workspace-sibling caid-agent — preferred so changes to the engine flow
 # without re-publishing a package.
