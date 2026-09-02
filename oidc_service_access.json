@@ -24,7 +24,8 @@
         "trial:read",
         "trial:write",
         "subject:read",
-        "audit:write"
+        "audit:write",
+        "connector:exchange"
       ],
       "denied_scopes": [
         "system:admin"
