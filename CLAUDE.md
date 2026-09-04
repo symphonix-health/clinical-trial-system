@@ -1,3 +1,3 @@
 # CTMS Claude instructions
 
-Read `C:\Users\hgeec\github\AGENTS.md` before working in this repository.
+Read `C:\Users\Joshua Tedam\github\AGENTS.md` before working in this repository.
