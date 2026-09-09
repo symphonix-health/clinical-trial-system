@@ -1,5 +1,25 @@
 # Clinical Trial Management System
 
+<!-- symphonix-health-ecosystem:start -->
+## Symphonix Health ecosystem
+
+<p>
+  <a href="https://github.com/symphonix-health"><img alt="Symphonix Health" src="https://img.shields.io/badge/Symphonix_Health-clinical_sibling-6366F1?style=flat-square" /></a>
+  <a href="https://github.com/symphonix-health/symphonix-health.github.io/blob/main/docs/system-catalogue.md"><img alt="System catalogue" src="https://img.shields.io/badge/catalogue-64_repos-14919B?style=flat-square" /></a>
+</p>
+
+| Field | Value |
+|---|---|
+| Organisation | Symphonix-Health |
+| Ecosystem layer | Clinical sibling system |
+| Repository role | Clinical trial management for protocol lifecycle, sites, subjects, IP accountability, and adverse events. |
+| Catalogue | [Symphonix system catalogue](https://github.com/symphonix-health/symphonix-health.github.io/blob/main/docs/system-catalogue.md) |
+| Scope basis | Current catalogue snapshot: 64 catalogued repositories; forked/imported repos are excluded. |
+| Evidence rule | Catalogue presence is orientation only. Use repo-local tests, CAID artefacts, seeded data, and runbooks for readiness claims. |
+<!-- symphonix-health-ecosystem:end -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/symphonix-health/.github/master/profile/assets/github-org-atlas.svg" alt="Symphonix Health GitHub system atlas - 64 catalogued repositories, 37 clinical sibling systems" width="100%" />
+</p>
 ![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?logo=fastapi&logoColor=white)
 ![React 18](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
